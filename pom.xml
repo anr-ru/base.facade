@@ -44,6 +44,8 @@
                                 <include>**/AbstractGlassfishWebTestCase*</include>
                                 <include>**/GlassfishLoader*</include>
                                 <include>**/RestClient.class</include>
+                                <include>**/TestDestination.class</include>
+                                <include>**/TestJmsOperations.class</include>
                             </includes>
                             <skip>false</skip>
                         </configuration>
