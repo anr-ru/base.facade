@@ -120,6 +120,7 @@ public class GlassfishLoader {
             safeAddMetadata(webmodule, new File("target/test-classes/META-INF", "glassfish-ejb-jar.xml"));
 
             // JPA config if required
+            safeAddMetadata(webmodule, new File("target/classes/META-INF", "persistence.xml"));
             safeAddMetadata(webmodule, new File("target/test-classes/META-INF", "persistence.xml"));
 
             deployer.deploy(webmodule.toURI());
