@@ -19,19 +19,8 @@
     <jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" lookup-on-startup="true" />
     <jee:jndi-lookup id="queue" jndi-name="jms/testQueue" />    
 
-    
-    <!-- reconnectOnException suitable for client applications only -->
-    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory"
-        p:sessionCacheSize="100" p:reconnectOnException="false">
-        <constructor-arg ref="jmsConnectionFactory" />
-    </bean>
-    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate" 
-        p:messageConverter-ref="converter"
-        p:defaultDestination-ref="queue">
-       <constructor-arg ref="connectionFactory"/>       
-    </bean>
-
-    <bean id = "converter" class = "org.springframework.jms.support.converter.MessagingMessageConverter" />
+    <!-- JMS -->
+    <bean id = "jmsConfig" class="ru.anr.base.facade.jmsclient.JmsConfig" />
     
     <!-- A test APIs -->
     <bean id = "apiConfig" class = "ru.anr.base.services.api.ApiConfig" />
