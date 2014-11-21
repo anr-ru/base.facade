@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.anr.base.facade.ejb;
+package ru.anr.base.facade.ejb.mdb;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -15,6 +15,7 @@ import org.springframework.jms.support.converter.MessagingMessageConverter;
 import org.springframework.util.Assert;
 
 import ru.anr.base.ApplicationException;
+import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
 
 /**
  * Base implementation for JMS Handler. Performs conversion from JMS message to
