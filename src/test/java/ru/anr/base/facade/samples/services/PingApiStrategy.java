@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import ru.anr.base.domain.api.APICommand;
+import ru.anr.base.domain.api.APIException;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.samples.domain.PingReponseModel;
@@ -69,6 +70,19 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
         rs.setMessage(m.getMessage() + "," + cmd.getContexts().get("id"));
 
         return rs;
+    }
+
+    /**
+     * Delete implementation which throws an exception
+     * 
+     * @param cmd
+     *            Api command
+     * @return response
+     */
+    @ApiMethod(MethodTypes.Delete)
+    public ResponseModel doDelete(APICommand cmd) {
+
+        throw new APIException("Shit happend", 100);
     }
 
 }
