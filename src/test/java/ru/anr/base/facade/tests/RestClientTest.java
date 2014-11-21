@@ -6,6 +6,8 @@ package ru.anr.base.facade.tests;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
 import ru.anr.base.tests.BaseTestCase;
@@ -69,5 +71,21 @@ public class RestClientTest extends BaseTestCase {
         Assert.assertEquals("http://localhost:8080/ping", client.getUri("ping"));
 
         Assert.assertEquals("https://google.com/xxx", client.getUri("https://google.com/xxx"));
+    }
+
+    /**
+     * Tests for connections
+     */
+    @Test
+    public void testConnect() {
+
+        ResponseEntity<String> r1 = client.get("https://google.com");
+        Assert.assertEquals(HttpStatus.OK, r1.getStatusCode());
+        Assert.assertTrue(r1.getBody().contains("Мне повезёт!")); // I'm Feeling
+                                                                  // Lucky
+
+        ResponseEntity<String> r2 = client.get("http://google.com");
+        Assert.assertEquals(HttpStatus.OK, r2.getStatusCode());
+        Assert.assertTrue(r2.getBody().contains("Мне повезёт!"));
     }
 }
