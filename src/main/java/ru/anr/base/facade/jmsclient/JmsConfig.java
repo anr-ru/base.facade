@@ -26,6 +26,11 @@ import org.springframework.jms.support.converter.MessagingMessageConverter;
 public class JmsConfig {
 
     /**
+     * timeout
+     */
+    private Long receiveTimeout = JmsTemplate.RECEIVE_TIMEOUT_NO_WAIT;
+
+    /**
      * Cached factory (wrapper for jms factory from JNDI). Expects a bean
      * 'jmsConnectionFactory' defined in current context.
      * 
@@ -60,6 +65,20 @@ public class JmsConfig {
         JmsTemplate template = new JmsTemplate(connectionFactory);
         template.setMessageConverter(new MessagingMessageConverter());
 
+        if (receiveTimeout != null) {
+            template.setReceiveTimeout(receiveTimeout);
+        }
+
         return template;
     }
+
+    /**
+     * @param receiveTimeout
+     *            the receiveTimeout
+     */
+    public void setReceiveTimeout(Long receiveTimeout) {
+
+        this.receiveTimeout = receiveTimeout;
+    }
+
 }
