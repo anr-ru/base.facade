@@ -116,7 +116,10 @@ public class GlassfishLoader {
             safeAddMetadata(webmodule, new File("src/main/webapp/WEB-INF", "web.xml"));
 
             // EJB application if required
+            safeAddMetadata(webmodule, new File("target/classes/META-INF", "ejb-jar.xml"));
             safeAddMetadata(webmodule, new File("target/test-classes/META-INF", "ejb-jar.xml"));
+
+            safeAddMetadata(webmodule, new File("target/classes/META-INF", "glassfish-ejb-jar.xml"));
             safeAddMetadata(webmodule, new File("target/test-classes/META-INF", "glassfish-ejb-jar.xml"));
 
             // JPA config if required
@@ -146,6 +149,7 @@ public class GlassfishLoader {
 
             logger.debug("Trying to load: {}", file);
             webmodule.addMetadata(file);
+            logger.info("Loaded: {}", file);
 
         } catch (IOException ex) {
             logger.error("File : {} not found, ignoring", file);
