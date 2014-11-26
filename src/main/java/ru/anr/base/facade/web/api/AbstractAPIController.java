@@ -88,6 +88,15 @@ public class AbstractAPIController {
      */
     protected APICommand process(APICommand api) {
 
-        return apis.process(api);
+        APICommand r = null;
+        try {
+
+            r = apis.process(api);
+
+        } catch (Exception ex) {
+
+            r = apis.error(api, ex);
+        }
+        return r;
     }
 }
