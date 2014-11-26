@@ -42,6 +42,11 @@ public class GlassfishLoader {
     protected GlassFish glassfish;
 
     /**
+     * Static ref to GlassfishRuntime
+     */
+    protected GlassFishRuntime glassfishRuntime;
+
+    /**
      * File with domain configuration in class path
      */
     private String domainFileConfig = "domain.xml";
@@ -75,6 +80,7 @@ public class GlassfishLoader {
             // Searching of domain.xml in classpath
             gfProps.setConfigFileURI(new ClassPathResource(domainFileConfig).getFile().toURI().toString());
             gfProps.setConfigFileReadOnly(true);
+            gfProps.setProperty("glassfish.embedded.tmpdir", "./target/glassfish");
 
             // Base logger settings
             Logger.getLogger("").getHandlers()[0].setLevel(Level.FINEST);
@@ -82,12 +88,30 @@ public class GlassfishLoader {
             Logger.getLogger("javax.enterprise.system.tools.deployment").setLevel(Level.FINEST);
             Logger.getLogger("javax.enterprise.system").setLevel(Level.INFO);
 
-            glassfish = GlassFishRuntime.bootstrap().newGlassFish(gfProps);
+            glassfishRuntime = GlassFishRuntime.bootstrap();
+
+            glassfish = glassfishRuntime.newGlassFish(gfProps);
             glassfish.start();
 
         } catch (IOException | GlassFishException ex) {
             throw new ApplicationException(ex);
         }
+    }
+
+    /**
+     * Shutdown instance
+     */
+    public void shutdown() {
+
+        try {
+
+            glassfish.dispose();
+            glassfishRuntime.shutdown();
+
+        } catch (GlassFishException ex) {
+            throw new ApplicationException(ex);
+        }
+
     }
 
     /**
@@ -105,7 +129,8 @@ public class GlassfishLoader {
             Deployer deployer = glassfish.getDeployer();
 
             // Create a scattered web application.
-            ScatteredArchive webmodule = new ScatteredArchive(appName, ScatteredArchive.Type.WAR);
+            ScatteredArchive webmodule =
+                    new ScatteredArchive(appName, ScatteredArchive.Type.WAR, new File("src/main/webapp"));
 
             // target/classes directory contains my complied servlets
             webmodule.addClassPath(new File("target", "classes"));
