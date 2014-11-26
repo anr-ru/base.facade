@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.anr.base.facade.tests;
+package ru.anr.base.tests.facade;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,9 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
+import ru.anr.base.tests.RestClient;
 
 /**
- * Description ...
+ * General EJB/Web integration tests.
  *
  *
  * @author Alexey Romanchuk

@@ -1,15 +1,17 @@
 /**
  * 
  */
-package ru.anr.base.facade.tests;
+package ru.anr.base.tests.facade;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import ru.anr.base.tests.RestClient;
+
 /**
- * Description ...
+ * Testing API via RESTClient
  *
  *
  * @author Alexey Romanchuk

@@ -9,15 +9,15 @@
     </parent>
     
     <artifactId>base.facade</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
 
     <name>Base Facade Services</name>
     <description>Base implementation of Facade Serivices for Glassfish App</description>
 
     <licenses>
         <license>
-            <name>The MIT License (MIT)</name>
-            <url>http://opensource.org/licenses/MIT</url>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
@@ -155,9 +155,9 @@
 
         <derby.version>10.8.2.2</derby.version>
 
-        <base.utils.version>0.0.1-SNAPSHOT</base.utils.version>
-        <base.services.version>0.0.1-SNAPSHOT</base.services.version>
-        <base.tests.version>0.0.1-SNAPSHOT</base.tests.version>
+        <base.utils.version>0.5-SNAPSHOT</base.utils.version>
+        <base.services.version>0.5-SNAPSHOT</base.services.version>
+        <base.tests.version>0.5-SNAPSHOT</base.tests.version>
         
         <db.hibernateDialect>org.hibernate.dialect.DerbyTenSevenDialect</db.hibernateDialect>
         <db.driverClass>org.apache.derby.jdbc.EmbeddedXADataSource</db.driverClass>

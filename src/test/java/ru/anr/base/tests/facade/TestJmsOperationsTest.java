@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.anr.base.facade.tests;
+package ru.anr.base.tests.facade;
 
 import java.util.Queue;
 
@@ -10,8 +10,11 @@ import javax.jms.Destination;
 import org.junit.Assert;
 import org.junit.Test;
 
+import ru.anr.base.tests.TestDestination;
+import ru.anr.base.tests.TestJmsOperations;
+
 /**
- * Description ...
+ * Tests for {@link TestJmsOperations}.
  *
  *
  * @author Alexey Romanchuk
