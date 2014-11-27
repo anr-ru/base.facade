@@ -5,6 +5,7 @@ package ru.anr.base.facade.samples.ejb;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.jms.Destination;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.PersistenceUnits;
 
@@ -38,6 +39,13 @@ public class MyServiceEJB extends AbstractEJBServiceImpl implements MyService {
     private JmsOperations jms;
 
     /**
+     * Destination
+     */
+    @Autowired
+    @Qualifier("queue")
+    private Destination queue;
+
+    /**
      * Reference to a dao
      */
     @Autowired
@@ -56,7 +64,7 @@ public class MyServiceEJB extends AbstractEJBServiceImpl implements MyService {
         s = dao.saveAndFlush(s);
 
         MessageBuilder<String> builder = MessageBuilder.withPayload("HELLO").setHeader("ObjectID", s.getId());
-        jms.convertAndSend(builder.build());
+        jms.convertAndSend(queue, builder.build());
 
         return s;
     }

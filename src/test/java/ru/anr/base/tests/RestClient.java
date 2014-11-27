@@ -1,21 +1,49 @@
-/**
+/*
+ * Copyright 2014 the original author or authors.
  * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
-package ru.anr.base.facade.tests;
+package ru.anr.base.tests;
 
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 
+import javax.net.ssl.SSLContext;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import ru.anr.base.ApplicationException;
 import ru.anr.base.BaseParent;
 
 /**
- * Some lite configured rest-client for test reason.
+ * Some lite configured rest-client for test purposes.
  *
  *
  * @author Alexey Romanchuk
@@ -31,12 +59,12 @@ public class RestClient extends BaseParent {
     private final RestTemplate rest;
 
     /**
-     * Port
+     * Default port
      */
     private int port = 8080;
 
     /**
-     * Host
+     * Default host
      */
     private String host = "localhost";
 
@@ -65,7 +93,8 @@ public class RestClient extends BaseParent {
     }
 
     /**
-     * Building a base url string (server location)
+     * Building a base url string (server location), excluding a printing of
+     * standard http ports.
      * 
      * @return String with server location with schema, host and port
      */
@@ -79,8 +108,9 @@ public class RestClient extends BaseParent {
      * Get final URI of http resource
      * 
      * @param path
-     *            Can be relating path (for instance, '/ping') or full path (
-     *            {@link #getBaseUrl()} is not used) like http://localhost:9090
+     *            Can be a relative path (for instance, '/ping') or a full one (
+     *            {@link #getBaseUrl()} is not used) like
+     *            http://localhost:9090/ping
      * @return A full path to http resource (included schema, host, port,
      *         relative path)
      */
@@ -99,7 +129,48 @@ public class RestClient extends BaseParent {
      */
     public RestTemplate initRest(RestTemplate template) {
 
+        // 1. Set up ssl settings
+        if ("https".equals(schema)) {
+            template.setRequestFactory(new HttpComponentsClientHttpRequestFactory(buildSSLClient()));
+
+        } else {
+            template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        }
+
+        // 2. Error handler
+        template.setErrorHandler(new DefaultResponseErrorHandler());
+
         return template;
+    }
+
+    /**
+     * Configuring an apache client to support untrusted ssl connections. This
+     * can be useful for test purposes only.
+     * 
+     * @return Apache {@link HttpClient}
+     */
+    private HttpClient buildSSLClient() {
+
+        TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
+
+            @Override
+            public boolean isTrusted(X509Certificate[] certificate, String authType) {
+
+                return true;
+            }
+        };
+
+        try {
+
+            SSLContextBuilder sslBuilder = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy);
+            SSLContext sslContext = sslBuilder.useTLS().build();
+
+            SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
+            return HttpClients.custom().setSSLSocketFactory(sf).build();
+
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException ex) {
+            throw new ApplicationException(ex);
+        }
     }
 
     /**
@@ -129,8 +200,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> post(String path, String body) {
 
-        HttpHeaders hh = applyHeaders();
-        return rest.exchange(getUri(path), HttpMethod.POST, new HttpEntity<String>(body, hh), String.class);
+        return exchange(path, HttpMethod.POST, body);
     }
 
     /**
@@ -145,8 +215,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> put(String path, String body) {
 
-        HttpHeaders hh = applyHeaders();
-        return rest.exchange(getUri(path), HttpMethod.PUT, new HttpEntity<String>(body, hh), String.class);
+        return exchange(path, HttpMethod.PUT, body);
     }
 
     /**
@@ -158,8 +227,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> delete(String path) {
 
-        HttpHeaders hh = applyHeaders();
-        return rest.exchange(getUri(path), HttpMethod.DELETE, new HttpEntity<String>(hh), String.class);
+        return exchange(path, HttpMethod.DELETE, null);
     }
 
     /**
@@ -175,8 +243,26 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> get(String path, Object... uriVariables) {
 
+        return exchange(path, HttpMethod.GET, null, uriVariables);
+    }
+
+    /**
+     * General representation for all rest operations
+     * 
+     * @param path
+     *            Relative or absolute path to resource
+     * @param method
+     *            http method to use
+     * @param body
+     *            Request body (for PUT/POST)
+     * @param uriVariables
+     *            uri params (part of url in GET queries)
+     * @return Response
+     */
+    private ResponseEntity<String> exchange(String path, HttpMethod method, String body, Object... uriVariables) {
+
         HttpHeaders hh = applyHeaders();
-        return rest.exchange(getUri(path), HttpMethod.GET, new HttpEntity<String>(hh), String.class, uriVariables);
+        return rest.exchange(getUri(path), method, new HttpEntity<String>(body, hh), String.class, uriVariables);
     }
 
     // /////////////////////////////////////////////////////////////////////////

@@ -1,14 +1,17 @@
 /**
  * 
  */
-package ru.anr.base.facade.tests;
+package ru.anr.base.tests.facade;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import ru.anr.base.tests.RestClient;
+
 /**
- * Description ...
+ * Testing API via RESTClient
  *
  *
  * @author Alexey Romanchuk
@@ -27,8 +30,16 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         ResponseEntity<String> r = client.get("/api/v1/ping/2");
 
-        logger.info("Result: {}", r.getBody());
+        logger.debug("Result: {}", r.getBody());
         Assert.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
+
+        // Changin to xml as expected type
+        client.setAccept(MediaType.APPLICATION_XML);
+        r = client.get("/api/v1/ping/2");
+
+        logger.debug("Result: {}", r.getBody());
+        Assert.assertEquals("<?xml version='1.0' encoding='UTF-8'?><pong code=\"0\" message=\"response,2\"/>",
+                r.getBody());
     }
 
     /**
@@ -44,4 +55,16 @@ public class ApiTest extends BaseWebTestCase {
         Assert.assertEquals("{\"code\":0,\"message\":\"hello,2\"}", r.getBody());
     }
 
+    /**
+     * Api Command throws exception
+     */
+    @Test
+    public void exception() {
+
+        RestClient client = new RestClient();
+        ResponseEntity<String> r = client.delete("/api/v1/delete");
+
+        logger.info("Result: {}", r.getBody());
+        Assert.assertEquals("{\"code\":100}", r.getBody());
+    }
 }

@@ -11,6 +11,7 @@
     
     <logger name="org.springframework.web" level="DEBUG"/>
     <logger name="org.hibernate" level="INFO"/>
+    <logger name="org.apache" level="INFO"/>
     
     <!-- To see what a cache does -->
     <logger name="org.springframework.cache" level="INFO"/>

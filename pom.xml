@@ -9,16 +9,15 @@
     </parent>
     
     <artifactId>base.facade</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <version>0.5-SNAPSHOT</version>
 
     <name>Base Facade Services</name>
     <description>Base implementation of Facade Serivices for Glassfish App</description>
 
     <licenses>
         <license>
-            <name>The MIT License (MIT)</name>
-            <url>http://opensource.org/licenses/MIT</url>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
@@ -32,11 +31,27 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                   <warName>facade</warName>
-                </configuration>
-            </plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>                            
+                            <goal>test-jar</goal>
+                        </goals>
+                        <configuration>
+                            <forceCreation>true</forceCreation>
+                            <includes>
+                                <include>**/AbstractGlassfishWebTestCase*</include>
+                                <include>**/GlassfishLoader*</include>
+                                <include>**/RestClient.class</include>
+                                <include>**/TestDestination.class</include>
+                                <include>**/TestJmsOperations.class</include>
+                            </includes>
+                            <skip>false</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>        
         </plugins>
     </build>
 
@@ -67,7 +82,15 @@
             <groupId>javax.ejb</groupId>
             <artifactId>javax.ejb-api</artifactId>
         </dependency>
-        
+        <dependency>
+        	<groupId>javax.jms</groupId>
+        	<artifactId>javax.jms-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+                
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
@@ -84,6 +107,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>  
             <groupId>hsqldb</groupId>  
             <artifactId>hsqldb</artifactId>  
@@ -93,7 +121,7 @@
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-all</artifactId>
             <version>${glassfish.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
 		<dependency>                                      
 		    <groupId>org.apache.derby</groupId>             
@@ -127,9 +155,9 @@
 
         <derby.version>10.8.2.2</derby.version>
 
-        <base.utils.version>0.0.1-SNAPSHOT</base.utils.version>
-        <base.services.version>0.0.1-SNAPSHOT</base.services.version>
-        <base.tests.version>0.0.1-SNAPSHOT</base.tests.version>
+        <base.utils.version>0.5-SNAPSHOT</base.utils.version>
+        <base.services.version>0.5-SNAPSHOT</base.services.version>
+        <base.tests.version>0.5-SNAPSHOT</base.tests.version>
         
         <db.hibernateDialect>org.hibernate.dialect.DerbyTenSevenDialect</db.hibernateDialect>
         <db.driverClass>org.apache.derby.jdbc.EmbeddedXADataSource</db.driverClass>

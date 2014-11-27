@@ -11,7 +11,7 @@ import javax.persistence.PersistenceUnits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import ru.anr.base.facade.ejb.AbstractMessageDrivenHandler;
+import ru.anr.base.facade.ejb.mdb.AbstractMessageDrivenHandler;
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
 

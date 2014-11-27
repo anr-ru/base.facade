@@ -1,10 +1,12 @@
 /**
  * 
  */
-package ru.anr.base.facade.tests;
+package ru.anr.base.tests.facade;
 
 import org.junit.Ignore;
 import org.springframework.test.context.ContextConfiguration;
+
+import ru.anr.base.tests.AbstractGlassfishWebTestCase;
 
 /**
  * Base test config
