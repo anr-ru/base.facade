@@ -9,12 +9,10 @@ import org.springframework.stereotype.Component;
 
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.APIException;
-import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.samples.domain.PingReponseModel;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
 import ru.anr.base.services.api.AbstractApiCommandStrategyImpl;
-import ru.anr.base.services.api.ApiMethod;
 import ru.anr.base.services.api.ApiStrategy;
 
 /**
@@ -35,14 +33,10 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
     private static final Logger logger = LoggerFactory.getLogger(PingApiStrategy.class);
 
     /**
-     * Get implementation
-     * 
-     * @param cmd
-     *            Api command
-     * @return response
+     * {@inheritDoc}
      */
-    @ApiMethod(MethodTypes.Get)
-    public ResponseModel doGet(APICommand cmd) {
+    @Override
+    public ResponseModel get(APICommand cmd) {
 
         logger.debug("Ping processed: {}", cmd.getContexts().get("id"));
 
@@ -53,14 +47,10 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
     }
 
     /**
-     * Get implementation
-     * 
-     * @param cmd
-     *            Api command
-     * @return response
+     * {@inheritDoc}
      */
-    @ApiMethod(MethodTypes.Post)
-    public ResponseModel doPost(APICommand cmd) {
+    @Override
+    public ResponseModel post(APICommand cmd) {
 
         PingRequestModel m = (PingRequestModel) cmd.getRequest();
 
@@ -73,14 +63,10 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
     }
 
     /**
-     * Delete implementation which throws an exception
-     * 
-     * @param cmd
-     *            Api command
-     * @return response
+     * {@inheritDoc}
      */
-    @ApiMethod(MethodTypes.Delete)
-    public ResponseModel doDelete(APICommand cmd) {
+    @Override
+    public ResponseModel delete(APICommand cmd) {
 
         throw new APIException("Shit happend", 100);
     }
