@@ -20,6 +20,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 
 import javax.net.ssl.SSLContext;
 
@@ -174,6 +175,33 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * Basic authorization header
+     */
+    private String basicCredentials;
+
+    /**
+     * Setting Basic Authorization header to apply
+     * 
+     * @param user
+     *            A user
+     * @param password
+     *            A password
+     */
+    public void setBasicCredentials(String user, String password) {
+
+        String s = user + ":" + password;
+        this.basicCredentials = "Basic " + utf8(Base64.getEncoder().encode(utf8(s)));
+    }
+
+    /**
+     * Cleaning up the Basic Authorization header
+     */
+    public void cleanBasicCredentials() {
+
+        this.basicCredentials = null;
+    }
+
+    /**
      * Applying for default headers
      * 
      * @return {@link HttpHeaders} object
@@ -184,6 +212,10 @@ public class RestClient extends BaseParent {
         hh.setContentType(contentType);
         hh.setAccept(list(accept));
         hh.setAcceptCharset(list(Charset.forName("utf-8")));
+
+        if (basicCredentials != null) {
+            hh.add("Authorization", basicCredentials);
+        }
 
         return hh;
     }
