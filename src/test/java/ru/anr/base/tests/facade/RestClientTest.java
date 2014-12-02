@@ -32,6 +32,7 @@ public class RestClientTest extends BaseTestCase {
     /**
      * Initialization
      */
+    @Override
     @Before
     public void setUp() {
 
@@ -82,11 +83,8 @@ public class RestClientTest extends BaseTestCase {
 
         ResponseEntity<String> r1 = client.get("https://google.com");
         Assert.assertEquals(HttpStatus.OK, r1.getStatusCode());
-        Assert.assertTrue(r1.getBody().contains("Мне повезёт!")); // I'm Feeling
-                                                                  // Lucky
 
         ResponseEntity<String> r2 = client.get("http://google.com");
         Assert.assertEquals(HttpStatus.OK, r2.getStatusCode());
-        Assert.assertTrue(r2.getBody().contains("Мне повезёт!"));
     }
 }
