@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xmlns:jee="http://www.springframework.org/schema/jee"
-    xmlns:tx="http://www.springframework.org/schema/tx"
-    xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.1.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.1.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
@@ -28,5 +26,22 @@
     <jee:local-slsb id="apibean"
         business-interface="ru.anr.base.services.api.APICommandFactory"
         jndi-name="java:global/facade/TestEJBApi" resource-ref="true" />
+
+
+    <jee:local-slsb id="authenticationManager"
+        business-interface="org.springframework.security.authentication.AuthenticationManager"
+        jndi-name="java:global/facade/AuthenticationBean" resource-ref="true" />
+        
+    <!-- Security settings: for default anonymous authenticationManager is not invoked -->        
+    <security:http authentication-manager-ref="authenticationManager" entry-point-ref="entryPoint">
+
+        <security:anonymous username="anonymous" key="DerKey" granted-authority="ROLE_ANONYMOUS"/>
+
+        <!-- Registration is allowed for an anonymous user -->
+        <security:intercept-url pattern="/**" access="ROLE_ANONYMOUS" />
+
+    </security:http>
+    
+    <bean id = "entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
 
 </beans>

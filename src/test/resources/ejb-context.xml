@@ -25,5 +25,15 @@
     <!-- A test APIs -->
     <bean id = "apiConfig" class = "ru.anr.base.services.api.ApiConfig" />
     <bean id = "messageConfig" class="ru.anr.base.services.MessagePropertiesConfig" />
+
+    <!-- Security -->
+    <bean id="securityConfig" class="ru.anr.base.services.SecurityConfig" 
+        p:providers-ref="authenticator"/>
+
+    <bean id = "authenticator" 
+        class="org.springframework.security.authentication.AnonymousAuthenticationProvider" 
+        p:messageSource-ref="messageSource">
+        <constructor-arg value="DerKey" />
+    </bean>        
         
 </beans>
