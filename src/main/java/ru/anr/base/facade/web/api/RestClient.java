@@ -31,7 +31,6 @@ import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.HttpClients;
-import org.junit.Assert;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -40,6 +39,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.util.Assert;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -178,7 +178,7 @@ public class RestClient extends BaseParent {
      */
     public OAuth2RestTemplate oauth2() {
 
-        Assert.assertTrue("No oauth2 rest configured", (rest instanceof OAuth2RestTemplate));
+        Assert.isTrue((rest instanceof OAuth2RestTemplate), "No oauth2 rest configured");
         return (OAuth2RestTemplate) rest;
     }
 
