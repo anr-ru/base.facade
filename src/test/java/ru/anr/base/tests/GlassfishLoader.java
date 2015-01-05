@@ -17,9 +17,16 @@ package ru.anr.base.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.glassfish.embeddable.CommandResult;
+import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
@@ -84,6 +91,79 @@ public class GlassfishLoader {
     }
 
     /**
+     * Note: This part of code is taken from Apache Ant CommandLine
+     * implementation.
+     * 
+     * Crack a command line.
+     * 
+     * @param toProcess
+     *            the command line to process.
+     * @return the command line broken into strings. An empty or null toProcess
+     *         parameter results in a zero sized array.
+     */
+    public static String[] translateCommandline(String toProcess) {
+
+        if (toProcess == null || toProcess.length() == 0) {
+            // no command? no string
+            return new String[0];
+        }
+        // parse with a simple finite state machine
+
+        final int normal = 0;
+        final int inQuote = 1;
+        final int inDoubleQuote = 2;
+        int state = normal;
+        final StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
+        final ArrayList<String> result = new ArrayList<String>();
+        final StringBuilder current = new StringBuilder();
+        boolean lastTokenHasBeenQuoted = false;
+
+        while (tok.hasMoreTokens()) {
+            String nextTok = tok.nextToken();
+            switch (state) {
+                case inQuote:
+                    if ("\'".equals(nextTok)) {
+                        lastTokenHasBeenQuoted = true;
+                        state = normal;
+                    } else {
+                        current.append(nextTok);
+                    }
+                    break;
+                case inDoubleQuote:
+                    if ("\"".equals(nextTok)) {
+                        lastTokenHasBeenQuoted = true;
+                        state = normal;
+                    } else {
+                        current.append(nextTok);
+                    }
+                    break;
+                default:
+                    if ("\'".equals(nextTok)) {
+                        state = inQuote;
+                    } else if ("\"".equals(nextTok)) {
+                        state = inDoubleQuote;
+                    } else if (" ".equals(nextTok)) {
+                        if (lastTokenHasBeenQuoted || current.length() != 0) {
+                            result.add(current.toString());
+                            current.setLength(0);
+                        }
+                    } else {
+                        current.append(nextTok);
+                    }
+                    lastTokenHasBeenQuoted = false;
+                    break;
+            }
+        }
+        if (lastTokenHasBeenQuoted || current.length() != 0) {
+            result.add(current.toString());
+        }
+        if (state == inQuote || state == inDoubleQuote) {
+            throw new ApplicationException("unbalanced quotes in " + toProcess);
+        }
+        return result.toArray(new String[result.size()]);
+    }
+
+    /**
      * Initialization and starting of Embedded Glassfish instance
      */
     public void initialize() {
@@ -98,9 +178,9 @@ public class GlassfishLoader {
             gfProps.setProperty("glassfish.embedded.tmpdir", "./target/glassfish");
 
             // Base logger settings
-            Logger.getLogger("").getHandlers()[0].setLevel(Level.FINEST);
+            Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
 
-            Logger.getLogger("javax.enterprise.system.tools.deployment").setLevel(Level.FINEST);
+            Logger.getLogger("javax.enterprise.system.tools.deployment").setLevel(Level.INFO);
             Logger.getLogger("javax.enterprise.system").setLevel(Level.INFO);
 
             glassfishRuntime = GlassFishRuntime.bootstrap();
@@ -108,8 +188,64 @@ public class GlassfishLoader {
             glassfish = glassfishRuntime.newGlassFish(gfProps);
             glassfish.start();
 
+            /*
+             * Executing command-line scripts
+             */
+            executeScript("META-INF/glassfish.properties.txt");
+            executeScript("META-INF/glassfish.txt");
+
         } catch (IOException | GlassFishException ex) {
             throw new ApplicationException(ex);
+        }
+    }
+
+    /**
+     * Executes a file with asadmin commands
+     * 
+     * @param fileName
+     *            Name of a file
+     * @throws IOException
+     *             In case of File not found
+     * @throws GlassFishException
+     *             In case of Glassfish error
+     */
+    private void executeScript(String fileName) throws IOException, GlassFishException {
+
+        ClassPathResource script = new ClassPathResource(fileName);
+
+        if (script.exists()) {
+
+            List<String> lines = IOUtils.readLines(script.getInputStream());
+            CommandRunner cmd = glassfish.getCommandRunner();
+
+            for (String l : lines) {
+
+                String[] tokens = translateCommandline(l);
+
+                if (tokens.length == 0 || "#".equals(tokens[0])) {
+                    continue;
+                }
+
+                String[] args = ArrayUtils.subarray(tokens, 1, tokens.length);
+
+                logger.info("Runnning a command: {} {}", tokens[0], args);
+                CommandResult r = cmd.run(tokens[0], args);
+
+                switch (r.getExitStatus()) {
+                    case SUCCESS:
+                        logger.info("SUCCESS >> {}", r.getOutput());
+                        break;
+                    case WARNING:
+                        logger.info("WARNING >> {} ( {} )", r.getOutput(), r.getFailureCause());
+                        break;
+                    case FAILURE:
+                        logger.info("ERROR >> \n{}", r.getOutput(), r.getFailureCause());
+                        throw new ApplicationException(r.getFailureCause());
+                    default:
+                }
+            }
+        } else {
+            logger.info("'glassfish.txt' file not found");
         }
     }
 
