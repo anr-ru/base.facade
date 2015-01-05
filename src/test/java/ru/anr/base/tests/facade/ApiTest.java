@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import ru.anr.base.tests.RestClient;
+import ru.anr.base.facade.web.api.RestClient;
 
 /**
  * Testing API via RESTClient

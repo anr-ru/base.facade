@@ -16,6 +16,7 @@
 package ru.anr.base.tests;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.glassfish.embeddable.GlassFishException;
 import org.junit.BeforeClass;
@@ -58,7 +59,7 @@ public class AbstractGlassfishWebTestCase extends BaseTestCase {
         if (loader == null) {
 
             synchronized (AbstractGlassfishWebTestCase.class) {
-
+                Locale.setDefault(new Locale("en", "US"));
                 loader = new GlassfishLoader("facade");
 
                 loader.initialize();

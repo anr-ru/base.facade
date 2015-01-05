@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package ru.anr.base.tests;
+package ru.anr.base.facade.web.api;
 
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
@@ -89,7 +89,19 @@ public class RestClient extends BaseParent {
      */
     public RestClient() {
 
+        this("http");
+    }
+
+    /**
+     * Constructor with schema
+     * 
+     * @param schema
+     *            schema Default constructor
+     */
+    public RestClient(String schema) {
+
         super();
+        setSchema(schema);
         rest = initRest(new RestTemplate());
     }
 
