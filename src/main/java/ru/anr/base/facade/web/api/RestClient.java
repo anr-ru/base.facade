@@ -31,12 +31,15 @@ import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.HttpClients;
+import org.junit.Assert;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -106,6 +109,18 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * Constructor with OAuth2 resource
+     * 
+     * @param resource
+     *            OAuth2 protected resource
+     */
+    public RestClient(OAuth2ProtectedResourceDetails resource) {
+
+        super();
+        rest = initRest(new OAuth2RestTemplate(resource));
+    }
+
+    /**
      * Building a base url string (server location), excluding a printing of
      * standard http ports.
      * 
@@ -154,6 +169,17 @@ public class RestClient extends BaseParent {
         template.setErrorHandler(new DefaultResponseErrorHandler());
 
         return template;
+    }
+
+    /**
+     * Getting {@link OAuth2RestTemplate}
+     * 
+     * @return A rest template
+     */
+    public OAuth2RestTemplate oauth2() {
+
+        Assert.assertTrue("No oauth2 rest configured", (rest instanceof OAuth2RestTemplate));
+        return (OAuth2RestTemplate) rest;
     }
 
     /**

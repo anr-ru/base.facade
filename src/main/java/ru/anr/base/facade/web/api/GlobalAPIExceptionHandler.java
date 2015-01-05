@@ -17,6 +17,8 @@ package ru.anr.base.facade.web.api;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,7 +31,7 @@ import ru.anr.base.services.api.APICommandFactory;
 
 /**
  * Global error handler for exceptions. It translate exception to a valid API
- * response (like {@link ru.anr.base.domain.api.ErrorModel}).
+ * response.
  *
  *
  * @author Alexey Romanchuk
@@ -38,6 +40,11 @@ import ru.anr.base.services.api.APICommandFactory;
  */
 @ControllerAdvice
 public class GlobalAPIExceptionHandler {
+
+    /**
+     * Logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(GlobalAPIExceptionHandler.class);
 
     /**
      * API Factory reference
@@ -59,6 +66,8 @@ public class GlobalAPIExceptionHandler {
     @ExceptionHandler(value = { Exception.class, RuntimeException.class })
     @ResponseBody
     public String process(HttpServletRequest rq, Exception ex) throws Exception {
+
+        logger.debug("API exception: {}", rq.getContextPath(), ex);
 
         if (AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class) != null) {
             throw ex; // Pre-defined exception handler exists
