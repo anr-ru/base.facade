@@ -12,9 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
-import ru.anr.base.tests.RestClient;
 
 /**
  * General EJB/Web integration tests.

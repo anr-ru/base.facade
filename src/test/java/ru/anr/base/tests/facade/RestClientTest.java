@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
+import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.tests.BaseTestCase;
-import ru.anr.base.tests.RestClient;
 
 /**
  * {@link RestClient} tests.
