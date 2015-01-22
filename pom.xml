@@ -10,7 +10,7 @@
     
     <artifactId>base.facade</artifactId>
 
-    <name>Base Facade Services</name>
+    <name>Base Facade</name>
     <description>Base implementation of Facade Serivices for Glassfish App</description>
 
     <licenses>
