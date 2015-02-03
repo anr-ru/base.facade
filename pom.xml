@@ -141,8 +141,8 @@
         <db.hibernateDialect>org.hibernate.dialect.DerbyTenSevenDialect</db.hibernateDialect>
         <db.driverClass>org.apache.derby.jdbc.EmbeddedXADataSource</db.driverClass>
         <db.url>jdbc:derby:target/database</db.url>
-        <db.user>localtest</db.user>
-        <db.password>localtest</db.password>
+        <dbx.user>localtest</dbx.user>
+        <dbx.password>localtest</dbx.password>
         <db.datasoureType>javax.sql.XADataSource</db.datasoureType>
         
     </properties>
