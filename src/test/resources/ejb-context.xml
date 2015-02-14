@@ -27,7 +27,7 @@
     <bean id = "messageConfig" class="ru.anr.base.services.MessagePropertiesConfig" />
 
     <!-- Security -->
-    <bean id="securityConfig" class="ru.anr.base.services.SecurityConfig" 
+    <bean id="securityConfig" class="ru.anr.base.services.security.SecurityConfig" 
         p:providers-ref="authenticator"/>
 
     <bean id = "authenticator" 
