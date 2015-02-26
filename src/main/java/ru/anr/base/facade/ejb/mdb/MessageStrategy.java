@@ -18,6 +18,7 @@ package ru.anr.base.facade.ejb.mdb;
 import org.springframework.messaging.Message;
 
 import ru.anr.base.services.pattern.Strategy;
+import ru.anr.base.services.pattern.StrategyConfig;
 
 /**
  * Strategy for message processing.
@@ -27,10 +28,22 @@ import ru.anr.base.services.pattern.Strategy;
  * @created Nov 21, 2014
  *
  */
-
 public interface MessageStrategy extends Strategy<Message<String>> {
 
     /**
-     * Do nothing
+     * Key of header describing the type of strategy
      */
+    String TYPE_KEY = "type";
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    StrategyConfig check(Message<String> message, Object... params);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    Message<String> process(Message<String> message, StrategyConfig strategyConfig);
 }
