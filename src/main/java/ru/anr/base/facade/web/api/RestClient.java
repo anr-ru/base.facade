@@ -15,22 +15,32 @@
  */
 package ru.anr.base.facade.web.api;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
+import java.util.List;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -40,7 +50,9 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.util.Assert;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import ru.anr.base.ApplicationException;
@@ -56,6 +68,11 @@ import ru.anr.base.BaseParent;
  */
 
 public class RestClient extends BaseParent {
+
+    /**
+     * Logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(RestClient.class);
 
     /**
      * A reference to Spring {@link RestTemplate} engine
@@ -86,6 +103,14 @@ public class RestClient extends BaseParent {
      * 'Accept' header value (what we expect to receive)
      */
     private MediaType accept = MediaType.APPLICATION_JSON;
+
+    /**
+     * Clearing cookie value (remove session)
+     */
+    public void clearCookies() {
+
+        store.clear();
+    }
 
     /**
      * Default constructor
@@ -144,8 +169,25 @@ public class RestClient extends BaseParent {
      */
     public String getUri(String path) {
 
-        return path.contains("://") ? path : getBaseUrl() + (path.charAt(0) == '/' ? path : "/" + path);
+        return hasHost(path) ? path : getBaseUrl() + (path.charAt(0) == '/' ? path : "/" + path);
     }
+
+    /**
+     * Is a host present in the url
+     * 
+     * @param path
+     *            Url path
+     * @return true, if presents
+     */
+    private boolean hasHost(String path) {
+
+        return path.startsWith("http://") || path.startsWith("https://");
+    }
+
+    /**
+     * Cookie storage
+     */
+    private final CookieStore store = new BasicCookieStore();
 
     /**
      * Special initialization of {@link RestTemplate} - used to apply some
@@ -158,12 +200,18 @@ public class RestClient extends BaseParent {
     public RestTemplate initRest(RestTemplate template) {
 
         // 1. Set up ssl settings
-        if ("https".equals(schema)) {
-            template.setRequestFactory(new HttpComponentsClientHttpRequestFactory(buildSSLClient()));
+        HttpClient client =
+                "https".equals(schema) ? buildSSLClient() : HttpClients.custom().setDefaultCookieStore(store).build();
 
-        } else {
-            template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        }
+        template.setRequestFactory(new HttpComponentsClientHttpRequestFactory(client) {
+
+            @Override
+            protected void postProcessHttpRequest(HttpUriRequest request) {
+
+                super.postProcessHttpRequest(request);
+            }
+
+        });
 
         // 2. Error handler
         template.setErrorHandler(new DefaultResponseErrorHandler());
@@ -247,9 +295,13 @@ public class RestClient extends BaseParent {
     protected HttpHeaders applyHeaders() {
 
         HttpHeaders hh = new HttpHeaders();
-        hh.setContentType(contentType);
-        hh.setAccept(list(accept));
-        hh.setAcceptCharset(list(Charset.forName("utf-8")));
+        if (contentType != null) {
+            hh.setContentType(contentType);
+        }
+        if (accept != null) {
+            hh.setAccept(list(accept));
+            hh.setAcceptCharset(list(Charset.forName("utf-8")));
+        }
 
         if (basicCredentials != null) {
             hh.add("Authorization", basicCredentials);
@@ -270,7 +322,41 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> post(String path, String body) {
 
-        return exchange(path, HttpMethod.POST, body);
+        return exchange(path, HttpMethod.POST, body, String.class);
+    }
+
+    /**
+     * POST for a form
+     * 
+     * @param path
+     *            Path to resource
+     * @param formData
+     *            Form params
+     * @return Http status for response
+     */
+    public ResponseEntity<Void> post(String path, MultiValueMap<String, String> formData) {
+
+        setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        return exchange(getUri(path), HttpMethod.POST, formData, (Class<Void>) null);
+    }
+
+    /**
+     * Performing GET query with redirect to some location
+     * 
+     * @param path
+     *            Path for query
+     * @return Redirected url
+     */
+    public String getRedirect(String path) {
+
+        ResponseEntity<Void> response = exchange(getUri(path), HttpMethod.GET, null, Void.class);
+        URI location = response.getHeaders().getLocation();
+
+        try {
+            return URLDecoder.decode(location.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Could not decode URL", e);
+        }
     }
 
     /**
@@ -285,7 +371,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> put(String path, String body) {
 
-        return exchange(path, HttpMethod.PUT, body);
+        return exchange(path, HttpMethod.PUT, body, String.class);
     }
 
     /**
@@ -297,7 +383,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> delete(String path) {
 
-        return exchange(path, HttpMethod.DELETE, null);
+        return exchange(path, HttpMethod.DELETE, null, String.class);
     }
 
     /**
@@ -313,7 +399,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> get(String path, Object... uriVariables) {
 
-        return exchange(path, HttpMethod.GET, null, uriVariables);
+        return exchange(path, HttpMethod.GET, null, String.class, uriVariables);
     }
 
     /**
@@ -328,11 +414,24 @@ public class RestClient extends BaseParent {
      * @param uriVariables
      *            uri params (part of url in GET queries)
      * @return Response
+     * 
+     * @param clazz
+     *            Response entity class
+     * @param <T>
+     *            Reponse entity type
+     * @param <S>
+     *            Request entity type
      */
-    private ResponseEntity<String> exchange(String path, HttpMethod method, String body, Object... uriVariables) {
+    private <S, T> ResponseEntity<T> exchange(String path, HttpMethod method, S body, Class<T> clazz,
+            Object... uriVariables) {
 
         HttpHeaders hh = applyHeaders();
-        return rest.exchange(getUri(path), method, new HttpEntity<String>(body, hh), String.class, uriVariables);
+        ResponseEntity<T> rs = rest.exchange(getUri(path), method, new HttpEntity<S>(body, hh), clazz, uriVariables);
+
+        logger.debug("Cookie: {}", store.getCookies());
+        logger.debug("Http response: {}", rs);
+
+        return rs;
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -375,10 +474,14 @@ public class RestClient extends BaseParent {
 
     /**
      * @return the rest
+     * 
+     * @param <S>
+     *            Interface type
      */
-    public RestTemplate getRest() {
+    @SuppressWarnings("unchecked")
+    public <S extends RestOperations> S getRest() {
 
-        return rest;
+        return (S) rest;
     }
 
     /**
@@ -430,5 +533,22 @@ public class RestClient extends BaseParent {
     public void setAccept(MediaType accept) {
 
         this.accept = accept;
+    }
+
+    /**
+     * @return the cookies
+     */
+    public List<Cookie> getCookies() {
+
+        return store.getCookies();
+    }
+
+    /**
+     * @param cookies
+     *            the cookies to set
+     */
+    public void setCookies(List<Cookie> cookies) {
+
+        cookies.forEach(c -> store.addCookie(c));
     }
 }
