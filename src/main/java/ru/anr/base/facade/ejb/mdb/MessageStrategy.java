@@ -1,24 +1,20 @@
 /*
  * Copyright 2014 the original author or authors.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package ru.anr.base.facade.ejb.mdb;
 
 import org.springframework.messaging.Message;
 
 import ru.anr.base.services.pattern.Strategy;
-import ru.anr.base.services.pattern.StrategyConfig;
 
 /**
  * Strategy for message processing.
@@ -28,22 +24,10 @@ import ru.anr.base.services.pattern.StrategyConfig;
  * @created Nov 21, 2014
  *
  */
+
 public interface MessageStrategy extends Strategy<Message<String>> {
 
     /**
-     * Key of header describing the type of strategy
+     * Do nothing
      */
-    String TYPE_KEY = "type";
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    StrategyConfig check(Message<String> message, Object... params);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    Message<String> process(Message<String> message, StrategyConfig strategyConfig);
 }
