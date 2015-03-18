@@ -57,6 +57,7 @@ import org.springframework.web.client.RestTemplate;
 
 import ru.anr.base.ApplicationException;
 import ru.anr.base.BaseParent;
+import ru.anr.base.UriUtils;
 
 /**
  * Some lite configured rest-client for test purposes.
@@ -153,8 +154,7 @@ public class RestClient extends BaseParent {
      */
     public String getBaseUrl() {
 
-        String portSuffix = (port == 80 || port == 443) ? "" : ":" + port;
-        return schema + "://" + host + portSuffix;
+        return UriUtils.getBaseUrl(schema, host, port);
     }
 
     /**
@@ -169,19 +169,7 @@ public class RestClient extends BaseParent {
      */
     public String getUri(String path) {
 
-        return hasHost(path) ? path : getBaseUrl() + (path.charAt(0) == '/' ? path : "/" + path);
-    }
-
-    /**
-     * Is a host present in the url
-     * 
-     * @param path
-     *            Url path
-     * @return true, if presents
-     */
-    private boolean hasHost(String path) {
-
-        return path.startsWith("http://") || path.startsWith("https://");
+        return UriUtils.getUri(schema, host, port, path);
     }
 
     /**
