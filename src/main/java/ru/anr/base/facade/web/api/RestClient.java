@@ -78,7 +78,7 @@ public class RestClient extends BaseParent {
     /**
      * A reference to Spring {@link RestTemplate} engine
      */
-    private final RestTemplate rest;
+    private RestTemplate rest;
 
     /**
      * Default port
@@ -529,6 +529,15 @@ public class RestClient extends BaseParent {
     public List<Cookie> getCookies() {
 
         return store.getCookies();
+    }
+
+    /**
+     * @param rest
+     *            the rest to set
+     */
+    public void setRest(RestTemplate rest) {
+
+        this.rest = rest;
     }
 
     /**
