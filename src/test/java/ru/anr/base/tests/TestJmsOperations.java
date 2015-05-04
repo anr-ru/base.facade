@@ -24,7 +24,6 @@ import javax.jms.Message;
 import javax.jms.Queue;
 
 import org.springframework.jms.core.BrowserCallback;
-import org.springframework.jms.core.JmsOperations;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.core.ProducerCallback;
@@ -34,7 +33,7 @@ import org.springframework.util.Assert;
 import ru.anr.base.BaseParent;
 
 /**
- * A test implementation for {@link JmsOperations} to use instead of real JMS
+ * A test implementation for {@link JmsTests} to use instead of real JMS
  * template.
  *
  *
@@ -43,7 +42,7 @@ import ru.anr.base.BaseParent;
  *
  */
 
-public class TestJmsOperations extends BaseParent implements JmsOperations {
+public class TestJmsOperations extends BaseParent implements JmsTests {
 
     /**
      * Embedded queue
@@ -409,5 +408,24 @@ public class TestJmsOperations extends BaseParent implements JmsOperations {
     public <T> T browseSelected(String queueName, String messageSelector, BrowserCallback<T> action) {
 
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <S> java.util.Queue<S> queue(Destination queue) {
+
+        return browse(queue.toString(), null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clean(Destination queue) {
+
+        java.util.Queue<?> q = queue(queue);
+        q.clear();
     }
 }
