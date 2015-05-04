@@ -15,8 +15,15 @@
  */
 package ru.anr.base.facade.ejb.mdb;
 
+import java.util.Map;
+
 import org.springframework.messaging.Message;
 
+import ru.anr.base.ApplicationException;
+import ru.anr.base.BaseParent;
+import ru.anr.base.dao.BaseRepositoryImpl;
+import ru.anr.base.dao.repository.BaseRepository;
+import ru.anr.base.domain.BaseEntity;
 import ru.anr.base.services.pattern.Strategy;
 
 /**
@@ -31,6 +38,48 @@ import ru.anr.base.services.pattern.Strategy;
 public interface MessageStrategy extends Strategy<Message<String>> {
 
     /**
-     * Do nothing
+     * The name for the header with object identifier information
      */
+    String OBJECT_ID = "OBJECT_ID";
+
+    /**
+     * The name for the header with object class information
+     */
+    String OBJECT_CLASS = "OBJECT_CLASS";
+
+    /**
+     * Finds an object using the provided headers inside of a message
+     * 
+     * @param msg
+     *            The message
+     * @param dao
+     *            Some {@link BaseRepository}
+     * @return The object or null if not found
+     * 
+     * @param <S>
+     *            The object class
+     */
+    default <S extends BaseEntity> S extractObject(Message<String> msg, BaseRepository<?> dao) {
+
+        try {
+            Class<?> clazz = Class.forName(msg.getHeaders().get(OBJECT_CLASS).toString());
+            Long id = Long.valueOf(msg.getHeaders().get(OBJECT_ID).toString());
+
+            return dao.find(clazz, id);
+        } catch (ClassNotFoundException ex) {
+            throw new ApplicationException(ex);
+        }
+    }
+
+    /**
+     * Builds the headers required for storing information about an entity
+     * 
+     * @param o
+     *            The entity
+     * @return A map which contains the headers
+     */
+    default Map<String, Object> toHeaders(BaseEntity o) {
+
+        return BaseParent.toMap(OBJECT_ID, o.getId(), OBJECT_CLASS, BaseRepositoryImpl.entityClass(o).getName());
+    }
 }
