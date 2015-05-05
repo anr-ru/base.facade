@@ -44,6 +44,7 @@
                                 <include>**/RestClient.class</include>
                                 <include>**/TestDestination.class</include>
                                 <include>**/TestJmsOperations.class</include>
+                                <include>**/JmsTests.class</include>
                             </includes>
                         </configuration>
                     </execution>
