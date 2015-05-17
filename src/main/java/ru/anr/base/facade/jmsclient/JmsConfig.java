@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.jms.connection.CachingConnectionFactory;
+import org.springframework.jms.connection.SingleConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessagingMessageConverter;
 
@@ -52,11 +52,9 @@ public class JmsConfig {
      */
     @Bean(name = "connectionFactory")
     @DependsOn("jmsConnectionFactory")
-    public CachingConnectionFactory cachedFactory(
-            @Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory) {
+    public SingleConnectionFactory cachedFactory(@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory) {
 
-        CachingConnectionFactory f = new CachingConnectionFactory(connectionFactory);
-        f.setSessionCacheSize(100);
+        SingleConnectionFactory f = new SingleConnectionFactory(connectionFactory);
 
         // Doesn't work with Glassfish client ??
         f.setReconnectOnException(false);
