@@ -16,8 +16,6 @@
 package ru.anr.base.facade.ejb;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.interceptor.Interceptors;
 
 import org.slf4j.Logger;
@@ -27,15 +25,15 @@ import org.springframework.context.ApplicationContext;
 
 /**
  * Singleton EJB, which loads spring context via {@link SpringEJBInterceptor}
- * interceptor.
+ * intercepter.
+ * 
+ * Add the @Singleton and @Startup annotations in descendants.
  *
  *
  * @author Alexey Romanchuk
  * @created Nov 12, 2014
  *
  */
-@Singleton
-@Startup
 @Interceptors(SpringEJBInterceptor.class)
 public class EJBSpringLoader {
 
