@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.jms.connection.SingleConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MessagingMessageConverter;
 
 /**
  * JMS Configurations. Defines a Spring {@link JmsTemplate} bean with required
@@ -35,7 +34,7 @@ import org.springframework.jms.support.converter.MessagingMessageConverter;
  *
  */
 @Configuration
-public class JmsConfig {
+public class JmsConfig extends JmsJEEConfig {
 
     /**
      * Timeout, no wait mode by default
@@ -68,12 +67,12 @@ public class JmsConfig {
      *            {@link ConnectionFactory}
      * @return Bean instance
      */
+    @Override
     @Bean(name = "jmsTemplate")
     @DependsOn("connectionFactory")
     public JmsTemplate template(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
 
-        JmsTemplate template = new JmsTemplate(connectionFactory);
-        template.setMessageConverter(new MessagingMessageConverter());
+        JmsTemplate template = super.template(connectionFactory);
 
         if (receiveTimeout != null) {
             template.setReceiveTimeout(receiveTimeout);

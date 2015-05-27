@@ -20,7 +20,7 @@
     <jee:jndi-lookup id="queue" jndi-name="jms/testQueue" />    
 
     <!-- JMS -->
-    <bean id = "jmsConfig" class="ru.anr.base.facade.jmsclient.JmsConfig" />
+    <bean id = "jmsConfig" class="ru.anr.base.facade.jmsclient.JmsJEEConfig" />
     
     <!-- A test APIs -->
     <bean id = "apiConfig" class = "ru.anr.base.services.api.ApiConfig" />
