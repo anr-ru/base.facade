@@ -49,7 +49,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestOperations;
@@ -208,14 +207,16 @@ public class RestClient extends BaseParent {
     }
 
     /**
-     * Getting {@link OAuth2RestTemplate}
+     * Getting {@link RestOperations} and its descendants
      * 
+     * @param <S>
+     *            Class of {@link RestOperations}
      * @return A rest template
      */
-    public OAuth2RestTemplate oauth2() {
+    @SuppressWarnings("unchecked")
+    public <S extends RestOperations> S ops() {
 
-        Assert.isTrue((rest instanceof OAuth2RestTemplate), "No oauth2 rest configured");
-        return (OAuth2RestTemplate) rest;
+        return (S) rest;
     }
 
     /**
