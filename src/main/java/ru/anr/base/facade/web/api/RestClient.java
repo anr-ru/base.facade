@@ -417,7 +417,7 @@ public class RestClient extends BaseParent {
         HttpHeaders hh = applyHeaders();
         ResponseEntity<T> rs = rest.exchange(getUri(path), method, new HttpEntity<S>(body, hh), clazz, uriVariables);
 
-        logger.debug("Cookie: {}", store.getCookies());
+        logger.trace("Cookie: {}", store.getCookies());
         logger.debug("Http response: {}", rs);
 
         return rs;
