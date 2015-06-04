@@ -139,12 +139,12 @@
 
         <derby.version>10.8.2.2</derby.version>
 
-        <db.hibernateDialect>org.hibernate.dialect.DerbyTenSevenDialect</db.hibernateDialect>
-        <db.driverClass>org.apache.derby.jdbc.EmbeddedXADataSource</db.driverClass>
-        <db.url>jdbc:derby:target/database</db.url>
+        <dbx.hibernateDialect>org.hibernate.dialect.DerbyTenSevenDialect</dbx.hibernateDialect>
+        <dbx.driverClass>org.apache.derby.jdbc.EmbeddedXADataSource</dbx.driverClass>
+        <dbx.url>jdbc:derby:target/database</dbx.url>
         <dbx.user>localtest</dbx.user>
         <dbx.password>localtest</dbx.password>
-        <db.datasoureType>javax.sql.XADataSource</db.datasoureType>
+        <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>
         
     </properties>
     

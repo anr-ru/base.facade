@@ -44,7 +44,7 @@
     <managed-executor-service object-type="system-all" jndi-name="concurrent/__defaultManagedExecutorService"></managed-executor-service>
     <managed-scheduled-executor-service object-type="system-all" jndi-name="concurrent/__defaultManagedScheduledExecutorService"></managed-scheduled-executor-service>
     <managed-thread-factory object-type="system-all" jndi-name="concurrent/__defaultManagedThreadFactory"></managed-thread-factory>
-    <jdbc-connection-pool datasource-classname="${db.driverClass}" name="AppJDBCPool" res-type="javax.sql.XADataSource">
+    <jdbc-connection-pool datasource-classname="${dbx.driverClass}" name="AppJDBCPool" res-type="javax.sql.XADataSource">
       <property name="Password" value="${dbx.user}"></property>
       <property name="User" value="${dbx.password}"></property>
       <property name="serverName" value="localhost"></property>
