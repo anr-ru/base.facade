@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -61,16 +61,17 @@ public class GlobalAPIExceptionHandler {
      *            An exception
      * @return String response
      * @throws Exception
-     *             If rethrown
+     *             If re-thrown
      */
     @ExceptionHandler(value = { Exception.class, RuntimeException.class })
     @ResponseBody
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public String process(HttpServletRequest rq, Exception ex) throws Exception {
 
         logger.debug("API exception: {}", rq.getContextPath(), ex);
 
-        if (AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class) != null) {
-            throw ex; // Pre-defined exception handler exists
+        if (ex instanceof WebAPIException) {
+            throw (RuntimeException) ((WebAPIException) ex).getCause();
         }
 
         APICommand cmd = apis.error(ex);

@@ -30,10 +30,15 @@ import ru.anr.base.services.api.APICommandFactory;
  * for fast building of API Command Object.
  *
  * All descendants must have
- * {@link org.springframework.web.bind.annotation.RestController.RestController}
- * annotation and method specific arguments, for example:
+ * {@link org.springframework.web.bind.annotation.RestController} annotation and
+ * method specific arguments, for example:
  * 
  * <PRE>
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  * 
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.GET)
@@ -47,6 +52,11 @@ import ru.anr.base.services.api.APICommandFactory;
  * or
  * 
  * <PRE>
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  * 
  * 
@@ -108,6 +118,11 @@ public class AbstractAPIController {
         } catch (Exception ex) {
 
             r = apis.error(api, ex);
+
+            RuntimeException e = CommandUtils.enhanceException(r, ex);
+            if (e != null) {
+                throw e;
+            }
         }
         return r;
     }

@@ -17,10 +17,17 @@ package ru.anr.base.facade.web.api;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 
+import ru.anr.base.ApplicationException;
+import ru.anr.base.BaseParent;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.RawFormatTypes;
+import ru.anr.base.domain.api.models.ResponseModel;
 
 /**
  * Utils for APICOmmand building in a web layer.
@@ -32,6 +39,11 @@ import ru.anr.base.domain.api.RawFormatTypes;
  */
 
 public final class CommandUtils {
+
+    /**
+     * The logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(CommandUtils.class);
 
     /**
      * Constructor
@@ -72,5 +84,38 @@ public final class CommandUtils {
         }
         cmd.method(request.getMethod());
         return cmd;
+    }
+
+    /**
+     * Exception enhancement - by default all our exception are packaged to
+     * {@link APICommand} format but in some cases we need to throw an exception
+     * (Spring security, Fatal error).
+     * 
+     * @param api
+     *            Original API command
+     * @param ex
+     *            OPriginal exception
+     * @return A new exception to be thrown or null if no throwing is required
+     */
+    public static RuntimeException enhanceException(APICommand api, Exception ex) {
+
+        RuntimeException rs = null;
+
+        ApplicationException exception = new ApplicationException(ex);
+        RuntimeException root = (RuntimeException) exception.getRootCause();
+
+        if ((root instanceof AccessDeniedException) || (root instanceof AuthenticationException)) {
+            rs = new WebAPIException(root.getMessage(), root);
+        } else {
+
+            ResponseModel r = api.getResponse();
+            if (BaseParent.safeEquals(r.getCode(), Integer.valueOf(1))) {
+
+                // code = 1 means "System error" and must generate HTTP 500
+                logger.error("System error caught: {}", r.getDescription());
+                rs = new WebAPIException(r.getMessage(), root);
+            }
+        }
+        return rs;
     }
 }
