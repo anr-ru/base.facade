@@ -65,6 +65,7 @@ public class ApiTest extends BaseWebTestCase {
         ResponseEntity<String> r = client.delete("/api/v1/delete");
 
         logger.info("Result: {}", r.getBody());
-        Assert.assertEquals("{\"code\":100}", r.getBody());
+        Assert.assertEquals("{\"code\":100,\"message\":\"Shit happend\",\"description\":\"Shit happend\"}",
+                r.getBody());
     }
 }

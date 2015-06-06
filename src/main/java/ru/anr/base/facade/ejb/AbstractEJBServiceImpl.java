@@ -33,7 +33,7 @@ import javax.interceptor.Interceptors;
  *
  */
 @TransactionManagement(TransactionManagementType.CONTAINER)
-@Interceptors(SpringEJBInterceptor.class)
+@Interceptors({ SpringEJBInterceptor.class, ExceptionHandlerInterceptor.class })
 public abstract class AbstractEJBServiceImpl extends EJBContextHolder {
 
     /**
