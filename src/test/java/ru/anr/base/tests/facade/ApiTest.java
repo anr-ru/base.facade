@@ -5,8 +5,10 @@ package ru.anr.base.tests.facade;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
 import ru.anr.base.facade.web.api.RestClient;
 
@@ -67,5 +69,26 @@ public class ApiTest extends BaseWebTestCase {
         logger.info("Result: {}", r.getBody());
         Assert.assertEquals("{\"code\":100,\"message\":\"Shit happend\",\"description\":\"Shit happend\"}",
                 r.getBody());
+    }
+
+    /**
+     * Not found exception
+     */
+    @Test
+    public void notFoundException() {
+
+        RestClient client = new RestClient();
+        try {
+            client.put("/api/v1/notfound/reason", "");
+            Assert.fail();
+        } catch (HttpClientErrorException ex) {
+            logger.info("Result: {}", ex.getResponseBodyAsString());
+
+            Assert.assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+            Assert.assertEquals("{\"code\":1,\"message\":\"reason\",\"description\":\"reason\"}",
+                    ex.getResponseBodyAsString());
+
+        }
+
     }
 }

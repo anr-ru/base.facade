@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ru.anr.base.facade.samples.ejb.MyService;
+import ru.anr.base.facade.web.api.NotFoundException;
 import ru.anr.base.samples.domain.Samples;
 
 /**
@@ -128,4 +129,18 @@ public class SampleController {
         return new ResponseEntity<String>("", HttpStatus.ALREADY_REPORTED);
     }
 
+    /**
+     * A sample method which raises the NotFoundException
+     * 
+     * @param what
+     *            Some path parameter
+     * 
+     * @return Some result value
+     */
+    @RequestMapping(value = "/notfound/{what}", method = RequestMethod.PUT, //
+    produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<String> notFound(@PathVariable String what) {
+
+        throw new NotFoundException(what);
+    }
 }

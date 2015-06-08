@@ -53,6 +53,26 @@ public class GlobalAPIExceptionHandler {
     private APICommandFactory apis;
 
     /**
+     * A special case when the {@link NotFoundException} is thrown
+     * 
+     * @param rq
+     *            The http request
+     * @param ex
+     *            The exception
+     * @return Response body
+     */
+    @ExceptionHandler(value = { NotFoundException.class })
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public String processNotFound(HttpServletRequest rq, Exception ex) {
+
+        logger.debug("API not found Exception: {}", rq.getContextPath(), ex);
+
+        APICommand cmd = apis.error(ex);
+        return cmd.getRawModel();
+    }
+
+    /**
      * Processing a global exception
      * 
      * @param rq
