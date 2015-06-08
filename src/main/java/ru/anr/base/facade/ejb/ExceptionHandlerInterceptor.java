@@ -12,6 +12,8 @@ import javax.validation.ConstraintViolationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 
 import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APIException;
@@ -54,7 +56,15 @@ public class ExceptionHandlerInterceptor {
 
             Throwable reason = new ApplicationException(ex).getMostSpecificCause();
 
-            if (reason instanceof ConstraintViolationException) {
+            if (reason instanceof AuthenticationException) {
+
+                logger.error("Authentication error: {}", reason.getMessage());
+
+            } else if (reason instanceof AccessDeniedException) {
+
+                logger.error("Access denied: {}", reason.getMessage());
+
+            } else if (reason instanceof ConstraintViolationException) {
 
                 Set<ConstraintViolation<?>> errors = ((ConstraintViolationException) reason).getConstraintViolations();
                 logger.info("Constraint Violation: {}", ValidationUtils.getAllErrorsAsString(errors));
