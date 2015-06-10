@@ -25,6 +25,8 @@ import ru.anr.base.dao.BaseRepositoryImpl;
 import ru.anr.base.dao.repository.BaseRepository;
 import ru.anr.base.domain.BaseEntity;
 import ru.anr.base.services.pattern.Strategy;
+import ru.anr.base.services.pattern.StrategyConfig;
+import ru.anr.base.services.pattern.StrategyConfig.StrategyModes;
 
 /**
  * Strategy for message processing.
@@ -69,6 +71,24 @@ public interface MessageStrategy extends Strategy<Message<String>> {
         } catch (ClassNotFoundException ex) {
             throw new ApplicationException(ex);
         }
+    }
+
+    /**
+     * Implementation for the case when a strategy is defined by a value of some
+     * header
+     * 
+     * @param o
+     *            A message which header is analyzed
+     * @param header
+     *            The name of the header
+     * @param controlValue
+     *            A control value to compare with
+     * @return {@link StrategyConfig}
+     */
+    default StrategyConfig headerCheck(Message<String> o, String header, String controlValue) {
+
+        String value = (String) o.getHeaders().get(header);
+        return new StrategyConfig(BaseParent.safeEquals(controlValue, value), o, StrategyModes.TerminateAfter);
     }
 
     /**

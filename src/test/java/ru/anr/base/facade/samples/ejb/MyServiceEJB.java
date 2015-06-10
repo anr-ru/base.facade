@@ -42,7 +42,7 @@ public class MyServiceEJB extends AbstractEJBServiceImpl implements MyService {
      * Destination
      */
     @Autowired
-    @Qualifier("queue")
+    @Qualifier("testQueue")
     private Destination queue;
 
     /**

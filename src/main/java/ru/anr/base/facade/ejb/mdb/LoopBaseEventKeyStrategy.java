@@ -5,6 +5,8 @@ package ru.anr.base.facade.ejb.mdb;
 
 import javax.jms.Destination;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
@@ -22,15 +24,20 @@ import org.springframework.messaging.Message;
 public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
 
     /**
+     * The logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(LoopBaseEventKeyStrategy.class);
+
+    /**
      * JMS template
      */
     @Autowired
     protected JmsOperations jms;
 
     /**
-     * Response queue used in tests to send message to stop
+     * Response queue bean used in tests to send message to stop
      */
-    private Destination dropQueue;
+    private String dropQueueBean = "testQueue";
 
     /**
      * The method can be used to organize re-sending back to the original queue
@@ -39,29 +46,34 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
      *            A message to send
      * @param queue
      *            The queue
-     * @param pause
-     *            true if a 'pause' required before starting a new cycle
+     * @param pauseMSec
+     *            amount of milliseconds for pause. 0 means 'no pause'
      * @return The message again
      */
-    protected Message<String> loop(Message<String> msg, Destination queue, boolean pause) {
+    protected Message<String> loop(Message<String> msg, Destination queue, long pauseMSec) {
 
-        if (msg.getHeaders().containsKey("TestMode")) {
-            jms.convertAndSend(dropQueue, msg);
-        } else {
-            if (pause) {
-                sleep(3000);
+        if (isProdMode()) {
+
+            if (pauseMSec > 0) {
+                sleep(pauseMSec);
             }
             jms.convertAndSend(queue, msg); // re-sending
+
+        } else {
+            Destination bean = bean(dropQueueBean, Destination.class);
+            jms.convertAndSend(bean, msg);
+
+            logger.info("Non-production mode, the message {} sent to {}", msg, dropQueueBean);
         }
         return msg;
     }
 
     /**
-     * @param dropQueue
+     * @param dropQueueBean
      *            the dropQueue to set
      */
-    public void setDropQueue(Destination dropQueue) {
+    public void setDropQueueBean(String dropQueueBean) {
 
-        this.dropQueue = dropQueue;
+        this.dropQueueBean = dropQueueBean;
     }
 }

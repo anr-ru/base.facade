@@ -7,7 +7,6 @@ import org.springframework.messaging.Message;
 
 import ru.anr.base.services.BaseServiceImpl;
 import ru.anr.base.services.pattern.StrategyConfig;
-import ru.anr.base.services.pattern.StrategyConfig.StrategyModes;
 
 /**
  * The base strategy for the case when difference between strategies is defined
@@ -37,8 +36,7 @@ public class BaseEventKeyStrategy extends BaseServiceImpl implements MessageStra
     @Override
     public StrategyConfig check(Message<String> o, Object... params) {
 
-        String value = (String) o.getHeaders().get(TYPE_KEY);
-        return new StrategyConfig(safeEquals(value, keyValue), o, StrategyModes.Normal);
+        return headerCheck(o, TYPE_KEY, keyValue);
     }
 
     /**
