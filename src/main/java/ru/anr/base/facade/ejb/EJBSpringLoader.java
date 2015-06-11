@@ -121,7 +121,7 @@ public class EJBSpringLoader extends BaseSpringParent {
 
         if (isProdMode()) {
             queueMap.forEach((q, a) -> {
-                initQueue(q.toString(), a[0].toString(), a[1].toString(), (Object[]) a[3]);
+                initQueue(q.toString(), a[0].toString(), a[1].toString(), (Object[]) a[2]);
             });
         } else {
             logger.info("Don't initialize the cycled queues when not in production mode");
