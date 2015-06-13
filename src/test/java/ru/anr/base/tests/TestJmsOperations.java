@@ -410,6 +410,10 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
         throw new UnsupportedOperationException();
     }
 
+    // /////////////////////////////////////////////////////////////////////////
+    // /// JmsTest specific
+    // /////////////////////////////////////////////////////////////////////////
+
     /**
      * {@inheritDoc}
      */

@@ -17,4 +17,12 @@
         p:userName="${db.user}" 
         p:password="${db.password}" />
 
+    <bean id = "jmsTemplate" class = "ru.anr.base.tests.TestJmsOperations" />
+    
+    <bean id = "queue" class = "ru.anr.base.tests.TestDestination">
+        <constructor-arg value="Queue" />
+    </bean>
+
+    <bean id = "ejbLoader" class = "ru.anr.base.facade.samples.ejb.StartUpEJB" />
+
 </beans>

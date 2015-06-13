@@ -15,6 +15,7 @@
  */
 package ru.anr.base.facade.ejb;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -91,7 +92,7 @@ public class EJBSpringLoader extends BaseSpringParent {
     /**
      * The map which stores information about the queues to be initialized
      */
-    private Map<String, Object[]> queueMap = toMap();
+    private List<Object[]> queues = list();
 
     /**
      * Adding queues for further initialization. Real initialization will be
@@ -108,7 +109,7 @@ public class EJBSpringLoader extends BaseSpringParent {
      */
     protected void addQueue(String queueBean, String messageKey, String body, Object... headerPairs) {
 
-        queueMap.put(queueBean, new Object[]{ messageKey, body, headerPairs });
+        queues.add(new Object[]{ queueBean, messageKey, body, headerPairs });
     }
 
     /**
@@ -120,8 +121,8 @@ public class EJBSpringLoader extends BaseSpringParent {
         logger.info("Holder: {}, profiles: {}", holder, getProfiles());
 
         if (isProdMode()) {
-            queueMap.forEach((q, a) -> {
-                initQueue(q.toString(), a[0].toString(), a[1].toString(), (Object[]) a[2]);
+            queues.forEach(a -> {
+                initQueue(a[0].toString(), a[1].toString(), a[2].toString(), (Object[]) a[3]);
             });
         } else {
             logger.info("Don't initialize the cycled queues when not in production mode");
