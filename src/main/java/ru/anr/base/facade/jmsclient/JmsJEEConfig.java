@@ -36,6 +36,11 @@ import org.springframework.jms.support.converter.MessagingMessageConverter;
 public class JmsJEEConfig {
 
     /**
+     * Timeout, no wait mode by default
+     */
+    private Long receiveTimeout = JmsTemplate.RECEIVE_TIMEOUT_NO_WAIT;
+
+    /**
      * Constructing a JMS template bean
      * 
      * @param connectionFactory
@@ -48,6 +53,23 @@ public class JmsJEEConfig {
         JmsTemplate template = new JmsTemplate(connectionFactory);
         template.setMessageConverter(new MessagingMessageConverter());
 
+        if (receiveTimeout != null) {
+            template.setReceiveTimeout(receiveTimeout);
+        }
         return template;
     }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // /// getters/setters
+    // /////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @param receiveTimeout
+     *            the receiveTimeout
+     */
+    public void setReceiveTimeout(Long receiveTimeout) {
+
+        this.receiveTimeout = receiveTimeout;
+    }
+
 }

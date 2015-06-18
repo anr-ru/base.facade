@@ -37,11 +37,6 @@ import org.springframework.jms.core.JmsTemplate;
 public class JmsConfig extends JmsJEEConfig {
 
     /**
-     * Timeout, no wait mode by default
-     */
-    private Long receiveTimeout = JmsTemplate.RECEIVE_TIMEOUT_NO_WAIT;
-
-    /**
      * Cached factory (wrapper for jms factory from JNDI). Expects a bean
      * 'jmsConnectionFactory' defined in current context.
      * 
@@ -72,25 +67,6 @@ public class JmsConfig extends JmsJEEConfig {
     @DependsOn("connectionFactory")
     public JmsTemplate template(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
 
-        JmsTemplate template = super.template(connectionFactory);
-
-        if (receiveTimeout != null) {
-            template.setReceiveTimeout(receiveTimeout);
-        }
-
-        return template;
-    }
-
-    // /////////////////////////////////////////////////////////////////////////
-    // /// getters/setters
-    // /////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param receiveTimeout
-     *            the receiveTimeout
-     */
-    public void setReceiveTimeout(Long receiveTimeout) {
-
-        this.receiveTimeout = receiveTimeout;
+        return super.template(connectionFactory);
     }
 }
