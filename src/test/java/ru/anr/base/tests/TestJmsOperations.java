@@ -15,13 +15,18 @@
  */
 package ru.anr.base.tests;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Queue;
+import javax.jms.QueueBrowser;
 
 import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.MessageCreator;
@@ -30,6 +35,7 @@ import org.springframework.jms.core.ProducerCallback;
 import org.springframework.jms.core.SessionCallback;
 import org.springframework.util.Assert;
 
+import ru.anr.base.ApplicationException;
 import ru.anr.base.BaseParent;
 
 /**
@@ -47,7 +53,7 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     /**
      * Embedded queue
      */
-    private final Map<String, java.util.Queue<Object>> queueMap;
+    private final Map<String, java.util.Queue<org.springframework.messaging.Message<String>>> queueMap;
 
     /**
      * Stored default queue
@@ -69,12 +75,12 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
      *            Destination to use
      * @return Mock queue instance
      */
-    private java.util.Queue<Object> getQueue(Object destination) {
+    private java.util.Queue<org.springframework.messaging.Message<String>> getQueue(Object destination) {
 
         Assert.notNull(destination, "Destination is null");
 
         String key = destination.toString();
-        java.util.Queue<Object> q = queueMap.get(key);
+        java.util.Queue<org.springframework.messaging.Message<String>> q = queueMap.get(key);
 
         if (q == null) {
             q = new ConcurrentLinkedQueue<>();
@@ -171,11 +177,12 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void convertAndSend(String destinationName, Object message) {
 
-        java.util.Queue<Object> q = getQueue(destinationName);
-        q.add(message);
+        java.util.Queue<org.springframework.messaging.Message<String>> q = getQueue(destinationName);
+        q.add((org.springframework.messaging.Message<String>) message);
     }
 
     /**
@@ -286,7 +293,7 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     @Override
     public Object receiveAndConvert(String destinationName) {
 
-        java.util.Queue<Object> q = getQueue(destinationName);
+        java.util.Queue<org.springframework.messaging.Message<String>> q = getQueue(destinationName);
         return q.poll();
     }
 
@@ -389,7 +396,41 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     @Override
     public <T> T browseSelected(Queue queue, String messageSelector, BrowserCallback<T> action) {
 
-        throw new UnsupportedOperationException();
+        java.util.Queue<org.springframework.messaging.Message<String>> q = getQueue(queue);
+        Vector<?> v = new Vector<>(q.stream().map(o -> new MockTextMessageImpl(o)).collect(Collectors.toList()));
+
+        try {
+
+            return action.doInJms(null, new QueueBrowser() {
+
+                @Override
+                public Queue getQueue() throws JMSException {
+
+                    return queue;
+                }
+
+                @Override
+                public String getMessageSelector() throws JMSException {
+
+                    return messageSelector;
+                }
+
+                @Override
+                public Enumeration<?> getEnumeration() throws JMSException {
+
+                    return v.elements();
+                }
+
+                @Override
+                public void close() throws JMSException {
+
+                    // Nothing
+                }
+            });
+        } catch (JMSException ex) {
+            throw new ApplicationException(ex);
+        }
+
     }
 
     /**

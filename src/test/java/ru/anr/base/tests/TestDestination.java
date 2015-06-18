@@ -16,6 +16,8 @@
 package ru.anr.base.tests;
 
 import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Queue;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -31,7 +33,7 @@ import ru.anr.base.BaseParent;
  *
  */
 
-public class TestDestination extends BaseParent implements Destination {
+public class TestDestination extends BaseParent implements Destination, Queue {
 
     /**
      * Destination name
@@ -75,5 +77,14 @@ public class TestDestination extends BaseParent implements Destination {
     public String toString() {
 
         return "[" + name + "]";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getQueueName() throws JMSException {
+
+        return name;
     }
 }
