@@ -28,11 +28,14 @@ public class NotFoundException extends ApplicationException {
     /**
      * Default constructor
      * 
+     * @param errorId
+     *            Unique identifier of the error
      * @param msg
      *            The error message
      */
-    public NotFoundException(String msg) {
+    public NotFoundException(String errorId, String msg) {
 
         super(msg);
+        setErrorId(errorId);
     }
 }

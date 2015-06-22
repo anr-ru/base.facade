@@ -53,7 +53,7 @@ public abstract class AbstractEJBApiCommandFactory extends AbstractEJBServiceImp
      * {@inheritDoc}
      */
     @Override
-    public APICommand error(APICommand cmd, Exception ex) {
+    public APICommand error(APICommand cmd, Throwable ex) {
 
         return factory.error(cmd, ex);
     }
@@ -62,7 +62,7 @@ public abstract class AbstractEJBApiCommandFactory extends AbstractEJBServiceImp
      * {@inheritDoc}
      */
     @Override
-    public APICommand error(Exception ex) {
+    public APICommand error(Throwable ex) {
 
         return factory.error(ex);
     }

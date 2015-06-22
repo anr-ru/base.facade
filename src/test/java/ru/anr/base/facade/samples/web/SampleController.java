@@ -141,6 +141,6 @@ public class SampleController {
     produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<String> notFound(@PathVariable String what) {
 
-        throw new NotFoundException(what);
+        throw new NotFoundException("what", what);
     }
 }

@@ -21,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.services.api.APICommandFactory;
 
 /**
- * Base class for API Controllers. It incapsulates an API Factory, basic
+ * Base class for API Controllers. It encapsulates an API Factory, basic
  * settings for support both JSON/XML formats and also contains short-cut method
  * for fast building of API Command Object.
  *
@@ -112,18 +113,18 @@ public class AbstractAPIController {
 
         APICommand r = null;
         try {
-
             r = apis.process(api);
 
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
 
-            r = apis.error(api, ex);
-
-            RuntimeException e = CommandUtils.enhanceException(r, ex);
-            if (e != null) {
-                throw e;
+            Throwable e = new ApplicationException(ex).getMostSpecificCause();
+            if (e != null && (e instanceof RuntimeException)) {
+                throw (RuntimeException) e;
+            } else {
+                throw new ApplicationException(e); // Real shit happened
             }
         }
         return r;
+
     }
 }

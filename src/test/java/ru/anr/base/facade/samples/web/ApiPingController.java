@@ -73,4 +73,67 @@ public class ApiPingController extends AbstractAPIController {
         APICommand cmd = buildAPI("ping", "v1");
         return process(cmd).getRawModel();
     }
+
+    // ///////////////// Special tests for error
+
+    /**
+     * 403
+     * 
+     * @return Some result value
+     */
+    @RequestMapping(value = "/denied", method = RequestMethod.POST)
+    public String do403() {
+
+        APICommand cmd = buildAPI("ping.errors", "v1");
+        return process(cmd).getRawModel();
+    }
+
+    /**
+     * 401
+     * 
+     * @return Some result value
+     */
+    @RequestMapping(value = "/unauth", method = RequestMethod.GET)
+    public String do401() {
+
+        APICommand cmd = buildAPI("ping.errors", "v1");
+        return process(cmd).getRawModel();
+    }
+
+    /**
+     * 400 APIException
+     * 
+     * @return Some result value
+     */
+    @RequestMapping(value = "/api", method = RequestMethod.DELETE)
+    public String do400() {
+
+        APICommand cmd = buildAPI("ping.errors", "v1");
+        return process(cmd).getRawModel();
+    }
+
+    /**
+     * 400 Validation
+     * 
+     * @return Some result value
+     */
+    @RequestMapping(value = "/validate", method = RequestMethod.PUT)
+    public String do400Validate() {
+
+        APICommand cmd = buildAPI("ping.errors", "v1");
+        return process(cmd).getRawModel();
+    }
+
+    /**
+     * 500 System error
+     * 
+     * @return Some result value
+     */
+    @RequestMapping(value = "/system", method = RequestMethod.PUT)
+    public String do500() {
+
+        APICommand cmd = buildAPI("ping", "v1");
+        return process(cmd).getRawModel();
+    }
+
 }

@@ -102,7 +102,7 @@ public final class CommandUtils {
         RuntimeException rs = null;
 
         ApplicationException exception = new ApplicationException(ex);
-        RuntimeException root = (RuntimeException) exception.getRootCause();
+        Throwable root = exception.getRootCause();
 
         if ((root instanceof AccessDeniedException) || (root instanceof AuthenticationException)) {
             rs = new WebAPIException(root.getMessage(), root);

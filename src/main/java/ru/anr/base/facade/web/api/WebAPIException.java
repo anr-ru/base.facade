@@ -28,9 +28,8 @@ public class WebAPIException extends ApplicationException {
      * @param cause
      *            The cause
      */
-    public WebAPIException(String msg, RuntimeException cause) {
+    public WebAPIException(String msg, Throwable cause) {
 
         super(msg, cause);
     }
-
 }

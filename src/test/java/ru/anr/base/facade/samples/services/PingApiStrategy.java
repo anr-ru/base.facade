@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.APIException;
 import ru.anr.base.domain.api.models.ResponseModel;
@@ -69,6 +70,15 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
     public ResponseModel delete(APICommand cmd) {
 
         throw new APIException("Shit happend", 100);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object put(APICommand cmd) {
+
+        throw new ApplicationException("Just runtime exception");
     }
 
 }

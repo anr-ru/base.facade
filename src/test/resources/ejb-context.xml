@@ -25,6 +25,8 @@
     <!-- A test APIs -->
     <bean id = "apiConfig" class = "ru.anr.base.services.api.ApiConfig" />
     <bean id = "messageConfig" class="ru.anr.base.services.MessagePropertiesConfig" />
+    <!-- Validations -->
+    <bean id = "validationConfig" class = "ru.anr.base.services.ValidationConfig" />
 
     <!-- Security -->
     <bean id="securityConfig" class="ru.anr.base.services.security.SecurityConfig" 
