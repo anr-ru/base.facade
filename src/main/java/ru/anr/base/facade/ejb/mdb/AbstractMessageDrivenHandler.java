@@ -61,7 +61,7 @@ public abstract class AbstractMessageDrivenHandler extends AbstractEJBServiceImp
             org.springframework.messaging.Message<String> msg =
                     (org.springframework.messaging.Message<String>) converter.fromMessage(message);
 
-            logger.debug("Received a JMS message: {}", msg);
+            logMessage(msg);
             onMessage(msg);
 
         } catch (JMSException ex) {
