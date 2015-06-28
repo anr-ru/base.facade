@@ -77,7 +77,7 @@ public interface MessageStrategy extends Strategy<Message<String>> {
      * Implementation for the case when a strategy is defined by a value of some
      * header
      * 
-     * @param o
+     * @param m
      *            A message which header is analyzed
      * @param header
      *            The name of the header
@@ -85,10 +85,10 @@ public interface MessageStrategy extends Strategy<Message<String>> {
      *            A control value to compare with
      * @return {@link StrategyConfig}
      */
-    default StrategyConfig headerCheck(Message<String> o, String header, String controlValue) {
+    default StrategyConfig headerCheck(Message<String> m, String header, String controlValue) {
 
-        String value = (String) o.getHeaders().get(header);
-        return new StrategyConfig(BaseParent.safeEquals(controlValue, value), o, StrategyModes.TerminateAfter);
+        String value = header(m, header, String.class);
+        return new StrategyConfig(BaseParent.safeEquals(controlValue, value), m, StrategyModes.TerminateAfter);
     }
 
     /**
@@ -101,5 +101,25 @@ public interface MessageStrategy extends Strategy<Message<String>> {
     default Map<String, Object> toHeaders(BaseEntity o) {
 
         return BaseParent.toMap(OBJECT_ID, o.getId(), OBJECT_CLASS, BaseRepositoryImpl.entityClass(o).getName());
+    }
+
+    /**
+     * Returns a value of message header which is specified as the parameter
+     * 'name'.
+     * 
+     * @param m
+     *            The message
+     * @param name
+     *            The name of the header
+     * @param clazz
+     *            The value of the header
+     * @return The found header value
+     * 
+     * @param <S>
+     *            Type of the header value
+     */
+    default <S> S header(Message<String> m, String name, Class<S> clazz) {
+
+        return m.getHeaders().get(name, clazz);
     }
 }
