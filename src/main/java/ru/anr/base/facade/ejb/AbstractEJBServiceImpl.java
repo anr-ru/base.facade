@@ -15,9 +15,14 @@
  */
 package ru.anr.base.facade.ejb;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.interceptor.Interceptors;
+import javax.transaction.Transactional;
+
+import org.springframework.security.acls.model.NotFoundException;
 
 /**
  * An abstract parent for all EJBs used here. Specified CONTAINER
@@ -33,6 +38,8 @@ import javax.interceptor.Interceptors;
  *
  */
 @TransactionManagement(TransactionManagementType.CONTAINER)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@Transactional(dontRollbackOn = { NotFoundException.class })
 @Interceptors({ SpringEJBInterceptor.class, ExceptionHandlerInterceptor.class })
 public abstract class AbstractEJBServiceImpl extends EJBContextHolder {
 
