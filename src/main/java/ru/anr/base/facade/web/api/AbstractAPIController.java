@@ -17,6 +17,8 @@ package ru.anr.base.facade.web.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -35,6 +37,9 @@ import ru.anr.base.services.api.APICommandFactory;
  * method specific arguments, for example:
  * 
  * <PRE>
+ * 
+ * 
+ * 
  * 
  * 
  * 
@@ -61,6 +66,9 @@ import ru.anr.base.services.api.APICommandFactory;
  * 
  * 
  * 
+ * 
+ * 
+ * 
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.POST)
  * public String doPost(@PathVariable String id, @RequestBody String body) {
  * 
@@ -77,6 +85,7 @@ import ru.anr.base.services.api.APICommandFactory;
 @RequestMapping(//
 consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, //
 produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+@Transactional(propagation = Propagation.NEVER)
 public class AbstractAPIController {
 
     /**
