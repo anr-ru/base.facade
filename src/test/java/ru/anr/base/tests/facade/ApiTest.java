@@ -12,6 +12,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 import ru.anr.base.facade.web.api.RestClient;
+import ru.anr.base.tests.HttpJob;
+import ru.anr.base.tests.multithreading.ThreadExecutor;
 
 /**
  * Testing API via RESTClient
@@ -207,4 +209,41 @@ public class ApiTest extends BaseWebTestCase {
         }
     }
 
+    /**
+     * API Command 'ping' testing : GET
+     */
+    @Test
+    public void multithreaded() {
+
+        ThreadExecutor exec = new ThreadExecutor();
+
+        exec.add(new HttpJob(new RestClient(), x -> {
+
+            ThreadExecutor.sleep(100, 100);
+
+            for (int i = 0; i < 100; i++) {
+                RestClient c = (RestClient) x[0];
+
+                ResponseEntity<String> r = c.get("/api/v1/ping/2");
+                Assert.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
+                ThreadExecutor.sleep(10, 50);
+            }
+        }));
+
+        exec.add(new HttpJob(new RestClient(), x -> {
+
+            ThreadExecutor.sleep(100, 100);
+
+            for (int i = 0; i < 100; i++) {
+                RestClient c = (RestClient) x[0];
+
+                ResponseEntity<String> r = c.get("/api/v1/ping/5");
+                Assert.assertEquals("{\"code\":0,\"message\":\"response,5\"}", r.getBody());
+                ThreadExecutor.sleep(10, 50);
+            }
+        }));
+
+        exec.start();
+        Assert.assertTrue(exec.waitNotError());
+    }
 }
