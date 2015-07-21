@@ -41,6 +41,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -49,6 +50,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestOperations;
@@ -311,7 +313,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> post(String path, String body) {
 
-        return exchange(path, HttpMethod.POST, body, String.class);
+        return doExchange(path, HttpMethod.POST, body, String.class);
     }
 
     /**
@@ -326,7 +328,7 @@ public class RestClient extends BaseParent {
     public ResponseEntity<Void> post(String path, MultiValueMap<String, String> formData) {
 
         setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        return exchange(getUri(path), HttpMethod.POST, formData, (Class<Void>) null);
+        return doExchange(getUri(path), HttpMethod.POST, formData, (Class<Void>) null);
     }
 
     /**
@@ -338,7 +340,7 @@ public class RestClient extends BaseParent {
      */
     public String getRedirect(String path) {
 
-        ResponseEntity<Void> response = exchange(getUri(path), HttpMethod.GET, null, Void.class);
+        ResponseEntity<Void> response = doExchange(getUri(path), HttpMethod.GET, (String) null, Void.class);
         URI location = response.getHeaders().getLocation();
 
         try {
@@ -360,7 +362,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> put(String path, String body) {
 
-        return exchange(path, HttpMethod.PUT, body, String.class);
+        return doExchange(path, HttpMethod.PUT, body, String.class);
     }
 
     /**
@@ -372,7 +374,7 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> delete(String path) {
 
-        return exchange(path, HttpMethod.DELETE, null, String.class);
+        return doExchange(path, HttpMethod.DELETE, (String) null, String.class);
     }
 
     /**
@@ -388,7 +390,45 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<String> get(String path, Object... uriVariables) {
 
-        return exchange(path, HttpMethod.GET, null, String.class, uriVariables);
+        return doExchange(path, HttpMethod.GET, (String) null, String.class, uriVariables);
+    }
+
+    /**
+     * Performs uploading a resource
+     * 
+     * @param path
+     *            The REST path
+     * @param resource
+     *            Some resource
+     * @return A resulted string
+     */
+    public ResponseEntity<String> upload(String path, Resource resource) {
+
+        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        map.add("file", resource);
+
+        HttpHeaders hh = applyHeaders();
+        hh.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<LinkedMultiValueMap<String, Object>> e =
+                new HttpEntity<LinkedMultiValueMap<String, Object>>(map, hh);
+
+        return exchange(path, HttpMethod.POST, e, String.class);
+    }
+
+    /**
+     * Performs downloading a file
+     * 
+     * @param path
+     *            A REST path
+     * @return An array of bytes
+     */
+    public ResponseEntity<byte[]> download(String path) {
+
+        HttpHeaders headers = applyHeaders();
+        headers.setAccept(list(MediaType.APPLICATION_OCTET_STREAM));
+
+        return exchange(path, HttpMethod.GET, new HttpEntity<>(headers), byte[].class);
     }
 
     /**
@@ -407,15 +447,41 @@ public class RestClient extends BaseParent {
      * @param clazz
      *            Response entity class
      * @param <T>
-     *            Reponse entity type
+     *            Response entity type
      * @param <S>
      *            Request entity type
      */
-    private <S, T> ResponseEntity<T> exchange(String path, HttpMethod method, S body, Class<T> clazz,
+    public <S, T> ResponseEntity<T> doExchange(String path, HttpMethod method, S body, Class<T> clazz,
             Object... uriVariables) {
 
         HttpHeaders hh = applyHeaders();
-        ResponseEntity<T> rs = rest.exchange(getUri(path), method, new HttpEntity<S>(body, hh), clazz, uriVariables);
+        return exchange(path, method, new HttpEntity<S>(body, hh), clazz, uriVariables);
+    }
+
+    /**
+     * A low-level http-exchange operation
+     * 
+     * @param path
+     *            A rest path
+     * @param method
+     *            An http method
+     * @param entity
+     *            An entity
+     * @param clazz
+     *            A response class
+     * @param uriVariables
+     *            A set of url parameters
+     * @return A response entity
+     * 
+     * @param <S>
+     *            A type of the response
+     * @param <T>
+     *            A type of the request entity
+     */
+    public <S, T> ResponseEntity<T> exchange(String path, HttpMethod method, HttpEntity<S> entity, Class<T> clazz,
+            Object... uriVariables) {
+
+        ResponseEntity<T> rs = rest.exchange(getUri(path), method, entity, clazz, uriVariables);
 
         logger.trace("Cookie: {}", store.getCookies());
         logger.debug("Http response: {}", rs);

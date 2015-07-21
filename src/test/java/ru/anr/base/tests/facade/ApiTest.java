@@ -93,7 +93,8 @@ public class ApiTest extends BaseWebTestCase {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
             Assert.assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":1,\"message\":\"reason\"}", ex.getResponseBodyAsString());
+            Assert.assertEquals("{\"code\":1,\"error_id\":\"what\",\"message\":\"reason\"}",
+                    ex.getResponseBodyAsString());
         }
     }
 
