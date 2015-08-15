@@ -26,6 +26,11 @@ public class BaseEventKeyStrategy extends BaseServiceImpl implements MessageStra
     public static final String TYPE_KEY = "TYPE_KEY";
 
     /**
+     * The key for routing messages
+     */
+    public static final String ROUTING_KEY = "ROUTING_KEY";
+
+    /**
      * A value for key used here
      */
     private String keyValue;
