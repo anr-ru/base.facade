@@ -22,12 +22,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import ru.anr.base.ApplicationException;
 import ru.anr.base.BaseParent;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.RawFormatTypes;
 import ru.anr.base.domain.api.models.ResponseModel;
+import ru.anr.base.services.api.APICommandFactory;
 
 /**
  * Utils for APICOmmand building in a web layer.
@@ -117,5 +120,49 @@ public final class CommandUtils {
             }
         }
         return rs;
+    }
+
+    /**
+     * Construction of API Command with request specific params (taken from a
+     * current request)
+     * 
+     * @param commandId
+     *            Identifier of command
+     * @param apiVersion
+     *            Version of API
+     * @return An instance of API command
+     */
+    public static APICommand buildAPI(String commandId, String apiVersion) {
+
+        ServletRequestAttributes r = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return CommandUtils.build(commandId, apiVersion, r.getRequest());
+    }
+
+    /**
+     * Processing an API command. If an exception occurs, starting predefined
+     * error processing.
+     * 
+     * @param factory
+     *            The {@link APICommandFactory}
+     * @param api
+     *            API Command to process
+     * @return Resulted command
+     */
+    public static APICommand process(APICommandFactory factory, APICommand api) {
+
+        APICommand r = null;
+        try {
+            r = factory.process(api);
+
+        } catch (Throwable ex) {
+
+            Throwable e = new ApplicationException(ex).getMostSpecificCause();
+            if (e != null && (e instanceof RuntimeException)) {
+                throw (RuntimeException) e;
+            } else {
+                throw new ApplicationException(e); // Real shit happened
+            }
+        }
+        return r;
     }
 }

@@ -20,10 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.services.api.APICommandFactory;
 
@@ -47,6 +44,9 @@ import ru.anr.base.services.api.APICommandFactory;
  * 
  * 
  * 
+ * 
+ * 
+ * 
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.GET)
  * public String doGet(@PathVariable String id, @RequestParam Map&lt;String, String&gt; params) {
  * 
@@ -58,6 +58,9 @@ import ru.anr.base.services.api.APICommandFactory;
  * or
  * 
  * <PRE>
+ * 
+ * 
+ * 
  * 
  * 
  * 
@@ -106,8 +109,7 @@ public class AbstractAPIController {
      */
     protected APICommand buildAPI(String commandId, String apiVersion) {
 
-        ServletRequestAttributes r = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        return CommandUtils.build(commandId, apiVersion, r.getRequest());
+        return CommandUtils.buildAPI(commandId, apiVersion);
     }
 
     /**
@@ -120,20 +122,6 @@ public class AbstractAPIController {
      */
     protected APICommand process(APICommand api) {
 
-        APICommand r = null;
-        try {
-            r = apis.process(api);
-
-        } catch (Throwable ex) {
-
-            Throwable e = new ApplicationException(ex).getMostSpecificCause();
-            if (e != null && (e instanceof RuntimeException)) {
-                throw (RuntimeException) e;
-            } else {
-                throw new ApplicationException(e); // Real shit happened
-            }
-        }
-        return r;
-
+        return CommandUtils.process(apis, api);
     }
 }
