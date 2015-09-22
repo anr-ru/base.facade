@@ -148,6 +148,18 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * Constructor with a predefined rest template
+     * 
+     * @param template
+     *            The template to use
+     */
+    public RestClient(RestTemplate template) {
+
+        super();
+        rest = template;
+    }
+
+    /**
      * Building a base url string (server location), excluding a printing of
      * standard http ports.
      * 
