@@ -3,10 +3,15 @@
  */
 package ru.anr.base.tests.facade;
 
+import javax.jms.Destination;
+
 import org.junit.Ignore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 
 import ru.anr.base.tests.AbstractGlassfishWebTestCase;
+import ru.anr.base.tests.JmsTests;
 
 /**
  * Base test config
@@ -20,4 +25,16 @@ import ru.anr.base.tests.AbstractGlassfishWebTestCase;
 @Ignore
 public class BaseWebTestCase extends AbstractGlassfishWebTestCase {
 
+    /**
+     * {@link JmsTests}
+     */
+    @Autowired
+    protected JmsTests jms;
+
+    /**
+     * the test queue
+     */
+    @Autowired
+    @Qualifier("queue")
+    protected Destination queue;
 }

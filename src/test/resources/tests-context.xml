@@ -25,4 +25,7 @@
 
     <bean id = "ejbLoader" class = "ru.anr.base.facade.samples.ejb.StartUpEJB" />
 
+    <bean id="messageConfig" 
+        class="ru.anr.base.services.MessagePropertiesConfig" />
+
 </beans>

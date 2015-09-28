@@ -31,6 +31,7 @@ import org.springframework.messaging.support.GenericMessage;
 
 import ru.anr.base.BaseSpringParent;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
+import ru.anr.base.facade.ejb.mdb.LoopBaseEventKeyStrategy;
 
 /**
  * Singleton EJB, which loads spring context via {@link SpringEJBInterceptor}
@@ -80,6 +81,11 @@ public class EJBSpringLoader extends BaseSpringParent {
 
         Map<String, Object> hh = toMap(headerPairs);
         hh.put(BaseEventKeyStrategy.TYPE_KEY, messageKey);
+        /*
+         * Storing the instance ID to process the message linked with the
+         * current instance only
+         */
+        hh.put(LoopBaseEventKeyStrategy.INSTANCE_HEADER, LoopBaseEventKeyStrategy.getInstanceID());
 
         Message<String> msg = new GenericMessage<String>(text, hh);
 

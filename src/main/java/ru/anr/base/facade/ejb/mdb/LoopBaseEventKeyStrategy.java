@@ -29,6 +29,27 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
     private static final Logger logger = LoggerFactory.getLogger(LoopBaseEventKeyStrategy.class);
 
     /**
+     * The identifier of the current instance
+     */
+    private static String instanceId = guid();
+
+    /**
+     * The name of the header
+     */
+    public static final String INSTANCE_HEADER = "INSTANCE_HEADER";
+
+    /**
+     * Returns the current instance identifier which has been set during the JVM
+     * start-up.
+     * 
+     * @return The identifier value
+     */
+    public static String getInstanceID() {
+
+        return instanceId;
+    }
+
+    /**
      * JMS template
      */
     @Autowired
@@ -53,12 +74,12 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
     protected Message<String> loop(Message<String> msg, Destination queue, long pauseMSec) {
 
         if (isProdMode()) {
-
-            if (pauseMSec > 0) {
-                sleep(pauseMSec);
+            if (matchedIDs(msg)) { // Using the current only
+                if (pauseMSec > 0) {
+                    sleep(pauseMSec);
+                }
+                jms.convertAndSend(queue, msg); // re-sending
             }
-            jms.convertAndSend(queue, msg); // re-sending
-
         } else {
             Destination bean = bean(dropQueueBean, Destination.class);
             jms.convertAndSend(bean, msg);
@@ -66,6 +87,21 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
             logger.info("Non-production mode, the message {} sent to {}", msg, dropQueueBean);
         }
         return msg;
+    }
+
+    /**
+     * Performs checking whether the header ID matches the instance on or not
+     * 
+     * @param msg
+     *            The current message to process
+     * @return true, if the header value is the same of the instance ID
+     */
+    protected boolean matchedIDs(Message<String> msg) {
+
+        String value = (String) msg.getHeaders().get(LoopBaseEventKeyStrategy.INSTANCE_HEADER);
+
+        logger.trace("Comparing the identifiers: {} vs {}", getInstanceID(), value);
+        return safeEquals(getInstanceID(), value);
     }
 
     /**

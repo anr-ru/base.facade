@@ -5,16 +5,13 @@ package ru.anr.base.tests.facade;
 
 import java.util.Queue;
 
-import javax.jms.Destination;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.test.context.ActiveProfiles;
 
 import ru.anr.base.facade.ejb.EJBSpringLoader;
-import ru.anr.base.tests.JmsTests;
+import ru.anr.base.facade.samples.ejb.StartUpEJB;
 
 /**
  * Description ...
@@ -28,25 +25,16 @@ import ru.anr.base.tests.JmsTests;
 public class EJBSpringLoaderTest extends BaseWebTestCase {
 
     /**
-     * Reference to {@link EJBSpringLoader}
-     */
-    @Autowired
-    private EJBSpringLoader loader;
-
-    /**
-     * Reference to {@link JmsTests}
-     */
-    @Autowired
-    private JmsTests jms;
-
-    /**
      * Test method for {@link ru.anr.base.facade.ejb.EJBSpringLoader#init()}.
      */
     @Test
     public void testInit() {
 
+        jms.clean(queue);
+        EJBSpringLoader loader = bean(StartUpEJB.class);
+
         Assert.assertNotNull(loader);
-        Queue<Message<String>> q = jms.queue(bean("queue", Destination.class));
+        Queue<Message<String>> q = jms.queue(queue);
         Assert.assertEquals(2, q.size());
         Message<String> m1 = q.poll();
         Message<String> m2 = q.poll();
