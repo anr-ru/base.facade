@@ -339,8 +339,28 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<Void> post(String path, MultiValueMap<String, String> formData) {
 
+        return post(path, formData, Void.class);
+    }
+
+    /**
+     * POST for a form with expectation of some result
+     * 
+     * @param path
+     *            Path to resource
+     * @param formData
+     *            Form parameters
+     * @param clazz
+     *            The class of the result
+     * 
+     * @return Http status for response
+     * 
+     * @param <S>
+     *            The type of the result
+     */
+    public <S> ResponseEntity<S> post(String path, MultiValueMap<String, String> formData, Class<S> clazz) {
+
         setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        return doExchange(getUri(path), HttpMethod.POST, formData, (Class<Void>) null);
+        return doExchange(getUri(path), HttpMethod.POST, formData, clazz);
     }
 
     /**
