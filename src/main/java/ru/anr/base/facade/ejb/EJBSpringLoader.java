@@ -119,6 +119,17 @@ public class EJBSpringLoader extends BaseSpringParent {
     }
 
     /**
+     * Performs sending to all preliminary registered queues
+     */
+    protected void sendAll() {
+
+        queues.forEach(a -> {
+            initQueue(a[0].toString(), a[1].toString(), a[2].toString(), (Object[]) a[3]);
+        });
+        queues.clear();
+    }
+
+    /**
      * Initialization
      */
     @PostConstruct
@@ -127,9 +138,7 @@ public class EJBSpringLoader extends BaseSpringParent {
         logger.info("Holder: {}, profiles: {}", holder, getProfiles());
 
         if (isProdMode()) {
-            queues.forEach(a -> {
-                initQueue(a[0].toString(), a[1].toString(), a[2].toString(), (Object[]) a[3]);
-            });
+            sendAll();
         } else {
             logger.info("Don't initialize the cycled queues when not in production mode");
         }
