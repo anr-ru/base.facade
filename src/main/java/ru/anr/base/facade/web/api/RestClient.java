@@ -17,6 +17,7 @@ package ru.anr.base.facade.web.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
@@ -406,6 +407,18 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * GET method.
+     * 
+     * @param path
+     *            Relative or absolute path
+     * @return Response with a body and state
+     */
+    public ResponseEntity<String> getURI(String path) {
+
+        return doExchangeURI(path, HttpMethod.GET, (String) null, String.class);
+    }
+
+    /**
      * Performs uploading a resource
      * 
      * @param path
@@ -471,6 +484,30 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * General representation for all rest operations
+     * 
+     * @param path
+     *            Relative or absolute path to resource
+     * @param method
+     *            http method to use
+     * @param body
+     *            Request body (for PUT/POST)
+     * @return Response
+     * 
+     * @param clazz
+     *            Response entity class
+     * @param <T>
+     *            Response entity type
+     * @param <S>
+     *            Request entity type
+     */
+    public <S, T> ResponseEntity<T> doExchangeURI(String path, HttpMethod method, S body, Class<T> clazz) {
+
+        HttpHeaders hh = applyHeaders();
+        return exchangeURI(path, method, new HttpEntity<S>(body, hh), clazz);
+    }
+
+    /**
      * A low-level http-exchange operation
      * 
      * @param path
@@ -498,6 +535,41 @@ public class RestClient extends BaseParent {
         logger.trace("Cookie: {}", store.getCookies());
         logger.debug("Http response: {}", rs);
 
+        return rs;
+    }
+
+    /**
+     * A low-level http-exchange operation
+     * 
+     * @param path
+     *            A rest path
+     * @param method
+     *            An http method
+     * @param entity
+     *            An entity
+     * @param clazz
+     *            A response class
+     * @return A response entity
+     * 
+     * @param <S>
+     *            A type of the response
+     * @param <T>
+     *            A type of the request entity
+     */
+    public <S, T> ResponseEntity<T> exchangeURI(String path, HttpMethod method, HttpEntity<S> entity, Class<T> clazz) {
+
+        ResponseEntity<T> rs = null;
+        try {
+            URI uri = new URI(getUri(path));
+
+            rs = rest.exchange(uri, method, entity, clazz);
+
+            logger.trace("Cookie: {}", store.getCookies());
+            logger.debug("Http response: {}", rs);
+        } catch (URISyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return rs;
     }
 
