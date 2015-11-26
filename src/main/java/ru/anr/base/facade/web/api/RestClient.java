@@ -270,6 +270,11 @@ public class RestClient extends BaseParent {
     private String basicCredentials;
 
     /**
+     * OAUTH2 Authorization header
+     */
+    private String oauth2Credentials;
+
+    /**
      * Setting Basic Authorization header to apply
      * 
      * @param user
@@ -292,6 +297,14 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * Cleaning up the OAuth2
+     */
+    public void cleanOAuth2() {
+
+        this.oauth2Credentials = null;
+    }
+
+    /**
      * Applying for default headers
      * 
      * @return {@link HttpHeaders} object
@@ -309,6 +322,10 @@ public class RestClient extends BaseParent {
 
         if (basicCredentials != null) {
             hh.add("Authorization", basicCredentials);
+        }
+
+        if (oauth2Credentials != null) {
+            hh.add("Authorization", "Bearer " + oauth2Credentials);
         }
 
         return hh;
@@ -709,6 +726,23 @@ public class RestClient extends BaseParent {
     public void setRest(RestTemplate rest) {
 
         this.rest = rest;
+    }
+
+    /**
+     * @param oauth2Credentials
+     *            the oauth2Credentials to set
+     */
+    public void setOauth2Credentials(String oauth2Credentials) {
+
+        this.oauth2Credentials = oauth2Credentials;
+    }
+
+    /**
+     * @return the oauth2Credentials
+     */
+    public String getOauth2Credentials() {
+
+        return oauth2Credentials;
     }
 
     /**
