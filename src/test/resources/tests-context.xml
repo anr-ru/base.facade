@@ -27,5 +27,8 @@
 
     <bean id="messageConfig" 
         class="ru.anr.base.services.MessagePropertiesConfig" />
+        
+    <bean id = "apis" class = "ru.anr.base.facade.ejb.api.requests.AsyncAPIRequestsConfig"
+        p:requestQueue="queue" p:responseQueue="queue" p:keyName="XXX" />
 
 </beans>
