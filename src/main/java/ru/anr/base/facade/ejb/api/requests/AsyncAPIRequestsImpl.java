@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import ru.anr.base.BaseSpringParent;
+import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
 import ru.anr.base.facade.ejb.api.AsyncAPIHeaders;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
@@ -95,14 +96,14 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      * {@inheritDoc}
      */
     @Override
-    public String query(String id, String version, String method, RequestModel model, Object... params) {
+    public String query(String id, String version, MethodTypes method, RequestModel model, Object... params) {
 
         Assert.notNull(requestQueue, "The request queue is not defined");
 
         Map<String, Object> hh = toMap(BaseEventKeyStrategy.TYPE_KEY, keyName);
         hh.put(AsyncAPIHeaders.API_STRATEGY_ID.name(), id);
         hh.put(AsyncAPIHeaders.API_VERSION.name(), version);
-        hh.put(AsyncAPIHeaders.API_METHOD.name(), method);
+        hh.put(AsyncAPIHeaders.API_METHOD.name(), method.name());
         hh.putAll(toMap(params));
 
         if (responseQueue != null) {

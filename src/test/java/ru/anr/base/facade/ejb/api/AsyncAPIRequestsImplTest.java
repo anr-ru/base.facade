@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 
+import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.facade.ejb.api.requests.AsyncAPIRequests;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
 import ru.anr.base.tests.JmsTests;
@@ -68,7 +69,7 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
 
         PingRequestModel m = new PingRequestModel();
 
-        String id = apis.query("async.ping", "v1", "GET", m, "XXX", 123, "YYY", "zzz");
+        String id = apis.query("async.ping", "v1", MethodTypes.Get, m, "XXX", 123, "YYY", "zzz");
 
         @SuppressWarnings("unchecked")
         Message<String> msg = (Message<String>) jms.receiveAndConvert(requests);
@@ -76,7 +77,7 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
 
         Assert.assertEquals("async.ping", msg.getHeaders().get("API_STRATEGY_ID"));
         Assert.assertEquals("v1", msg.getHeaders().get("API_VERSION"));
-        Assert.assertEquals("GET", msg.getHeaders().get("API_METHOD"));
+        Assert.assertEquals("Get", msg.getHeaders().get("API_METHOD"));
 
         Assert.assertEquals(id, msg.getHeaders().get("API_QUERY_ID"));
 

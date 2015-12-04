@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.messaging.Message;
 
+import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,7 +67,7 @@ public interface AsyncAPIRequests {
      * @return The identifier of the query (because the processing is pure
      *         asynchronous
      */
-    String query(String id, String version, String method, RequestModel model, Object... params);
+    String query(String id, String version, MethodTypes method, RequestModel model, Object... params);
 
     /**
      * Pulls the response from the requests queue by the specified identifier of

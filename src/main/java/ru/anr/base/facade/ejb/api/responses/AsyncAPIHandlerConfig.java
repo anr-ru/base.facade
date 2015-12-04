@@ -5,10 +5,12 @@ package ru.anr.base.facade.ejb.api.responses;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.util.Assert;
 
 import ru.anr.base.services.api.APICommandFactory;
+import ru.anr.base.services.api.ApiConfig;
 
 /**
  * The handler side configuration.
@@ -19,6 +21,7 @@ import ru.anr.base.services.api.APICommandFactory;
  *
  */
 @Configuration
+@Import(ApiConfig.class)
 public class AsyncAPIHandlerConfig {
 
     /**
