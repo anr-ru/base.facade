@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.jms.Destination;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
@@ -33,6 +35,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
  */
 @Validated
 public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRequests {
+
+    /**
+     * The logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(AsyncAPIRequestsImpl.class);
 
     /**
      * A reference to the serializer (xml, json)
@@ -118,6 +125,8 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
         Destination d = bean(requestQueue);
 
         jms.convertAndSend(d, msg);
+
+        logger.info("The Async JMS API query with ID = {} has been sent to {}", queryId, requestQueue);
         return queryId;
     }
 
