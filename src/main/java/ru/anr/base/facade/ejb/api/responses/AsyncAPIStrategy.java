@@ -3,6 +3,8 @@
  */
 package ru.anr.base.facade.ejb.api.responses;
 
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +90,7 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
         if (!isEmpty(m.getPayload())) {
             cmd.setRawModel(m.getPayload());
         }
-        cmd.method(header(m, METHOD, String.class));
+        cmd.method(header(m, METHOD, String.class).toUpperCase(Locale.getDefault()));
 
         try {
 

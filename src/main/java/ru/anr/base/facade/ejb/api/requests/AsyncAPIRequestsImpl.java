@@ -79,6 +79,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
         super();
         this.serializer = serializer;
+        this.keyName = keyName;
     }
 
     /**
@@ -118,7 +119,12 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
         }
 
         String queryId = guid();
-        hh.put(AsyncAPIHeaders.API_QUERY_ID.name(), queryId);
+
+        if (!hh.containsKey(AsyncAPIHeaders.API_QUERY_ID.name())) {
+            hh.put(AsyncAPIHeaders.API_QUERY_ID.name(), queryId);
+        } else {
+            queryId = (String) hh.get(AsyncAPIHeaders.API_QUERY_ID.name());
+        }
 
         Message<String> msg = toMessage(model, hh);
 
@@ -159,6 +165,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     public <S> S getResponse(String queryId, Class<S> responseClass) {
 
         String s = getResponse(queryId);
+        logger.debug("Raw response: {}", s);
         return (s == null) ? null : serializer.fromStr(s, responseClass);
     }
 
@@ -169,6 +176,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     public <S> S getResponse(String queryId, TypeReference<S> ref) {
 
         String s = getResponse(queryId);
+        logger.debug("Raw response: {}", s);
         return (s == null) ? null : serializer.fromStr(s, ref);
     }
 
