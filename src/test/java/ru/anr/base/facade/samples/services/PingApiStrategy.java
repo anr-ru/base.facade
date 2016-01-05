@@ -69,7 +69,7 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
     @Override
     public ResponseModel delete(APICommand cmd) {
 
-        throw new APIException("Shit happend", 100);
+        throw APIException.withCode("Shit happend", 100);
     }
 
     /**
