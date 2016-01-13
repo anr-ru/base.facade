@@ -488,8 +488,6 @@ public class RestClient extends BaseParent {
     public ResponseEntity<byte[]> download(String path) {
 
         HttpHeaders headers = applyHeaders();
-        headers.setAccept(list(MediaType.APPLICATION_OCTET_STREAM));
-
         return exchange(path, HttpMethod.GET, new HttpEntity<>(headers), byte[].class);
     }
 
