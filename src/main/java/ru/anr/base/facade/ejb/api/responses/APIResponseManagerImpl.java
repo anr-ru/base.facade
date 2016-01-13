@@ -3,6 +3,9 @@
  */
 package ru.anr.base.facade.ejb.api.responses;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.jms.Destination;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +93,10 @@ public class APIResponseManagerImpl extends BaseServiceImpl implements APIRespon
     private void sendResponse(String queue, String body, APICommand request) {
 
         Destination d = bean(queue);
-        jms.convertAndSend(d, new GenericMessage<String>(body, request.getContexts()));
+
+        Map<String, Object> hh = new HashMap<String, Object>(request.getContexts());
+        hh.remove(AsyncAPIHeaders.API_RESPONSE_TO.name());
+
+        jms.convertAndSend(d, new GenericMessage<String>(body, hh));
     }
 }
