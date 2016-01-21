@@ -17,7 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 
 import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APIException;
-import ru.anr.base.services.ValidationUtils;
+import ru.anr.base.services.validation.ValidationUtils;
 
 /**
  * Global Exception Handler for any EJB invocations. Allows to write in
