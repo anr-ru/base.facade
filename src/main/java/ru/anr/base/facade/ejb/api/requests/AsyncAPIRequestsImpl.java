@@ -16,14 +16,14 @@ import org.springframework.messaging.support.GenericMessage;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ru.anr.base.BaseSpringParent;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
 import ru.anr.base.facade.ejb.api.AsyncAPIHeaders;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.services.serializer.Serializer;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * The implementation for {@link AsyncAPIRequests}.

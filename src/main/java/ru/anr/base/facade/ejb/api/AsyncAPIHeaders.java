@@ -19,14 +19,17 @@ public enum AsyncAPIHeaders {
      * What destination to use for the response
      */
     API_RESPONSE_TO,
+
     /**
      * The identifier of the API strategy
      */
     API_STRATEGY_ID,
+
     /**
      * The method of the API strategy (GET, POST, PUT, DELETE)
      */
     API_METHOD,
+
     /**
      * The version identifier of the strategy
      */
@@ -40,5 +43,10 @@ public enum AsyncAPIHeaders {
     /**
      * The identifier of a query
      */
-    API_QUERY_ID
+    API_QUERY_ID,
+
+    /**
+     * The header that is used to organize parallel processing
+     */
+    PARALLEL_HASH;
 }
