@@ -18,6 +18,7 @@ package ru.anr.base.facade.ejb.api;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.anr.base.domain.api.APICommand;
+import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
 import ru.anr.base.services.api.APICommandFactory;
 
@@ -56,6 +57,15 @@ public abstract class AbstractEJBApiCommandFactory extends AbstractEJBServiceImp
     public APICommand error(APICommand cmd, Throwable ex) {
 
         return factory.error(cmd, ex);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public APICommand error(APICommand cmd, Throwable ex, ResponseModel model) {
+
+        return factory.error(cmd, ex, model);
     }
 
     /**

@@ -63,7 +63,7 @@ public class APIResponseManagerImpl extends BaseServiceImpl implements APIRespon
         String queue = getQueue(request);
         if (queue != null) {
 
-            APICommand rs = apis.error(request, ex);
+            APICommand rs = apis.error(request, ex, request.getRequest());
             sendResponse(queue, rs.getRawModel(), request);
         }
     }

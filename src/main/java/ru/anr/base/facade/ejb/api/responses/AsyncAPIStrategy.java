@@ -8,7 +8,6 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
 
 import ru.anr.base.domain.api.APICommand;
@@ -48,12 +47,6 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
      */
     @Autowired
     private APICommandFactory apis;
-
-    /**
-     * JMS template
-     */
-    @Autowired
-    private JmsOperations jms;
 
     /**
      * The name of the strategy ID header
@@ -99,7 +92,7 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
 
         } catch (Exception ex) {
             responses.error(cmd, ex);
-            throw ex; // re-throw to complete the transaction rollback
+            throw ex; // re-throw to complete the transaction roll-back
         }
         return null;
     }
