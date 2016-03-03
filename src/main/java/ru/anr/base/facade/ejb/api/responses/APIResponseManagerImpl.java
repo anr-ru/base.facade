@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.anr.base.domain.api.APICommand;
+import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.ejb.api.AsyncAPIHeaders;
 import ru.anr.base.services.BaseServiceImpl;
 import ru.anr.base.services.api.APICommandFactory;
@@ -63,7 +64,9 @@ public class APIResponseManagerImpl extends BaseServiceImpl implements APIRespon
         String queue = getQueue(request);
         if (queue != null) {
 
-            APICommand rs = apis.error(request, ex, request.getRequest());
+            ResponseModel m = request.getRequest() == null ? new ResponseModel() : request.getRequest();
+
+            APICommand rs = apis.error(request, ex, m);
             sendResponse(queue, rs.getRawModel(), request);
         }
     }
