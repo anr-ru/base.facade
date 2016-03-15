@@ -75,7 +75,7 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
     @Override
     public Message<String> process(Message<String> m, StrategyConfig cfg) {
 
-        logger.info("Processing API command: {}", m);
+        logger.debug("Processing API command: {}", m);
 
         APICommand cmd = new APICommand(header(m, STRATEGY, String.class), header(m, VERSION, String.class));
 
