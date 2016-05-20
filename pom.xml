@@ -47,6 +47,7 @@
                                 <include>**/MockTextMessageImpl.class</include>
                                 <include>**/JmsTests.class</include>
                                 <include>**/HttpJob.class</include>
+                                <include>**/APITester.class</include>
                             </includes>
                         </configuration>
                     </execution>
