@@ -27,7 +27,7 @@ import ru.anr.base.services.serializer.Serializer;
  *
  */
 @Ignore
-public class APITester extends BaseTestCase {
+public class APITester {
 
     /**
      * The logger
@@ -38,6 +38,21 @@ public class APITester extends BaseTestCase {
      * {@link Serializer}
      */
     private Serializer json = new JSONSerializerImpl();
+
+    /**
+     * The parent test case
+     */
+    private BaseTestCase testcase;
+
+    /**
+     * Construction of an object
+     * 
+     * @param parent
+     *            A parent test case
+     */
+    public APITester(BaseTestCase parent) {
+        this.testcase = parent;
+    }
 
     /**
      * Performs a wrapped API call
@@ -290,7 +305,7 @@ public class APITester extends BaseTestCase {
      */
     public void assertAPIException(ApiCallback callback, String expectedMsg, Object... params) {
 
-        assertException(args -> {
+        testcase.assertException(args -> {
             api(callback, ResponseModel.class, params);
         }, expectedMsg, params);
     }
