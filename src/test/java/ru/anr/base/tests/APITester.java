@@ -161,6 +161,8 @@ public class APITester extends BaseTestCase {
     public <S> S apiPOST(RestClient client, String url, Object model, Class<S> returnModelClass) {
 
         Assert.assertNotNull("The model cannot be null", model);
+        Assert.assertNotNull("The class cannot be null", returnModelClass);
+
         return api(args -> {
             return client.post(url, json.toStr(model));
         }, returnModelClass);
@@ -184,6 +186,32 @@ public class APITester extends BaseTestCase {
     public <S> S apiPUT(RestClient client, String url, S model) {
 
         Assert.assertNotNull("The model class cannot be null", model);
+        return api(args -> {
+            return client.put(url, json.toStr(model));
+        }, (Class<S>) model.getClass());
+    }
+
+    /**
+     * A PUT command for API
+     * 
+     * @param client
+     *            The rest client
+     * @param url
+     *            The url
+     * @param model
+     *            The model to use
+     * @param returnModelClass
+     *            The class of the resulted model
+     * @return The resulted model object
+     * 
+     * @param <S>
+     *            The type definition for the model
+     */
+    @SuppressWarnings("unchecked")
+    public <S> S apiPUT(RestClient client, String url, Object model, Class<S> returnModelClass) {
+
+        Assert.assertNotNull("The model cannot be null", model);
+        Assert.assertNotNull("The class cannot be null", returnModelClass);
         return api(args -> {
             return client.put(url, json.toStr(model));
         }, (Class<S>) model.getClass());
