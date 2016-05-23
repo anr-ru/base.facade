@@ -40,22 +40,6 @@ public class APITester extends BaseTestCase {
     private Serializer json = new JSONSerializerImpl();
 
     /**
-     * The callback to wrap API calls.
-     */
-    @FunctionalInterface
-    public interface ApiCallback {
-
-        /**
-         * An API function call prototype
-         * 
-         * @param params
-         *            Parameters to use
-         * @return The response
-         */
-        ResponseEntity<String> doAPI(Object... params);
-    }
-
-    /**
      * Performs a wrapped API call
      * 
      * @param callback
