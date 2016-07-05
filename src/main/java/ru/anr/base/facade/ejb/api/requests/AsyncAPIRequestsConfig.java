@@ -46,7 +46,7 @@ public class AsyncAPIRequestsConfig {
      *            JSON Serializer which the bean depends on
      * @return An instance of the bean
      */
-    @Bean
+    @Bean(name = "asyncApiService")
     public AsyncAPIRequests asyncApiService(@Qualifier("jsonSerializer") Serializer json) {
 
         Assert.notNull(requestQueue, "The request qiueue is not specified");

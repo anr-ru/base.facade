@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.facade.ejb.api.requests.AsyncAPIRequests;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
 import ru.anr.base.tests.JmsTests;
 import ru.anr.base.tests.facade.BaseWebTestCase;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * Description ...
@@ -37,6 +37,7 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
      * {@link AsyncAPIRequests}
      */
     @Autowired
+    @Qualifier("asyncApiService")
     private AsyncAPIRequests apis;
 
     /**
