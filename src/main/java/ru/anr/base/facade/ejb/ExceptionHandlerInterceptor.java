@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
+import javax.transaction.RollbackException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -74,6 +75,8 @@ public class ExceptionHandlerInterceptor {
                 APIException api = (APIException) reason;
                 logger.info("API error: code={}, msg={}", api.getErrorCode(), api.getMessage());
 
+            } else if (reason instanceof RollbackException) {
+                logger.error("ERROR: Rollback exception, maybe due to timeout");
             } else {
                 logger.error("Thrown an EJB exception: {}", reason.getMessage(), ex);
             }
