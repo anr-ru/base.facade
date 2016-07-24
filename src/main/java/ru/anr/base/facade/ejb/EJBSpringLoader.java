@@ -135,7 +135,7 @@ public class EJBSpringLoader extends BaseSpringParent {
     @PostConstruct
     public void init() {
 
-        logger.info("Holder: {}, profiles: {}", holder, getProfiles());
+        logger.info("Holder: {}, context: {}, profiles: {}", holder, EJBContextHolder.getCtx(), getProfiles());
 
         if (isProdMode()) {
             sendAll();

@@ -79,6 +79,8 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
                     sleep(pauseMSec);
                 }
                 jms.convertAndSend(queue, msg); // re-sending
+            } else {
+                logger.info("Removing old message: {}", msg);
             }
         } else {
             Destination bean = bean(dropQueueBean, Destination.class);
