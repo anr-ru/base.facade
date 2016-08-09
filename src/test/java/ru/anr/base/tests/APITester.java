@@ -5,18 +5,11 @@ package ru.anr.base.tests;
 
 import org.junit.Assert;
 import org.junit.Ignore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.web.api.RestClient;
-import ru.anr.base.services.serializer.JSONSerializerImpl;
-import ru.anr.base.services.serializer.Serializer;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * A class to facilitate some testing procedures for a REST-based API.
@@ -27,17 +20,7 @@ import ru.anr.base.services.serializer.Serializer;
  *
  */
 @Ignore
-public class APITester {
-
-    /**
-     * The logger
-     */
-    private static final Logger logger = LoggerFactory.getLogger(APITester.class);
-
-    /**
-     * {@link Serializer}
-     */
-    private Serializer json = new JSONSerializerImpl();
+public class APITester extends APIClient {
 
     /**
      * The parent test case
@@ -51,88 +34,9 @@ public class APITester {
      *            A parent test case
      */
     public APITester(BaseTestCase parent) {
+
+        super(null);
         this.testcase = parent;
-    }
-
-    /**
-     * Performs a wrapped API call
-     * 
-     * @param callback
-     *            The callback with request details
-     * @param typeDef
-     *            An unspecified type (can be a class or a {@link TypeReference}
-     *            object)
-     * @param params
-     *            Additional parameters
-     * @return The response as an object of the required class
-     * @param <S>
-     *            Type of object to use
-     */
-    @SuppressWarnings("unchecked")
-    private <S> S api(ApiCallback callback, Object typeDef, Object... params) {
-
-        try {
-
-            ResponseEntity<String> rs = callback.doAPI(params);
-            logger.info("Query result: {}", rs.getBody());
-
-            Object type = (typeDef == null) ? ResponseModel.class : typeDef;
-            S value = null;
-
-            if (typeDef instanceof TypeReference<?>) {
-                value = json.fromStr(rs.getBody(), (TypeReference<S>) type);
-            } else if (String.class.equals(typeDef)) {
-                value = (S) rs.getBody();
-            } else {
-                value = json.fromStr(rs.getBody(), (Class<S>) type);
-            }
-            return value;
-
-        } catch (HttpClientErrorException e1) {
-            logger.error("Query client error: {}: {}", e1.getStatusCode(), e1.getResponseBodyAsString());
-            throw e1;
-        } catch (HttpServerErrorException e2) {
-            logger.error("Query server error: {}: {}", e2.getStatusCode(), e2.getResponseBodyAsString());
-            throw e2;
-        }
-    }
-
-    /**
-     * The variation of {@link #api(ApiCallback, Class, Object...)} for the case
-     * when we deal with TypeRerefence for more complex types.s
-     * 
-     * @param callback
-     *            The callback
-     * @param clazz
-     *            The typeref class
-     * @param params
-     *            Parameters
-     * @return The resulted value
-     * 
-     * @param <S>
-     *            The class
-     */
-    private <S> S api(ApiCallback callback, TypeReference<S> clazz, Object... params) {
-
-        return api(callback, (Object) clazz, params);
-    }
-
-    /**
-     * Performs a wrapped API call
-     * 
-     * @param callback
-     *            The callback with request details
-     * @param clazz
-     *            The class to use to get response
-     * @param params
-     *            Additional parameters
-     * @return The response as an object of the required class
-     * @param <S>
-     *            Type of object to use
-     */
-    private <S> S api(ApiCallback callback, Class<S> clazz, Object... params) {
-
-        return api(callback, (Object) clazz, params);
     }
 
     /**
