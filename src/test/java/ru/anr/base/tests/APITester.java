@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Ignore;
 
 import ru.anr.base.domain.api.models.ResponseModel;
+import ru.anr.base.facade.web.api.APIClient;
+import ru.anr.base.facade.web.api.ApiCallback;
 import ru.anr.base.facade.web.api.RestClient;
 
 import com.fasterxml.jackson.core.type.TypeReference;

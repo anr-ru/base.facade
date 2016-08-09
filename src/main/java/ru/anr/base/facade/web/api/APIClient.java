@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.anr.base.tests;
+package ru.anr.base.facade.web.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 import ru.anr.base.domain.api.models.ResponseModel;
-import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.services.serializer.JSONSerializerImpl;
 import ru.anr.base.services.serializer.Serializer;
 

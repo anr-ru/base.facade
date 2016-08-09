@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.anr.base.tests;
+package ru.anr.base.facade.web.api;
 
 import org.springframework.http.ResponseEntity;
 
