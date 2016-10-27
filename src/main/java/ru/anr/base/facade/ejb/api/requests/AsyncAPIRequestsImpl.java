@@ -106,6 +106,29 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     @Override
     public String query(String id, String version, MethodTypes method, RequestModel model, Object... params) {
 
+        return internalQuery(id, version, method, model, responseQueue, params);
+    }
+
+    /**
+     * The sending procedure.
+     * 
+     * @param id
+     *            The identifier of the strategy to use
+     * @param version
+     *            The version of the strategy
+     * @param method
+     *            The method of the strategy
+     * @param model
+     *            A model to use
+     * @param queue
+     *            A response queue if required
+     * @param params
+     *            Parameters of the query
+     * @return The ID of the query
+     */
+    private String internalQuery(String id, String version, MethodTypes method, RequestModel model, String queue,
+            Object... params) {
+
         Assert.notNull(requestQueue, "The request queue is not defined");
 
         Map<String, Object> hh = toMap(BaseEventKeyStrategy.TYPE_KEY, keyName);
@@ -114,8 +137,8 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
         hh.put(AsyncAPIHeaders.API_METHOD.name(), method.name());
         hh.putAll(toMap(params));
 
-        if (responseQueue != null) {
-            hh.put(AsyncAPIHeaders.API_RESPONSE_TO.name(), responseQueue);
+        if (queue != null) {
+            hh.put(AsyncAPIHeaders.API_RESPONSE_TO.name(), queue);
         }
 
         String queryId = guid();
@@ -135,6 +158,16 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
         logger.info("The Async JMS API query {}/{} with ID = {} has been sent to {}", id, version, queryId,
                 requestQueue);
         return queryId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String noResponseQuery(String id, String version, MethodTypes method, RequestModel model,
+            Object... params) {
+
+        return internalQuery(id, version, method, model, null, params);
     }
 
     /**
@@ -202,5 +235,4 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
         this.responseQueue = responseQueue;
     }
-
 }

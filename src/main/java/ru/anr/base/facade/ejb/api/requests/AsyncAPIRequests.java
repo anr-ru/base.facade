@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.messaging.Message;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * This service is a tiny wrapper to hide the serialization procedures and
@@ -68,6 +68,24 @@ public interface AsyncAPIRequests {
      *         asynchronous
      */
     String query(String id, String version, MethodTypes method, RequestModel model, Object... params);
+
+    /**
+     * Performs sending a new query but without a need to receive a response.
+     * 
+     * @param id
+     *            The identifier of API strategy
+     * @param version
+     *            The version of the strategy
+     * @param method
+     *            A method to use
+     * @param model
+     *            A request model
+     * @param params
+     *            A list of parameters
+     * @return The identifier of the query (because the processing is pure
+     *         asynchronous
+     */
+    String noResponseQuery(String id, String version, MethodTypes method, RequestModel model, Object... params);
 
     /**
      * Pulls the response from the requests queue by the specified identifier of
