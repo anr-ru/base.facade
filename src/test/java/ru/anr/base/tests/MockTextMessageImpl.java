@@ -354,7 +354,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
     @Override
     public String getStringProperty(String name) throws JMSException {
 
-        throw new UnsupportedOperationException();
+        return (String) this.message.getHeaders().get(name);
     }
 
     /**
