@@ -18,7 +18,7 @@ import org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean;
  *
  */
 @Configuration
-public class HealthConfig {
+public class HealthCheckConfig {
 
     /**
      * The JNDI name of a health service
