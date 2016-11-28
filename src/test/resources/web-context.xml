@@ -47,4 +47,6 @@
     
     <bean id = "entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
 
+    <bean class="ru.anr.base.facade.ejb.health.HealthConfig" p:jndiName="java:global/facade/HealthBean" />
+
 </beans>
