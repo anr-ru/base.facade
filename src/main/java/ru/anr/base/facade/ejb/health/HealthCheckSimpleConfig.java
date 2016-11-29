@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 public class HealthCheckSimpleConfig {
 
     /**
-     * Exports a controller for serving '/health' requests.
+     * Exports a controller for serving '/healthcheck' requests.
      * 
      * @return A bean instance
      */

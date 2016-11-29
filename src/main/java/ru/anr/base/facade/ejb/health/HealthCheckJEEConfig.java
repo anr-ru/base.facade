@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean;
 
 /**
- * A configuration for health beans.
- * 
- * This class must be put to a web spring context.
+ * A configuration for health beans in the case of using in a EJB environment.
+ * This class must be put to a spring context fo a web application.
  *
  *
  * @author Alexey Romanchuk
@@ -18,7 +17,7 @@ import org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean;
  *
  */
 @Configuration
-public class HealthCheckConfig {
+public class HealthCheckJEEConfig {
 
     /**
      * The JNDI name of a health service

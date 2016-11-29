@@ -4,7 +4,8 @@
 package ru.anr.base.facade.ejb.health;
 
 /**
- * A health check service.
+ * A health check service. Any implementation should perform some deep checking
+ * for availability on underlying infrastructure.
  *
  *
  * @author Alexey Romanchuk
@@ -15,12 +16,12 @@ package ru.anr.base.facade.ejb.health;
 public interface HealthCheck {
 
     /**
-     * The single function to use
+     * A single function to use
      * 
      * @param fail
      *            true, if a intended exception is expected (for tests).
-     * 
-     * @return Some status text
+     * @return Some status text showing that the underlying infrastructure has
+     *         started.
      */
     String check(boolean fail);
 }

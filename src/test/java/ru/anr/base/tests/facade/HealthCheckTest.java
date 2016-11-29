@@ -33,12 +33,14 @@ public class HealthCheckTest extends BaseWebTestCase {
     @Test
     public void testGet() {
 
-        ResponseEntity<String> r = client.get("/health");
+        ResponseEntity<String> r = client.get("/healthcheck");
 
         Assert.assertEquals(HttpStatus.OK, r.getStatusCode());
         logger.info("Response: {}", r.getBody());
 
         assertContains(r.getBody(), "{\"status\" : \"UP\", \"message\":\"");
+
+        assertContains(client.get("/healthcheck/false").getBody(), "{\"status\" : \"UP\", \"message\":\"");
     }
 
     /**
@@ -48,7 +50,7 @@ public class HealthCheckTest extends BaseWebTestCase {
     public void testGetIfFailure() {
 
         try {
-            client.get("/health/true");
+            client.get("/healthcheck/true");
             Assert.fail();
         } catch (HttpServerErrorException ex) {
 

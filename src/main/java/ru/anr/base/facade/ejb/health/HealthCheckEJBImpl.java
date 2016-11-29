@@ -6,7 +6,8 @@ package ru.anr.base.facade.ejb.health;
 import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
 
 /**
- * An implementation of {@link HealthCheck} service.
+ * A EJB implementation of {@link HealthCheck} service. To include this service
+ * you need to create a new EJB based on this class.
  *
  *
  * @author Alexey Romanchuk
@@ -21,17 +22,6 @@ public class HealthCheckEJBImpl extends AbstractEJBServiceImpl implements Health
     @Override
     public String check(boolean fail) {
 
-        if (fail) {
-            throw new ServiceUnavailableException("BOOM", "");
-        }
-        /*
-         * It's supposed that accessing to the spring context should throw an
-         * exception if the context has not been previously loaded yet.
-         */
-        try {
-            return "" + getCtx().getStartupDate();
-        } catch (Exception ex) {
-            throw new ServiceUnavailableException("Context accessing failure", ex.getMessage());
-        }
+        return HealthCheckUtils.checkWork(fail, getCtx());
     }
 }

@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.anr.base.ApplicationException;
 
 /**
- * A controller for health management.
+ * A web controller for health management. It also processes a
+ * {@link ServiceUnavailableException} exception as a 503 http error.
  *
  *
  * @author Alexey Romanchuk
@@ -76,14 +77,14 @@ public class HealthCheckController {
     private HealthCheck healthCheck;
 
     /**
-     * A handler for '/health' requests.
+     * A handler for '/healthcheck' requests.
      * 
      * @param fail
      *            true, if there is a need to throw a forced exception for tests
      * @return A json string containing the current status and a detailed
      *         message if required
      */
-    @RequestMapping(value = "health/{fail}", method = RequestMethod.GET,
+    @RequestMapping(value = "/healthcheck/{fail}", method = RequestMethod.GET,
             produces = { "application/json; charset=UTF-8" })
     @ResponseBody
     public String health(@PathVariable("fail") String fail) {
@@ -92,12 +93,13 @@ public class HealthCheckController {
     }
 
     /**
-     * A handler for '/health' requests.
+     * A handler for '/healthcheck' requests.
      * 
      * @return A json string containing the current status and a detailed
      *         message if required
      */
-    @RequestMapping(value = "health", method = RequestMethod.GET, produces = { "application/json; charset=UTF-8" })
+    @RequestMapping(value = "/healthcheck", method = RequestMethod.GET,
+            produces = { "application/json; charset=UTF-8" })
     @ResponseBody
     public String health() {
 
@@ -105,7 +107,8 @@ public class HealthCheckController {
     }
 
     /**
-     * The real work.
+     * Delegates execution of checking to some underlying {@link HealthCheck}
+     * service.
      * 
      * @param fail
      *            "true", if it's necessary to throw an exception forcedly.
@@ -115,6 +118,10 @@ public class HealthCheckController {
 
         Boolean b = (fail == null) ? false : Boolean.parseBoolean(fail);
         try {
+            /*
+             * if there is no health-check service defined, we suppose not to
+             * use a health-check and return always Http.OK
+             */
             return (healthCheck == null) ? String.format(JSON_TEMPLATE, "NONE")
                     : String.format(JSON_MSG_TEMPLATE, "UP", healthCheck.check(b));
         } catch (RuntimeException ex) {
