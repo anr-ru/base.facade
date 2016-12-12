@@ -46,7 +46,8 @@ public class JmsConfig extends JmsJEEConfig {
      */
     @Bean(name = "connectionFactory")
     @DependsOn("jmsConnectionFactory")
-    public SingleConnectionFactory cachedFactory(@Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory) {
+    public SingleConnectionFactory cachedFactory(
+            @Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory) {
 
         SingleConnectionFactory f = new SingleConnectionFactory(connectionFactory);
 

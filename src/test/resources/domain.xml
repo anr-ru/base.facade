@@ -58,6 +58,9 @@
     <admin-object-resource res-adapter="jmsra" res-type="javax.jms.Queue" jndi-name="jms/testQueue">
       <property name="Name" value="TestQueue"></property>
     </admin-object-resource>
+    <admin-object-resource res-adapter="jmsra" res-type="javax.jms.Queue" jndi-name="jms/xxxQueue">
+      <property name="Name" value="XxxQueue"></property>
+    </admin-object-resource>
   </resources>
   <servers>
     <server config-ref="server-config" name="server">
@@ -70,6 +73,7 @@
       <resource-ref ref="concurrent/__defaultManagedThreadFactory"></resource-ref>
       <resource-ref ref="APPJDBC"></resource-ref>
       <resource-ref ref="jms/testQueue"></resource-ref>
+      <resource-ref ref="jms/xxxQueue"></resource-ref>
       <resource-ref ref="jms/DMQ"></resource-ref>
     </server>
   </servers>
