@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.serializer.JSONSerializerImpl;
 import ru.anr.base.services.serializer.Serializer;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * A class to some procedures for a REST-based API.
@@ -37,7 +37,7 @@ public class APIClient {
     /**
      * The parent test case
      */
-    private RestClient client;
+    protected RestClient client;
 
     /**
      * Construction of an object

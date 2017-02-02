@@ -26,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
@@ -134,6 +135,34 @@ public class RestClient extends BaseParent {
 
         super();
         setSchema(schema);
+        rest = initRest(new RestTemplate());
+    }
+
+    /**
+     * Additional headers to pass
+     */
+    private Map<String, String> headers;
+
+    /**
+     * Constructor with a schema, host and a port
+     * 
+     * @param schema
+     *            A schema (http, https)
+     * @param host
+     *            A host
+     * @param port
+     *            A port
+     * @param headers
+     *            Additional headers to pass
+     */
+    public RestClient(String schema, String host, int port, String... headers) {
+
+        super();
+        setSchema(schema);
+        setHost(host);
+        setPort(port);
+
+        this.headers = toMap(headers);
         rest = initRest(new RestTemplate());
     }
 
@@ -327,6 +356,10 @@ public class RestClient extends BaseParent {
 
         if (oauth2Credentials != null) {
             hh.add("Authorization", "Bearer " + oauth2Credentials);
+        }
+
+        if (headers != null) {
+            headers.forEach((h, v) -> hh.add(h, v));
         }
 
         return hh;
@@ -566,6 +599,7 @@ public class RestClient extends BaseParent {
     public <S, T> ResponseEntity<T> exchange(String path, HttpMethod method, HttpEntity<S> entity, Class<T> clazz,
             Object... uriVariables) {
 
+        logger.debug("Http body: {}", entity);
         ResponseEntity<T> rs = rest.exchange(getUri(path), method, entity, clazz, uriVariables);
 
         logger.trace("Cookie: {}", store.getCookies());
