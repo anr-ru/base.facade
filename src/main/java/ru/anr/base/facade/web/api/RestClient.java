@@ -496,12 +496,18 @@ public class RestClient extends BaseParent {
      *            The REST path
      * @param resource
      *            Some resource
+     * @param props
+     *            Some additional properties to pass as form values
      * @return A resulted string
      */
-    public ResponseEntity<String> upload(String path, Resource resource) {
+    public ResponseEntity<String> upload(String path, Resource resource, Map<String, Object> props) {
 
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("file", resource);
+
+        if (props != null) {
+            props.forEach((k, v) -> map.add(nullSafe(k), nullSafe(v)));
+        }
 
         HttpHeaders hh = applyHeaders();
         hh.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -513,6 +519,22 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * Performs uploading a resource
+     * 
+     * @param path
+     *            The REST path
+     * @param resource
+     *            Some resource
+     * @param props
+     *            Some additional properties to pass as form values
+     * @return A resulted string
+     */
+    public ResponseEntity<String> upload(String path, Resource resource, Object... props) {
+
+        return upload(path, resource, toMap(props));
+    }
+
+    /**
      * Performs downloading a file
      * 
      * @param path
@@ -521,8 +543,8 @@ public class RestClient extends BaseParent {
      */
     public ResponseEntity<byte[]> download(String path) {
 
-        HttpHeaders headers = applyHeaders();
-        return exchange(path, HttpMethod.GET, new HttpEntity<>(headers), byte[].class);
+        HttpHeaders hh = applyHeaders();
+        return exchange(path, HttpMethod.GET, new HttpEntity<>(hh), byte[].class);
     }
 
     /**

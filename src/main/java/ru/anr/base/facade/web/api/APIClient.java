@@ -3,8 +3,11 @@
  */
 package ru.anr.base.facade.web.api;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -149,6 +152,27 @@ public class APIClient {
         return api(args -> {
             return client.post(url, json.toStr(model));
         }, (Class<S>) model.getClass());
+    }
+
+    /**
+     * Uploads a file.
+     * 
+     * @param url
+     *            The url used for the uploading
+     * @param file
+     *            A file
+     * @param resultModel
+     *            A model for the result
+     * @param props
+     *            A key-value pairs for additional properties to put in the same
+     *            form as the file
+     * @return A response model
+     * @param <S>
+     *            The class
+     */
+    public <S> S apiUpload(String url, Resource file, Class<S> resultModel, Map<String, Object> props) {
+
+        return api(args -> client.upload(url, file, props), resultModel);
     }
 
     /**
