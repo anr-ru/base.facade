@@ -3,15 +3,18 @@
  */
 package ru.anr.base.tests;
 
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Ignore;
+import org.springframework.core.io.Resource;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.web.api.APIClient;
 import ru.anr.base.facade.web.api.ApiCallback;
 import ru.anr.base.facade.web.api.RestClient;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * A class to facilitate some testing procedures for a REST-based API.
@@ -196,6 +199,30 @@ public class APITester extends APIClient {
 
         Assert.assertNotNull("The model cannot be null", modelClass);
         return api(args -> client.delete(url), modelClass);
+    }
+
+    /**
+     * Uploads a file.
+     * 
+     * @param client
+     *            A REST client
+     * @param url
+     *            The url used for the uploading
+     * @param file
+     *            A file
+     * @param resultModel
+     *            A model for the result
+     * @param props
+     *            A key-value pairs for additional properties to put in the same
+     *            form as the file
+     * @return A response model
+     * @param <S>
+     *            The class
+     */
+    public <S> S apiUpload(RestClient client, String url, Resource file, Class<S> resultModel,
+            Map<String, Object> props) {
+
+        return api(args -> client.upload(url, file, props), resultModel);
     }
 
     /**
