@@ -226,6 +226,20 @@ public class APITester extends APIClient {
     }
 
     /**
+     * Downloads a file
+     * 
+     * @param client
+     *            A REST Client
+     * @param url
+     *            The URL
+     * @return The resulted array of bytes
+     */
+    public byte[] apiDownload(RestClient client, String url) {
+
+        return new APIClient(client).apiDownload(url);
+    }
+
+    /**
      * Asserts that the specified API query definitely generates an exception
      * with the message
      * 

@@ -176,6 +176,26 @@ public class APIClient {
     }
 
     /**
+     * Downloads a file
+     * 
+     * @param url
+     *            The URL of the resource
+     * @return An array of bytes
+     */
+    public byte[] apiDownload(String url) {
+
+        try {
+            return client.download(url).getBody();
+        } catch (HttpClientErrorException e1) {
+            logger.error("Query client error: {}: {}", e1.getStatusCode(), e1.getResponseBodyAsString());
+            throw e1;
+        } catch (HttpServerErrorException e2) {
+            logger.error("Query server error: {}: {}", e2.getStatusCode(), e2.getResponseBodyAsString());
+            throw e2;
+        }
+    }
+
+    /**
      * A POST command for API
      * 
      * @param url
