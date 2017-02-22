@@ -136,9 +136,7 @@ public class APITester extends APIClient {
 
         Assert.assertNotNull("The model cannot be null", model);
         Assert.assertNotNull("The class cannot be null", returnModelClass);
-        return api(args -> {
-            return client.put(url, json.toStr(model));
-        }, (Class<S>) model.getClass());
+        return api(args -> client.put(url, json.toStr(model)), returnModelClass);
     }
 
     /**
