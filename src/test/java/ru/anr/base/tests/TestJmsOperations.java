@@ -397,7 +397,7 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     public <T> T browseSelected(Queue queue, String messageSelector, BrowserCallback<T> action) {
 
         java.util.Queue<org.springframework.messaging.Message<String>> q = getQueue(queue);
-        Vector<?> v = new Vector<>(q.stream().map(o -> new MockTextMessageImpl(o)).collect(Collectors.toList()));
+        Vector<?> v = new Vector<>(q.stream().collect(Collectors.toList()));
 
         try {
 

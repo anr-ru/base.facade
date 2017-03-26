@@ -10,7 +10,6 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -102,8 +101,8 @@ public class TestJmsOperationsTest {
             @Override
             public String doInJms(Session session, QueueBrowser browser) throws JMSException {
 
-                Enumeration<TextMessage> e = browser.getEnumeration();
-                return e.hasMoreElements() ? e.nextElement().getText() : null;
+                Enumeration<Message<String>> e = browser.getEnumeration();
+                return e.hasMoreElements() ? e.nextElement().getPayload() : null;
             }
         });
         Assert.assertEquals("XXX", rs);
