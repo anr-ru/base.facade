@@ -23,6 +23,7 @@ import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 
 import org.springframework.security.acls.model.NotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
 
 /**
  * An abstract parent for all EJBs used here. Specified CONTAINER
@@ -39,7 +40,7 @@ import org.springframework.security.acls.model.NotFoundException;
  */
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@Transactional(dontRollbackOn = { NotFoundException.class })
+@Transactional(dontRollbackOn = { NotFoundException.class, BadCredentialsException.class })
 @Interceptors({ SpringEJBInterceptor.class, ExceptionHandlerInterceptor.class })
 public abstract class AbstractEJBServiceImpl extends EJBContextHolder {
 
