@@ -42,6 +42,16 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
     }
 
     /**
+     * Returns the embedded message
+     * 
+     * @return The message
+     */
+    public Message<String> getMessage() {
+
+        return message;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

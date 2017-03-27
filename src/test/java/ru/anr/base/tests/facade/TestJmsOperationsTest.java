@@ -17,6 +17,7 @@ import org.springframework.jms.core.BrowserCallback;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 
+import ru.anr.base.tests.MockTextMessageImpl;
 import ru.anr.base.tests.TestDestination;
 import ru.anr.base.tests.TestJmsOperations;
 
@@ -101,8 +102,8 @@ public class TestJmsOperationsTest {
             @Override
             public String doInJms(Session session, QueueBrowser browser) throws JMSException {
 
-                Enumeration<Message<String>> e = browser.getEnumeration();
-                return e.hasMoreElements() ? e.nextElement().getPayload() : null;
+                Enumeration<MockTextMessageImpl> e = browser.getEnumeration();
+                return e.hasMoreElements() ? e.nextElement().getMessage().getPayload() : null;
             }
         });
         Assert.assertEquals("XXX", rs);
