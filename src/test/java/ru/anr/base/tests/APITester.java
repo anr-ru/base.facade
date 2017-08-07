@@ -68,6 +68,28 @@ public class APITester extends APIClient {
     }
 
     /**
+     * A POST command for the API
+     * 
+     * @param client
+     *            A rest client
+     * @param url
+     *            The url of the command
+     * @param model
+     *            The model to user
+     * @return Some resulted value
+     * 
+     * @param <S>
+     *            The class value
+     */
+    public <S> S apiPOST(RestClient client, String url, TypeReference<S> model) {
+
+        Assert.assertNotNull("The model cannot be null", model);
+        return api(args -> {
+            return client.post(url, json.toStr(model));
+        }, model);
+    }
+
+    /**
      * A POST command for API
      * 
      * @param client
@@ -131,7 +153,6 @@ public class APITester extends APIClient {
      * @param <S>
      *            The type definition for the model
      */
-    @SuppressWarnings("unchecked")
     public <S> S apiPUT(RestClient client, String url, Object model, Class<S> returnModelClass) {
 
         Assert.assertNotNull("The model cannot be null", model);
