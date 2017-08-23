@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ru.anr.base.domain.api.APICommand;
+import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.api.APICommandFactory;
 
 /**
@@ -33,19 +34,6 @@ import ru.anr.base.services.api.APICommandFactory;
  * 
  * <PRE>
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.GET)
  * public String doGet(@PathVariable String id, @RequestParam Map&lt;String, String&gt; params) {
  * 
@@ -57,20 +45,6 @@ import ru.anr.base.services.api.APICommandFactory;
  * or
  * 
  * <PRE>
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
  * 
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.POST)
  * public String doPost(@PathVariable String id, @RequestBody String body) {
@@ -86,8 +60,8 @@ import ru.anr.base.services.api.APICommandFactory;
  *
  */
 @RequestMapping(//
-consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, //
-produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+        consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, //
+        produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 public class AbstractAPIController {
 
     /**
@@ -122,5 +96,21 @@ public class AbstractAPIController {
     protected APICommand process(APICommand api) {
 
         return CommandUtils.process(apis, api);
+    }
+
+    /**
+     * Processing an error.
+     * 
+     * @param api
+     *            API Command to process
+     * @param ex
+     *            An exception
+     * @param model
+     *            A model
+     * @return Resulted command
+     */
+    protected APICommand error(APICommand api, Exception ex, ResponseModel model) {
+
+        return apis.error(api, ex, model);
     }
 }
