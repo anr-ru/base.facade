@@ -216,14 +216,34 @@ public class APIClient {
     }
 
     /**
+     * A POST command for API
+     *
+     * @param url
+     *            The url
+     * @param model
+     *            The model to use
+     * @param typeRef
+     *            The {@link TypeReference} object
+     * @return The resulted model object
+     * @param <S>
+     *            The type definition for the model
+     */
+    public <S> S apiPOST(String url, Object model, TypeReference<S> typeRef) {
+
+        return api(args -> {
+            return client.post(url, json.toStr(model));
+        }, typeRef);
+    }
+
+    /**
      * A PUT command for API
-     * 
+     *
      * @param url
      *            The url
      * @param model
      *            The model to use
      * @return The resulted model object
-     * 
+     *
      * @param <S>
      *            The type definition for the model
      */
