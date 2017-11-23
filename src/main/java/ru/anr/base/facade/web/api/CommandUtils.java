@@ -86,6 +86,10 @@ public final class CommandUtils {
             cmd.setResponseFormat(RawFormatTypes.JSON);
         }
         cmd.method(request.getMethod());
+
+        cmd.getContexts().put("x-forwarded-for", request.getHeader("x-forwarded-for"));
+        cmd.getContexts().put("user-agent", request.getHeader("user-agent"));
+
         return cmd;
     }
 
