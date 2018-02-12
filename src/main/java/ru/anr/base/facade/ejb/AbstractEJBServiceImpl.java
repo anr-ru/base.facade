@@ -26,11 +26,10 @@ import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 
 /**
- * An abstract parent for all EJBs used here. Specified CONTAINER
- * transactionality has been added just for understanding what we really relay
- * on.
+ * The abstract parent for all EJBs used here. The CONTAINER transaction support
+ * has been added just for understanding what we really relay on.
  *
- * Also added an interceptor, which gives an ability to inject spring beans
+ * Also added an interceptor which gives an ability to inject spring beans
  * directly as EJB class fields (with
  * {@link org.springframework.beans.factory.annotation.Autowired} annotation).
  *

@@ -33,7 +33,7 @@ import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.api.APICommandFactory;
 
 /**
- * Utils for APICOmmand building in a web layer.
+ * Utilities for APICommand building in a web layer.
  *
  *
  * @author Alexey Romanchuk

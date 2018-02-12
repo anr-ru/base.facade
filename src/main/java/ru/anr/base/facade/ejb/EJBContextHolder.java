@@ -23,7 +23,7 @@ import ru.anr.base.BaseParent;
 
 /**
  * A holder of Spring context (static reference). The idea is that @Startup EJB
- * loads necessary context and then stores it inside this class.
+ * loads necessary context and then stores it inside this class only once.
  *
  * @author Alexey Romanchuk
  * @created Nov 12, 2014

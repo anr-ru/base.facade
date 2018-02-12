@@ -34,7 +34,7 @@ import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.facade.ejb.mdb.LoopBaseEventKeyStrategy;
 
 /**
- * Singleton EJB, which loads spring context via {@link SpringEJBInterceptor}
+ * A singleton EJB which loads spring context via {@link SpringEJBInterceptor}
  * intercepter.
  * 
  * Add the @Singleton and @Startup annotations in descendants.
@@ -58,7 +58,7 @@ public class EJBSpringLoader extends BaseSpringParent {
     private final EJBContextHolder holder = new EJBContextHolder();
 
     /**
-     * Reference to {@link JmsOperations}
+     * Reference to {@link JmsOperations} if it is used
      */
     @Autowired(required = false)
     private JmsOperations jms;

@@ -24,11 +24,11 @@ import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.api.APICommandFactory;
 
 /**
- * Base class for API Controllers. It encapsulates an API Factory, basic
+ * The base class for API Controllers. It encapsulates an API Factory, basic
  * settings for support both JSON/XML formats and also contains short-cut method
  * for fast building of API Command Object.
  *
- * All descendants must have
+ * All descendants must have a
  * {@link org.springframework.web.bind.annotation.RestController} annotation and
  * method specific arguments, for example:
  * 

@@ -22,6 +22,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
  * This interceptor performs initial context loading from resource with specific
  * predefined name.
  *
+ * To used these beans, please add a context file with the name ejb-context.xml.
  *
  * @author Alexey Romanchuk
  * @created Nov 12, 2014

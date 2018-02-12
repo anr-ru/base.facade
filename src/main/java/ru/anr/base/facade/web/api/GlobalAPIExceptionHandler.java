@@ -35,8 +35,8 @@ import ru.anr.base.domain.api.APIException;
 import ru.anr.base.services.api.APICommandFactory;
 
 /**
- * Global error handler for exceptions. It translate exception to a valid API
- * response.
+ * A global error handler for all exceptions. It translate exception to a valid
+ * API response.
  *
  *
  * @author Alexey Romanchuk
@@ -52,7 +52,7 @@ public class GlobalAPIExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalAPIExceptionHandler.class);
 
     /**
-     * API Factory reference
+     * {@link APICommandFactory}
      */
     @Autowired
     private APICommandFactory apis;
@@ -65,7 +65,7 @@ public class GlobalAPIExceptionHandler {
      *            The http request
      * @param ex
      *            The exception
-     * @return Response body
+     * @return The response body
      */
     @ExceptionHandler(value = { HttpRequestMethodNotSupportedException.class })
     @ResponseBody
@@ -85,7 +85,7 @@ public class GlobalAPIExceptionHandler {
      *            The http request
      * @param ex
      *            The exception
-     * @return Response body
+     * @return The response body
      */
     @ExceptionHandler(value = { APIException.class })
     @ResponseBody
@@ -105,7 +105,7 @@ public class GlobalAPIExceptionHandler {
      *            The http request
      * @param ex
      *            The exception
-     * @return Response body
+     * @return The response body
      */
     @ExceptionHandler(value = { ConstraintViolationException.class })
     @ResponseBody
@@ -125,7 +125,7 @@ public class GlobalAPIExceptionHandler {
      *            The http request
      * @param ex
      *            The exception
-     * @return Response body
+     * @return The response body
      */
     @ExceptionHandler(value = { NotFoundException.class })
     @ResponseBody
@@ -145,7 +145,7 @@ public class GlobalAPIExceptionHandler {
      *            The http request
      * @param ex
      *            The exception
-     * @return Response body
+     * @return The response body
      */
     @ExceptionHandler(value = { AccessDeniedException.class })
     @ResponseBody
@@ -165,7 +165,7 @@ public class GlobalAPIExceptionHandler {
      *            The http request
      * @param ex
      *            The exception
-     * @return Response body
+     * @return The response body
      */
     @ExceptionHandler(value = { AuthenticationException.class })
     @ResponseBody
@@ -179,14 +179,14 @@ public class GlobalAPIExceptionHandler {
     }
 
     /**
-     * Processing general types of exception - generating 500 Internal Server
+     * Processes general types of exceptions - generating a 500 Internal Server
      * Error
      * 
      * @param rq
      *            Original Http request
      * @param ex
      *            An exception
-     * @return String response
+     * @return The string response
      * @throws Exception
      *             If re-thrown
      */

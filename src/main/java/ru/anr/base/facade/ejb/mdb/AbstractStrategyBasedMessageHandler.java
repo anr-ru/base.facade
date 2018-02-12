@@ -24,10 +24,10 @@ import ru.anr.base.services.pattern.StrategyFactory;
 import ru.anr.base.services.pattern.StrategyStatistic;
 
 /**
- * A specialized message handler, which uses {@link StrategyFactory} pattern and
- * expects a number of {@link ru.anr.base.services.pattern.Strategy} in a spring
- * context. Each strategy is responsible for processing a message according to
- * its own algorithm.
+ * A specialized message handler which uses the {@link StrategyFactory} pattern
+ * and expects a number of {@link ru.anr.base.services.pattern.Strategy} in a
+ * spring context. Each strategy is responsible for processing a message
+ * according to its own algorithm.
  *
  *
  * @author Alexey Romanchuk

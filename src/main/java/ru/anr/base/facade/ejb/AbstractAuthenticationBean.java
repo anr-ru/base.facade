@@ -22,7 +22,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 
 /**
- * Abstract authentication manager EJB.
+ * An abstract authentication manager EJB. This EJB is used for exporting the
+ * authentication service to the servlet level.
  *
  *
  * @author Alexey Romanchuk

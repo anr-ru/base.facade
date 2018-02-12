@@ -24,7 +24,7 @@ import ru.anr.base.services.api.APICommandFactory;
 
 /**
  * EJB prototype for implementing API Command Factory bean. It works just like a
- * wrapper and such EJB implementation give us a possibility to work in JEE
+ * wrapper and such an EJB implementation give us ability to work in JEE
  * container with container-based transaction support.
  *
  *
