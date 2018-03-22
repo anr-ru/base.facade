@@ -281,12 +281,11 @@ public class APIClient {
      * @param <S>
      *            The type definition for the model
      */
-    @SuppressWarnings("unchecked")
     public <S> S apiPUT(String url, Object model, Class<S> returnModelClass) {
 
         return api(args -> {
             return client.put(url, json.toStr(model));
-        }, (Class<S>) model.getClass());
+        }, returnModelClass);
     }
 
     /**
@@ -338,5 +337,13 @@ public class APIClient {
     public <S> S apiDELETE(String url, Class<S> modelClass) {
 
         return api(args -> client.delete(url), modelClass);
+    }
+
+    /**
+     * @return Returns the embedded client for extra settings
+     */
+    public RestClient getClient() {
+
+        return client;
     }
 }
