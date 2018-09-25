@@ -141,7 +141,7 @@ public class RestClient extends BaseParent {
     /**
      * Additional headers to pass
      */
-    private Map<String, String> headers;
+    private Map<String, String> headers = toMap();
 
     /**
      * Constructor with a schema, host and a port
@@ -164,6 +164,19 @@ public class RestClient extends BaseParent {
 
         this.headers = toMap(headers);
         rest = initRest(new RestTemplate());
+    }
+
+    /**
+     * Adds a new headers to the headers map
+     * 
+     * @param name
+     *            The name of the header
+     * @param value
+     *            The value
+     */
+    public void addHeader(String name, String value) {
+
+        this.headers.put(name, value);
     }
 
     /**
