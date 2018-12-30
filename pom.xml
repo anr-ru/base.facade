@@ -5,13 +5,13 @@
     <parent>
         <groupId>ru.anr</groupId>
         <artifactId>base.platform.parent</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     
     <artifactId>base.facade</artifactId>
 
     <name>Base Facade</name>
-    <description>Base implementation of Facade Serivices for Glassfish App</description>
+    <description>Facade Serivices for Glassfish Apps</description>
 
     <licenses>
         <license>
@@ -110,10 +110,12 @@
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.utils</artifactId>
+            <version>1.0.0</version>
         </dependency>
         
         <dependency>
@@ -142,10 +144,12 @@
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
             <classifier>tests</classifier>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.tests</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.mchange</groupId>

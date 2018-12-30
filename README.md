@@ -1,24 +1,21 @@
 [![Build Status](https://travis-ci.org/anr-ru/base.facade.svg?branch=master)](https://travis-ci.org/anr-ru/base.facade)
 
-Base.Platform Project
+## A part of [Base.Platform Project](https://github.com/anr-ru/base.platform.parent)
 
-=====================
-Base.Facade
-=====================
+# Base.Facade
 
-Base prototypes for Facade layer(EJB/MDB, REST):
+Base prototypes for the Facade layer(EJB/MDB, REST):
 
 1. Provides a bridge between REST API web layer (Spring Rest controllers) and API function (commands) implementation
-in Spring core throw EJB interfaces. Using EJB give us a strong transacted environment.
+in the business logic via EJB interfaces. Usage of EJB gives a strong transaction environment.
 
-   A final AbstractAPIController can be used for implement owns REST controller connected with business logic via
-   APICommandFactory pattern from Base.Services subproject.
+   A AbstractAPIController class can be used for implementing own REST controllers connected to the business logic via
+   APICommandFactory pattern from the [Base.Services](https://github.com/anr-ru/base.services) project.
 
-2. Exports some strategy-pattern-based implementation for Message-Driven Enterprise Beans and creates also a bridge 
-to spring beans to write business logic for message processing.      
-
+2. Exports some strategy-pattern-based implementation for Message-Driven Enterprise (MDB) Beans and creates also a bridge 
+to spring beans enabling to create a business logic for message processing.      
 
 3. Exports additional JmsConfig for fast configuring access to Spring JMS Template.
 
-4. Uses a Embedded Glassfish to JUnit test and exports some configuration for writing such tests.
+4. Uses a Embedded Glassfish for JUnit tests and exports some configuration for writing such tests.
  
