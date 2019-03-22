@@ -15,6 +15,15 @@
  */
 package ru.anr.base.facade.ejb.health;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+
+import javax.ejb.Schedule;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
 
 /**
@@ -29,11 +38,38 @@ import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
 public class HealthCheckEJBImpl extends AbstractEJBServiceImpl implements HealthCheck {
 
     /**
+     * The logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(HealthCheckEJBImpl.class);
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String check(boolean fail) {
 
         return HealthCheckUtils.checkWork(fail, getCtx());
+    }
+
+    /**
+     * Checks the state every 10 minutes and reports to the log file.
+     */
+    @Schedule(hour = "*", minute = "*/10", second = "0", persistent = false)
+    public void onSchedule() {
+
+        ZonedDateTime start = ZonedDateTime.ofInstant(//
+                Instant.ofEpochMilli(Long.parseLong(this.check(false))), DEFAULT_TIMEZONE);
+        ZonedDateTime now = now();
+
+        long hours = ChronoUnit.HOURS.between(start, now);
+        long minutes = ChronoUnit.MINUTES.between(start, now);
+        long seconds = ChronoUnit.SECONDS.between(start, now);
+
+        seconds = seconds - 60 * minutes;
+        minutes = minutes - 60 * hours;
+
+        String log = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+        logger.info("Health check, up time {}", log);
     }
 }

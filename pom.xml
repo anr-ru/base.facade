@@ -9,6 +9,7 @@
     </parent>
     
     <artifactId>base.facade</artifactId>
+    <version>1.0.1-SNAPHOT</version>
 
     <name>Base Facade</name>
     <description>Facade Serivices for Glassfish Apps</description>
