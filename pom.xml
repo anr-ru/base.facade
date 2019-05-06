@@ -111,12 +111,12 @@
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
-            <version>1.0.0</version>
+            <version>${base.services.version}</version>
         </dependency>
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.utils</artifactId>
-            <version>1.0.0</version>
+            <version>${base.utils.version}</version>
         </dependency>
         
         <dependency>
@@ -145,7 +145,7 @@
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
             <classifier>tests</classifier>
-            <version>1.0.0</version>
+            <version>${base.services.version}</version>
         </dependency>
         <dependency>
             <groupId>ru.anr</groupId>
@@ -170,6 +170,9 @@
         <dbx.user>localtest</dbx.user>
         <dbx.password>localtest</dbx.password>
         <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>
+        
+        <base.utils.version>1.0.1</base.utils.version>
+        <base.services.version>1.0.1</base.services.version>
         
     </properties>
     
