@@ -139,7 +139,7 @@
 		    <groupId>org.apache.derby</groupId>             
 		    <artifactId>derby</artifactId>                  
 		    <version>${derby.version}</version>                     
-		    <scope>runtime</scope>                          
+		    <scope>test</scope>                          
 		  </dependency>         
         <dependency>
             <groupId>ru.anr</groupId>
