@@ -50,6 +50,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -261,6 +262,13 @@ public class RestClient extends BaseParent {
         // 2. Error handler
         template.setErrorHandler(new DefaultResponseErrorHandler());
         template.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+
+        for (HttpMessageConverter<?> converter : template.getMessageConverters()) {
+            if (converter instanceof StringHttpMessageConverter) {
+                ((StringHttpMessageConverter) converter).setWriteAcceptCharset(false);
+            }
+        }
+
         return template;
     }
 
