@@ -167,7 +167,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
         jms.convertAndSend(d, msg);
 
-        logger.info("The Async JMS API query {}/{} with ID = {} has been sent to {}", id, version, queryId,
+        logger.debug("The Async JMS API query {}/{} with ID = {} has been sent to {}", id, version, queryId,
                 requestQueue);
         return queryId;
     }
