@@ -163,7 +163,12 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
         Message<String> msg = toMessage(model, hh);
 
-        Destination d = bean(requestQueue);
+        String requests = (String) hh.get(AsyncAPIHeaders.API_REQUEST_TO.name());
+        if (requests == null) {
+            // Use the default
+            requests = requestQueue;
+        }
+        Destination d = bean(requests);
 
         jms.convertAndSend(d, msg);
 

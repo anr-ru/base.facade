@@ -3,7 +3,7 @@
         <branch>
             <pattern>master</pattern>
             <!-- i.e. 1.0.1-0fc2045 . Force to use tags-->
-            <versionFormat>${version}-${commit.short}</versionFormat>
+            <versionFormat>${version}</versionFormat>
         </branch>
         <branch>
              <pattern>.*</pattern>
