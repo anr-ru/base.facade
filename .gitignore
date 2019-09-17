@@ -6,3 +6,5 @@
 .classpath
 
 *.log
+/.idea/
+/base.facade.iml
