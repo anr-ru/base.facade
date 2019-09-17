@@ -32,6 +32,11 @@ public enum AsyncAPIHeaders {
     API_RESPONSE_TO,
 
     /**
+     * What destination should be use for the request
+     */
+    API_REQUEST_TO,
+
+    /**
      * The identifier of the API strategy
      */
     API_STRATEGY_ID,
