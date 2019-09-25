@@ -201,7 +201,7 @@ public class APITester extends APIClient {
     }
 
     /**
-     * A GET command for API
+     * A Delete command for API
      * 
      * @param client
      *            The rest client
@@ -218,6 +218,31 @@ public class APITester extends APIClient {
 
         Assert.assertNotNull("The model cannot be null", modelClass);
         return api(args -> client.delete(url), modelClass);
+    }
+
+    /**
+     * A Delete command for API
+     * 
+     * @param client
+     *            The rest client
+     * @param url
+     *            The url
+     * @param requestModel
+     *            The request model
+     * @param modelClass
+     *            The response model class
+     * 
+     * @return The resulted model object
+     * 
+     * @param <S>
+     *            The type definition for the model
+     */
+    public <S> S apiDELETE(RestClient client, String url, Object requestModel, Class<S> modelClass) {
+
+        Assert.assertNotNull("The response class cannot be null", modelClass);
+        Assert.assertNotNull("The model cannot be null", requestModel);
+
+        return api(args -> client.delete(url, json.toStr(requestModel)), modelClass);
     }
 
     /**

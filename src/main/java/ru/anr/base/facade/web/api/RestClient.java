@@ -483,6 +483,20 @@ public class RestClient extends BaseParent {
     }
 
     /**
+     * DELETE method.
+     * 
+     * @param path
+     *            Relative or absolute path
+     * @param body
+     *            The request body
+     * @return Response with a body and state
+     */
+    public ResponseEntity<String> delete(String path, String body) {
+
+        return doExchange(path, HttpMethod.DELETE, body, String.class);
+    }
+
+    /**
      * GET method.
      * 
      * @param path
