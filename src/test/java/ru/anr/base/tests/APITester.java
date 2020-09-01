@@ -151,6 +151,22 @@ public class APITester extends APIClient {
     }
 
     /**
+     * A variant of the PUT method with a complex return type
+     * @param client The REST client
+     * @param url The API url
+     * @param model The request model
+     * @param returnModelClass The response model
+     * @param <S> The type model
+     * @return The resulted value
+     */
+    public <S> S apiPUT(RestClient client, String url, Object model, TypeReference<S> returnModelClass) {
+
+        Assert.assertNotNull("The model cannot be null", model);
+        Assert.assertNotNull("The class cannot be null", returnModelClass);
+        return api(args -> client.put(url, json.toStr(model)), returnModelClass);
+    }
+
+    /**
      * A GET command for API (a TypeReference variant)
      *
      * @param client
@@ -230,7 +246,6 @@ public class APITester extends APIClient {
         return api(args -> client.delete(url), typeRef);
     }
 
-
     /**
      * A Delete command for API
      *
@@ -275,7 +290,7 @@ public class APITester extends APIClient {
      *            The class
      */
     public <S> S apiUpload(RestClient client, String url, Resource file, Class<S> resultModel,
-                           Map<String, Object> props) {
+            Map<String, Object> props) {
 
         return api(args -> client.upload(url, file, props), resultModel);
     }
