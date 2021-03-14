@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ru.anr.base.facade.samples.services;
 
 import org.slf4j.Logger;
@@ -9,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
-
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.samples.domain.PingReponseModel;
@@ -22,10 +18,8 @@ import ru.anr.base.services.api.ApiStrategy;
 /**
  * Sample API strategy.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 13, 2014
- *
  */
 @ApiStrategy(id = "norollback", version = "v1", model = PingRequestModel.class)
 @Component
@@ -55,7 +49,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
     @Override
     public ResponseModel post(APICommand cmd) {
 
-        PingRequestModel m = (PingRequestModel) cmd.getRequest();
+        PingRequestModel m = cmd.getRequest();
 
         Samples s = new Samples();
         s.setName(m.getMessage());
@@ -80,7 +74,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
     @Override
     public ResponseModel put(APICommand cmd) {
 
-        PingRequestModel m = (PingRequestModel) cmd.getRequest();
+        PingRequestModel m = cmd.getRequest();
 
         Samples s = new Samples();
         s.setName(m.getMessage());
@@ -98,5 +92,4 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
 
         return rs;
     }
-
 }

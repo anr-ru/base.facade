@@ -1,23 +1,17 @@
-/**
- * 
- */
 package ru.anr.base.tests.facade;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpServerErrorException;
-
 import ru.anr.base.facade.web.api.RestClient;
 
 /**
  * Tests for HealthCheck.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 28, 2016
- *
  */
 
 public class HealthCheckTest extends BaseWebTestCase {
@@ -35,7 +29,7 @@ public class HealthCheckTest extends BaseWebTestCase {
 
         ResponseEntity<String> r = client.get("/healthcheck");
 
-        Assert.assertEquals(HttpStatus.OK, r.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, r.getStatusCode());
         logger.info("Response: {}", r.getBody());
 
         assertContains(r.getBody(), "{\"status\" : \"UP\", \"message\":\"");
@@ -51,10 +45,10 @@ public class HealthCheckTest extends BaseWebTestCase {
 
         try {
             client.get("/healthcheck/true");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpServerErrorException ex) {
 
-            Assert.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, ex.getStatusCode());
+            Assertions.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, ex.getStatusCode());
             logger.info("Response: {}", ex.getResponseBodyAsString());
 
             assertContains(ex.getResponseBodyAsString(), "{\"status\" : \"FAILURE\"");

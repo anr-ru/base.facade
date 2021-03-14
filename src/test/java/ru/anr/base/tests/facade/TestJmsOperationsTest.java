@@ -1,42 +1,34 @@
-/**
- * 
- */
 package ru.anr.base.tests.facade;
 
-import java.util.Enumeration;
-import java.util.Queue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.jms.core.BrowserCallback;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.GenericMessage;
+import ru.anr.base.tests.MockTextMessageImpl;
+import ru.anr.base.tests.TestDestination;
+import ru.anr.base.tests.TestJmsOperations;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.jms.core.BrowserCallback;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.GenericMessage;
-
-import ru.anr.base.tests.MockTextMessageImpl;
-import ru.anr.base.tests.TestDestination;
-import ru.anr.base.tests.TestJmsOperations;
+import java.util.Enumeration;
+import java.util.Queue;
 
 /**
  * Tests for {@link TestJmsOperations}.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 22, 2014
- *
  */
 
 public class TestJmsOperationsTest {
 
     /**
      * Creates a new text message
-     * 
-     * @param text
-     *            The text of a message
+     *
+     * @param text The text of a message
      * @return The text message
      */
     private Message<String> msg(String text) {
@@ -58,13 +50,13 @@ public class TestJmsOperationsTest {
 
         Message<String> m = msg("1");
         jms.convertAndSend(x, m);
-        Assert.assertEquals(m, jms.receiveAndConvert(x));
-        Assert.assertNull(jms.receiveAndConvert(x)); // once more is null
-        Assert.assertNull(jms.receiveAndConvert()); // default is null
+        Assertions.assertEquals(m, jms.receiveAndConvert(x));
+        Assertions.assertNull(jms.receiveAndConvert(x)); // once more is null
+        Assertions.assertNull(jms.receiveAndConvert()); // default is null
 
         m = msg("2");
         jms.convertAndSend(m);
-        Assert.assertEquals(m, jms.receiveAndConvert());
+        Assertions.assertEquals(m, jms.receiveAndConvert());
 
         Message<String> m3 = msg("3");
         Message<String> m4 = msg("4");
@@ -73,15 +65,15 @@ public class TestJmsOperationsTest {
         jms.convertAndSend(m4);
 
         Queue<Object> q1 = jms.browse("x", null);
-        Assert.assertNotNull(q1);
-        Assert.assertTrue(q1.isEmpty());
+        Assertions.assertNotNull(q1);
+        Assertions.assertTrue(q1.isEmpty());
 
         Queue<Object> q2 = jms.browse(null); // default queue
-        Assert.assertNotNull(q2);
-        Assert.assertFalse(q2.isEmpty());
+        Assertions.assertNotNull(q2);
+        Assertions.assertFalse(q2.isEmpty());
 
-        Assert.assertEquals(m3, q2.poll());
-        Assert.assertEquals(m4, q2.poll());
+        Assertions.assertEquals(m3, q2.poll());
+        Assertions.assertEquals(m4, q2.poll());
 
     }
 
@@ -106,6 +98,6 @@ public class TestJmsOperationsTest {
                 return e.hasMoreElements() ? e.nextElement().getMessage().getPayload() : null;
             }
         });
-        Assert.assertEquals("XXX", rs);
+        Assertions.assertEquals("XXX", rs);
     }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,10 +15,7 @@
  */
 package ru.anr.base.facade.ejb.api.requests;
 
-import java.util.Map;
-
-import javax.jms.Destination;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +24,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import ru.anr.base.BaseSpringParent;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
@@ -37,13 +31,14 @@ import ru.anr.base.facade.ejb.api.AsyncAPIHeaders;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.services.serializer.Serializer;
 
+import javax.jms.Destination;
+import java.util.Map;
+
 /**
  * An implementation for {@link AsyncAPIRequests}.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 20, 2015
- *
  */
 @Validated
 public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRequests {
@@ -77,15 +72,13 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     /**
      * The name of the key
      */
-    private String keyName;
+    private final String keyName;
 
     /**
      * The default constructor requires a serializer
-     * 
-     * @param serializer
-     *            The serializer (XML or JSON)
-     * @param keyName
-     *            The name of the key used to distinguish the API messages
+     *
+     * @param serializer The serializer (XML or JSON)
+     * @param keyName    The name of the key used to distinguish the API messages
      */
     public AsyncAPIRequestsImpl(Serializer serializer, String keyName) {
 
@@ -123,23 +116,17 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
     /**
      * The sending procedure.
-     * 
-     * @param id
-     *            The identifier of the strategy to use
-     * @param version
-     *            The version of the strategy
-     * @param method
-     *            The method of the strategy
-     * @param model
-     *            A model to use
-     * @param queue
-     *            A response queue if required
-     * @param params
-     *            Parameters of the query
+     *
+     * @param id      The identifier of the strategy to use
+     * @param version The version of the strategy
+     * @param method  The method of the strategy
+     * @param model   A model to use
+     * @param queue   A response queue if required
+     * @param params  Parameters of the query
      * @return The ID of the query
      */
     private String internalQuery(String id, String version, MethodTypes method, RequestModel model, String queue,
-            Object... params) {
+                                 Object... params) {
 
         Assert.notNull(requestQueue, "The request queue is not defined");
 
@@ -182,7 +169,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      */
     @Override
     public String noResponseQuery(String id, String version, MethodTypes method, RequestModel model,
-            Object... params) {
+                                  Object... params) {
 
         return internalQuery(id, version, method, model, null, params);
     }
@@ -236,8 +223,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     // /////////////////////////////////////////////////////////////////////////
 
     /**
-     * @param requestQueue
-     *            the requestQueue to set
+     * @param requestQueue the requestQueue to set
      */
     public void setRequestQueue(String requestQueue) {
 
@@ -245,8 +231,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     }
 
     /**
-     * @param responseQueue
-     *            the responseQueue to set
+     * @param responseQueue the responseQueue to set
      */
     public void setResponseQueue(String responseQueue) {
 

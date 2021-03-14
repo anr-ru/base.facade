@@ -1,26 +1,19 @@
-/**
- * 
- */
 package ru.anr.base.tests;
 
-import java.util.Enumeration;
+import org.springframework.messaging.Message;
+import ru.anr.base.BaseParent;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-
-import org.springframework.messaging.Message;
-
-import ru.anr.base.BaseParent;
+import java.util.Enumeration;
 
 /**
  * A mock text message used in operations which require raw JMS Objects like
  * 'queueu browsing'.
  *
- *
  * @author Alexey Romanchuk
  * @created Jun 17, 2015
- *
  */
 
 public class MockTextMessageImpl extends BaseParent implements TextMessage {
@@ -28,13 +21,12 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
     /**
      * Embedded Spring message
      */
-    private Message<String> message;
+    private final Message<String> message;
 
     /**
      * Constructor
-     * 
-     * @param message
-     *            The message
+     *
+     * @param message The message
      */
     public MockTextMessageImpl(Message<String> message) {
 
@@ -43,7 +35,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
 
     /**
      * Returns the embedded message
-     * 
+     *
      * @return The message
      */
     public Message<String> getMessage() {

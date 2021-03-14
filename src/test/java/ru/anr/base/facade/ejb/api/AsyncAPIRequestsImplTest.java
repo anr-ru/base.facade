@@ -1,26 +1,23 @@
 /**
- * 
+ *
  */
 package ru.anr.base.facade.ejb.api;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.jms.Destination;
-
-import org.junit.Assert;
-import org.junit.Test;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.facade.ejb.api.requests.AsyncAPIRequests;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
 import ru.anr.base.tests.JmsTests;
 import ru.anr.base.tests.facade.BaseWebTestCase;
+
+import javax.jms.Destination;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description ...
@@ -74,16 +71,16 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
 
         @SuppressWarnings("unchecked")
         Message<String> msg = (Message<String>) jms.receiveAndConvert(requests);
-        Assert.assertNotNull(msg);
+        Assertions.assertNotNull(msg);
 
-        Assert.assertEquals("async.ping", msg.getHeaders().get("API_STRATEGY_ID"));
-        Assert.assertEquals("v1", msg.getHeaders().get("API_VERSION"));
-        Assert.assertEquals("Get", msg.getHeaders().get("API_METHOD"));
+        Assertions.assertEquals("async.ping", msg.getHeaders().get("API_STRATEGY_ID"));
+        Assertions.assertEquals("v1", msg.getHeaders().get("API_VERSION"));
+        Assertions.assertEquals("Get", msg.getHeaders().get("API_METHOD"));
 
-        Assert.assertEquals(id, msg.getHeaders().get("API_QUERY_ID"));
+        Assertions.assertEquals(id, msg.getHeaders().get("API_QUERY_ID"));
 
-        Assert.assertEquals(123, msg.getHeaders().get("XXX"));
-        Assert.assertEquals("zzz", msg.getHeaders().get("YYY"));
+        Assertions.assertEquals(123, msg.getHeaders().get("XXX"));
+        Assertions.assertEquals("zzz", msg.getHeaders().get("YYY"));
     }
 
     /**
@@ -104,7 +101,7 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
         jms.convertAndSend(responses, msg);
 
         PingRequestModel r = apis.getResponse("ID", PingRequestModel.class);
-        Assert.assertEquals("self", r.getDescription());
+        Assertions.assertEquals("self", r.getDescription());
 
         // TypeReference
         List<PingRequestModel> list = list(m);
@@ -116,6 +113,6 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
         };
 
         List<PingRequestModel> rs = apis.getResponse("ID", type);
-        Assert.assertEquals("self", rs.get(0).getDescription());
+        Assertions.assertEquals("self", rs.get(0).getDescription());
     }
 }

@@ -1,14 +1,10 @@
-/**
- * 
- */
 package ru.anr.base.facade.web.api;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
-
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.RawFormatTypes;
@@ -17,10 +13,8 @@ import ru.anr.base.tests.BaseTestCase;
 /**
  * Tests for {@link CommandUtils}.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 21, 2014
- *
  */
 @ContextConfiguration(classes = CommandUtilsTest.class)
 public class CommandUtilsTest extends BaseTestCase {
@@ -39,10 +33,10 @@ public class CommandUtilsTest extends BaseTestCase {
 
         APICommand cmd = CommandUtils.build("xxx", "v1", rq);
 
-        Assert.assertEquals(MethodTypes.Post, cmd.getType());
+        Assertions.assertEquals(MethodTypes.Post, cmd.getType());
 
-        Assert.assertEquals(RawFormatTypes.XML, cmd.getRequestFormat());
-        Assert.assertEquals(RawFormatTypes.JSON, cmd.getResponseFormat());
+        Assertions.assertEquals(RawFormatTypes.XML, cmd.getRequestFormat());
+        Assertions.assertEquals(RawFormatTypes.JSON, cmd.getResponseFormat());
     }
 
     /**
@@ -59,9 +53,9 @@ public class CommandUtilsTest extends BaseTestCase {
 
         APICommand cmd = CommandUtils.build("xxx", "v1", rq);
 
-        Assert.assertEquals(MethodTypes.Get, cmd.getType());
+        Assertions.assertEquals(MethodTypes.Get, cmd.getType());
 
-        Assert.assertEquals(RawFormatTypes.JSON, cmd.getRequestFormat());
-        Assert.assertEquals(RawFormatTypes.JSON, cmd.getResponseFormat());
+        Assertions.assertEquals(RawFormatTypes.JSON, cmd.getRequestFormat());
+        Assertions.assertEquals(RawFormatTypes.JSON, cmd.getResponseFormat());
     }
 }

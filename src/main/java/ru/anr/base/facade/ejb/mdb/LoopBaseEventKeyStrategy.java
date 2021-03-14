@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,22 +16,20 @@
 
 package ru.anr.base.facade.ejb.mdb;
 
-import javax.jms.Destination;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
 
+import javax.jms.Destination;
+
 /**
  * A strategy which resends a message back to the queue but in test case it
  * sends the message to 'ResponsesQueue' to avoid cycling.
  *
- *
  * @author Alexey Romanchuk
  * @created May 2, 2015
- *
  */
 
 public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
@@ -44,7 +42,7 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
     /**
      * The identifier of the current instance
      */
-    private static String instanceId = guid();
+    private static final String instanceId = guid();
 
     /**
      * The name of the header
@@ -54,7 +52,7 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
     /**
      * Returns the current instance identifier which has been set during the JVM
      * start-up.
-     * 
+     *
      * @return The identifier value
      */
     public static String getInstanceID() {
@@ -75,13 +73,10 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
 
     /**
      * The method can be used to organize re-sending back to the original queue
-     * 
-     * @param msg
-     *            A message to send
-     * @param queue
-     *            The queue
-     * @param pauseMSec
-     *            amount of milliseconds for pause. 0 means 'no pause'
+     *
+     * @param msg       A message to send
+     * @param queue     The queue
+     * @param pauseMSec amount of milliseconds for pause. 0 means 'no pause'
      * @return The message again
      */
     protected Message<String> loop(Message<String> msg, Destination queue, long pauseMSec) {
@@ -106,9 +101,8 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
 
     /**
      * Performs checking whether the header ID matches the instance on or not
-     * 
-     * @param msg
-     *            The current message to process
+     *
+     * @param msg The current message to process
      * @return true, if the header value is the same of the instance ID
      */
     protected boolean matchedIDs(Message<String> msg) {
@@ -120,8 +114,7 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
     }
 
     /**
-     * @param dropQueueBean
-     *            the dropQueue to set
+     * @param dropQueueBean the dropQueue to set
      */
     public void setDropQueueBean(String dropQueueBean) {
 

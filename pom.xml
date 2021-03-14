@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>ru.anr</groupId>
         <artifactId>base.platform.parent</artifactId>
-        <version>1.0.0</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>base.facade</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <name>Base Facade</name>
     <description>Facade Serivices for Glassfish Apps</description>
@@ -35,7 +35,7 @@
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <goals>                            
+                        <goals>
                             <goal>test-jar</goal>
                         </goals>
                         <configuration>
@@ -54,13 +54,13 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>        
+            </plugin>
         </plugins>
     </build>
 
 
     <dependencies>
-        <!-- Spring -->    
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-        </dependency>            
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jms</artifactId>
@@ -77,21 +77,21 @@
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
         </dependency>
-        
+
         <!-- JEE -->
         <dependency>
             <groupId>javax.ejb</groupId>
             <artifactId>javax.ejb-api</artifactId>
         </dependency>
         <dependency>
-        	<groupId>javax.jms</groupId>
-        	<artifactId>javax.jms-api</artifactId>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-                
+
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
@@ -102,16 +102,16 @@
             <artifactId>base.utils</artifactId>
             <version>${base.utils.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
-              
-        <!-- TESTS -->        
-        <dependency>  
-            <groupId>org.hsqldb</groupId>  
-            <artifactId>hsqldb</artifactId>  
+
+        <!-- TESTS -->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -119,12 +119,12 @@
             <artifactId>glassfish-embedded-all</artifactId>
             <scope>provided</scope>
         </dependency>
-		<dependency>                                      
-		    <groupId>org.apache.derby</groupId>             
-		    <artifactId>derby</artifactId>                  
-		    <version>${derby.version}</version>                     
-		    <scope>test</scope>                          
-		  </dependency>         
+        <!--dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+            <scope>provided</scope>
+        </dependency-->
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
@@ -134,30 +134,31 @@
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.tests</artifactId>
-            <version>1.0.0</version>
+            <version>${base.tests.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
     <properties>
 
-        <derby.version>10.8.2.2</derby.version>
+        <derby.version>10.12.1.1</derby.version>
 
         <dbx.hibernateDialect>org.hibernate.dialect.DerbyTenSevenDialect</dbx.hibernateDialect>
         <dbx.driverClass>org.apache.derby.jdbc.EmbeddedXADataSource</dbx.driverClass>
-        <dbx.url>jdbc:derby:target/database</dbx.url>
+        <dbx.url>jdbc\:derby\:target\/database</dbx.url>
         <dbx.user>localtest</dbx.user>
         <dbx.password>localtest</dbx.password>
         <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>
-        
-        <base.utils.version>1.0.1</base.utils.version>
-        <base.services.version>1.0.1</base.services.version>
-        
+
+        <base.utils.version>2.0.0-SNAPSHOT</base.utils.version>
+        <base.services.version>2.0.0-SNAPSHOT</base.services.version>
+        <base.tests.version>2.0.0-SNAPSHOT</base.tests.version>
+
     </properties>
-    
+
 </project>

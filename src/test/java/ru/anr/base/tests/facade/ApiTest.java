@@ -1,16 +1,12 @@
-/**
- * 
- */
 package ru.anr.base.tests.facade;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-
 import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.tests.HttpJob;
 import ru.anr.base.tests.multithreading.ThreadExecutor;
@@ -18,10 +14,8 @@ import ru.anr.base.tests.multithreading.ThreadExecutor;
 /**
  * Testing API via RESTClient
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 11, 2014
- *
  */
 
 public class ApiTest extends BaseWebTestCase {
@@ -36,14 +30,14 @@ public class ApiTest extends BaseWebTestCase {
         ResponseEntity<String> r = client.get("/api/v1/ping/2");
 
         logger.debug("Result: {}", r.getBody());
-        Assert.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
+        Assertions.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
 
         // Changin to xml as expected type
         client.setAccept(MediaType.APPLICATION_XML);
         r = client.get("/api/v1/ping/2");
 
         logger.debug("Result: {}", r.getBody());
-        Assert.assertEquals("<?xml version='1.0' encoding='UTF-8'?><pong code=\"0\" message=\"response,2\"/>",
+        Assertions.assertEquals("<?xml version='1.0' encoding='UTF-8'?><pong code=\"0\" message=\"response,2\"/>",
                 r.getBody());
     }
 
@@ -57,7 +51,7 @@ public class ApiTest extends BaseWebTestCase {
         ResponseEntity<String> r = client.post("/api/v1/ping/2", "{\"message\":\"hello\"}");
 
         logger.info("Result: {}", r.getBody());
-        Assert.assertEquals("{\"code\":0,\"message\":\"hello,2\"}", r.getBody());
+        Assertions.assertEquals("{\"code\":0,\"message\":\"hello,2\"}", r.getBody());
     }
 
     /**
@@ -69,13 +63,13 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.delete("/api/v1/delete");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpClientErrorException ex) {
 
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":100,\"message\":\"Shit happend\"}", ex.getResponseBodyAsString());
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":100,\"message\":\"Shit happend\"}", ex.getResponseBodyAsString());
         }
     }
 
@@ -88,12 +82,12 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.put("/api/v1/notfound/reason", "");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpClientErrorException ex) {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":1,\"error_id\":\"what\",\"message\":\"reason\"}",
+            Assertions.assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":1,\"error_id\":\"what\",\"message\":\"reason\"}",
                     ex.getResponseBodyAsString());
         }
     }
@@ -107,12 +101,12 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.post("/api/v1/denied", "");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpClientErrorException ex) {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":1,\"message\":\"Unable to access this ping\"}",
+            Assertions.assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":1,\"message\":\"Unable to access this ping\"}",
                     ex.getResponseBodyAsString());
         }
     }
@@ -126,12 +120,12 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.get("/api/v1/unauth");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpClientErrorException ex) {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":1,\"message\":\"Wrong password or alike\"}", ex.getResponseBodyAsString());
+            Assertions.assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":1,\"message\":\"Wrong password or alike\"}", ex.getResponseBodyAsString());
         }
     }
 
@@ -144,12 +138,12 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.delete("/api/v1/api");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpClientErrorException ex) {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":-1,\"error_id\":\"shit.happened\",\"message\":\"Shit happened\"}",
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":-1,\"error_id\":\"shit.happened\",\"message\":\"Shit happened\"}",
                     ex.getResponseBodyAsString());
         }
     }
@@ -163,12 +157,12 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.delete("/api/v1/validate");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpClientErrorException ex) {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.METHOD_NOT_ALLOWED, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":1,\"message\":\"Request method 'DELETE' not supported\"}",
+            Assertions.assertEquals(HttpStatus.METHOD_NOT_ALLOWED, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":1,\"message\":\"Request method 'DELETE' not supported\"}",
                     ex.getResponseBodyAsString());
         }
     }
@@ -182,12 +176,12 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.put("/api/v1/validate", "");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpClientErrorException ex) {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":-1,\"error_id\":\"validation\",\"message\":\"[may not be null]\"}",
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":-1,\"error_id\":\"validation\",\"message\":\"[may not be null]\"}",
                     ex.getResponseBodyAsString());
         }
     }
@@ -201,12 +195,12 @@ public class ApiTest extends BaseWebTestCase {
         RestClient client = new RestClient();
         try {
             client.put("/api/v1/system", "");
-            Assert.fail();
+            Assertions.fail();
         } catch (HttpServerErrorException ex) {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
-            Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatusCode());
-            Assert.assertEquals("{\"code\":1,\"message\":\"Just runtime exception\"}", ex.getResponseBodyAsString());
+            Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":1,\"message\":\"Just runtime exception\"}", ex.getResponseBodyAsString());
         }
     }
 
@@ -226,7 +220,7 @@ public class ApiTest extends BaseWebTestCase {
                 RestClient c = (RestClient) x[0];
 
                 ResponseEntity<String> r = c.get("/api/v1/ping/2");
-                Assert.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
+                Assertions.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
                 ThreadExecutor.sleep(10, 50);
             }
         }));
@@ -239,12 +233,12 @@ public class ApiTest extends BaseWebTestCase {
                 RestClient c = (RestClient) x[0];
 
                 ResponseEntity<String> r = c.get("/api/v1/ping/5");
-                Assert.assertEquals("{\"code\":0,\"message\":\"response,5\"}", r.getBody());
+                Assertions.assertEquals("{\"code\":0,\"message\":\"response,5\"}", r.getBody());
                 ThreadExecutor.sleep(10, 50);
             }
         }));
 
         exec.start();
-        Assert.assertTrue(exec.waitNotError());
+        Assertions.assertTrue(exec.waitNotError());
     }
 }

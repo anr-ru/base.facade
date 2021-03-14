@@ -1,15 +1,15 @@
 /**
- * 
+ *
  */
 package ru.anr.base.facade.samples.ejb;
+
+import ru.anr.base.facade.ejb.health.HealthCheck;
+import ru.anr.base.facade.ejb.health.HealthCheckEJBImpl;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.PersistenceUnits;
-
-import ru.anr.base.facade.ejb.health.HealthCheck;
-import ru.anr.base.facade.ejb.health.HealthCheckEJBImpl;
 
 /**
  * Implementation of sample service.
@@ -20,11 +20,8 @@ import ru.anr.base.facade.ejb.health.HealthCheckEJBImpl;
  *
  */
 @Stateless(name = "HealthBean", mappedName = "ejb/HealthBean")
-@PersistenceUnits({ @PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit") })
+@PersistenceUnits({@PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")})
 @Local(HealthCheck.class)
 public class SampleHealthEJB extends HealthCheckEJBImpl {
 
-    /**
-     * Empty
-     */
 }

@@ -1,17 +1,13 @@
-/**
- * 
- */
 package ru.anr.base.tests.facade;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
@@ -19,10 +15,8 @@ import ru.anr.base.samples.domain.Samples;
 /**
  * General EJB/Web integration tests.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 11, 2014
- *
  */
 
 public class WebAccessTest extends BaseWebTestCase {
@@ -42,7 +36,7 @@ public class WebAccessTest extends BaseWebTestCase {
     /**
      * Integration test to chech EJB/JTA/JMS/JPA integration to work with
      * Glassfish Embedded server.
-     * 
+     * <p>
      * Transaction annotations (which gives a local transaction) is required for
      * lazy-loaded hibernate objects.
      */
@@ -56,16 +50,16 @@ public class WebAccessTest extends BaseWebTestCase {
         ResponseEntity<String> r = rest.get("api/v1/query/2");
 
         logger.info("Result: {}", r.getBody());
-        Assert.assertNotNull(r.getBody());
+        Assertions.assertNotNull(r.getBody());
 
         sleep(2000); // Waiting JMS Handler to complete
 
         Long id = Long.valueOf(r.getBody());
 
-        Samples s = dao.findOne(id);
+        Samples s = dao.find(Samples.class, id);
 
-        Assert.assertNotNull(s);
-        Assert.assertEquals("2,xxx", s.getName());
+        Assertions.assertNotNull(s);
+        Assertions.assertEquals("2,xxx", s.getName());
     }
 
     /**
@@ -76,10 +70,10 @@ public class WebAccessTest extends BaseWebTestCase {
 
         ResponseEntity<String> r = client.get("/api/v1/get?q={query}&variable={x}", "secret", "yyy");
 
-        Assert.assertEquals(HttpStatus.OK, r.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, r.getStatusCode());
         logger.info("Response: {}", r.getBody());
 
-        Assert.assertEquals("{\"value\": \"secret\"}", r.getBody());
+        Assertions.assertEquals("{\"value\": \"secret\"}", r.getBody());
     }
 
     /**
@@ -90,10 +84,10 @@ public class WebAccessTest extends BaseWebTestCase {
 
         ResponseEntity<String> r = client.post("/api/v1/post", "{\"value\": \"secret\"}");
 
-        Assert.assertEquals(HttpStatus.OK, r.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, r.getStatusCode());
         logger.info("Response: {}", r.getBody());
 
-        Assert.assertEquals("{\"value\": \"secret\"}", r.getBody());
+        Assertions.assertEquals("{\"value\": \"secret\"}", r.getBody());
     }
 
     /**
@@ -104,10 +98,10 @@ public class WebAccessTest extends BaseWebTestCase {
 
         ResponseEntity<String> r = client.put("/api/v1/put", "{\"value\": \"secret\"}");
 
-        Assert.assertEquals(HttpStatus.CREATED, r.getStatusCode());
+        Assertions.assertEquals(HttpStatus.CREATED, r.getStatusCode());
         logger.info("Response: {}", r.getBody());
 
-        Assert.assertNull(r.getBody());
+        Assertions.assertNull(r.getBody());
     }
 
     /**
@@ -118,10 +112,10 @@ public class WebAccessTest extends BaseWebTestCase {
 
         ResponseEntity<String> r = client.delete("/api/v1/delete/64");
 
-        Assert.assertEquals(HttpStatus.ALREADY_REPORTED, r.getStatusCode());
+        Assertions.assertEquals(HttpStatus.ALREADY_REPORTED, r.getStatusCode());
         logger.info("Response: {}", r.getBody());
 
-        Assert.assertNull(r.getBody());
+        Assertions.assertNull(r.getBody());
     }
 
 }

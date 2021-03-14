@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
-    version="2.1">
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
 
     <!-- JTA version -->
     <persistence-unit name="TestUnit" transaction-type="JTA">
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>APPJDBC</jta-data-source>
+        <jta-data-source>AppDatabase</jta-data-source>
 
         <class>ru.anr.base.samples.domain.Samples</class>
 
         <!-- converter -->
-        <class>ru.anr.base.domain.LocalDateTimePersistenceConverter</class>        
+        <class>ru.anr.base.domain.LocalDateTimePersistenceConverter</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
-            <property name="hibernate.dialect" value="${db.hibernateDialect}" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.connection.driver_class" value="${db.driverClassName}" />
+            <property name="hibernate.dialect" value="${dbx.hibernateDialect}"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.connection.driver_class" value="${dbx.driverClass}"/>
 
-            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />
-            <property name="hibernate.transaction.factory_class" value="org.hibernate.engine.transaction.internal.jta.CMTTransactionFactory" />
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+            <!--property name="hibernate.transaction.factory_class" value="org.hibernate.engine.transaction.internal.jta.CMTTransactionFactory"/-->
+
+            <property name="hibernate.transaction.coordinator_class"
+                      value="org.hibernate.resource.transaction.backend.jta.internal.JtaTransactionCoordinatorImpl"/>
 
             <!-- ddl auto update for test database -->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>            
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
 
-            <property name="hibernate.cache.use_second_level_cache" value="true" />
-            <property name="hibernate.cache.use_query_cache" value="true" />
-            <property name="hibernate.cache.use_structured_entries" value="true" />
-            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory" />
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.use_structured_entries" value="true"/>
+            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>
 
-            <property name="net.sf.ehcache.configurationResourceName" value="ehcache.xml" />
+            <property name="net.sf.ehcache.configurationResourceName" value="ehcache.xml"/>
 
-            <property name="hibernate.connection.charSet" value="UTF-8" />
-            <property name="hibernate.format_sql" value="false" />
+            <property name="hibernate.connection.charSet" value="UTF-8"/>
+            <property name="hibernate.format_sql" value="false"/>
         </properties>
 
     </persistence-unit>

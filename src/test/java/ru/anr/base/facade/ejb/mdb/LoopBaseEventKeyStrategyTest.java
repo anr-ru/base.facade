@@ -1,26 +1,20 @@
-/**
- * 
- */
 package ru.anr.base.facade.ejb.mdb;
 
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.context.ActiveProfiles;
-
 import ru.anr.base.tests.facade.BaseWebTestCase;
+
+import java.util.Map;
 
 /**
  * Verifying how the unique instance ID works
  *
- *
  * @author Alexey Romanchuk
  * @created Sep 28, 2015
- *
  */
 @ActiveProfiles("production")
 public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
@@ -33,8 +27,8 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
     /**
      * Setting the value for a first time
      */
-    @BeforeClass
-    public static void before() {
+    @BeforeEach
+    public void before() {
 
         value = LoopBaseEventKeyStrategy.getInstanceID();
     }
@@ -45,21 +39,20 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
     @Test
     public void testGetInstanceID() {
 
-        Assert.assertNotNull(value);
-        Assert.assertEquals(value, LoopBaseEventKeyStrategy.getInstanceID());
+        Assertions.assertNotNull(value);
+        Assertions.assertEquals(value, LoopBaseEventKeyStrategy.getInstanceID());
     }
 
     /**
      * A sample message
-     * 
-     * @param id
-     *            The ID value (can be a null if no one required)
+     *
+     * @param id The ID value (can be a null if no one required)
      * @return The message
      */
     private Message<String> msg(String id) {
 
         Map<String, Object> hh = (id == null) ? null : toMap(LoopBaseEventKeyStrategy.INSTANCE_HEADER, id);
-        return new GenericMessage<String>("", hh);
+        return new GenericMessage<>("", hh);
     }
 
     /**
@@ -72,7 +65,7 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
 
         LoopBaseEventKeyStrategy s = bean(LoopBaseEventKeyStrategy.class);
         s.loop(msg(null), queue, 0L);
-        Assert.assertNull(jms.receiveAndConvert(queue));
+        Assertions.assertNull(jms.receiveAndConvert(queue));
     }
 
     /**
@@ -86,7 +79,7 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
 
         Message<String> m = msg(LoopBaseEventKeyStrategy.getInstanceID());
         s.loop(m, queue, 0L);
-        Assert.assertSame(m, jms.receiveAndConvert(queue));
+        Assertions.assertSame(m, jms.receiveAndConvert(queue));
     }
 
     /**
@@ -101,6 +94,6 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
         Message<String> m = msg("xxx");
 
         s.loop(m, queue, 0L);
-        Assert.assertNull(jms.receiveAndConvert(queue));
+        Assertions.assertNull(jms.receiveAndConvert(queue));
     }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,36 +15,35 @@
  */
 package ru.anr.base.facade.ejb;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.interceptor.Interceptors;
-import javax.jms.Destination;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-
 import ru.anr.base.BaseSpringParent;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.facade.ejb.mdb.LoopBaseEventKeyStrategy;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.jms.Destination;
+import java.util.List;
+import java.util.Map;
+
 /**
  * A singleton EJB which loads spring context via {@link SpringEJBInterceptor}
  * intercepter.
- * 
+ * <p>
  * Add the @Singleton and @Startup annotations in descendants.
- *
  *
  * @author Alexey Romanchuk
  * @created Nov 12, 2014
- *
  */
-@Interceptors(SpringEJBInterceptor.class)
 public class EJBSpringLoader extends BaseSpringParent {
 
     /**
@@ -53,9 +52,15 @@ public class EJBSpringLoader extends BaseSpringParent {
     private static final Logger logger = LoggerFactory.getLogger(EJBSpringLoader.class);
 
     /**
-     * Reference to holder to avoid class unloading.
+     * The main entry point for loading Spring context
      */
-    private final EJBContextHolder holder = new EJBContextHolder();
+    @Produces
+    public ApplicationContext getApplicationContext() {
+
+        AbstractApplicationContext context = new ClassPathXmlApplicationContext("classpath:/ejb-context.xml");
+        context.registerShutdownHook();
+        return context;
+    }
 
     /**
      * Reference to {@link JmsOperations} if it is used
@@ -65,17 +70,13 @@ public class EJBSpringLoader extends BaseSpringParent {
 
     /**
      * Initialization of a queue ( JmsOperation specified above must be set).
-     * 
-     * @param queueBean
-     *            The queue to be initialized ( specified as a bean in the
-     *            context)
-     * @param messageKey
-     *            Message key
-     * @param headerPairs
-     *            Pairs name/value for additional headers
-     * @param text
-     *            Text inside of the message (to understand what it is the
-     *            message for)
+     *
+     * @param queueBean   The queue to be initialized ( specified as a bean in the
+     *                    context)
+     * @param messageKey  Message key
+     * @param headerPairs Pairs name/value for additional headers
+     * @param text        Text inside of the message (to understand what it is the
+     *                    message for)
      */
     protected void initQueue(String queueBean, String messageKey, String text, Object... headerPairs) {
 
@@ -98,24 +99,20 @@ public class EJBSpringLoader extends BaseSpringParent {
     /**
      * The map which stores information about the queues to be initialized
      */
-    private List<Object[]> queues = list();
+    private final List<Object[]> queues = list();
 
     /**
      * Adding queues for further initialization. Real initialization will be
      * available in 'production' mode only.
-     * 
-     * @param queueBean
-     *            The name of queue bean
-     * @param messageKey
-     *            The key for message identification
-     * @param headerPairs
-     *            Pairs 'name'/'value' for additional headers
-     * @param body
-     *            Message body
+     *
+     * @param queueBean   The name of queue bean
+     * @param messageKey  The key for message identification
+     * @param headerPairs Pairs 'name'/'value' for additional headers
+     * @param body        Message body
      */
     protected void addQueue(String queueBean, String messageKey, String body, Object... headerPairs) {
 
-        queues.add(new Object[]{ queueBean, messageKey, body, headerPairs });
+        queues.add(new Object[]{queueBean, messageKey, body, headerPairs});
     }
 
     /**
@@ -129,13 +126,16 @@ public class EJBSpringLoader extends BaseSpringParent {
         queues.clear();
     }
 
+    @Inject
+    private ApplicationContext context;
+
     /**
      * Initialization
      */
     @PostConstruct
     public void init() {
 
-        logger.info("Holder: {}, context: {}, profiles: {}", holder, EJBContextHolder.getCtx(), getProfiles());
+        logger.info("Context: {}, profiles: {}", context, getProfiles());
 
         if (isProdMode()) {
             sendAll();

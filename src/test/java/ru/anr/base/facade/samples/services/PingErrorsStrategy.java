@@ -1,12 +1,8 @@
-/**
- * 
- */
 package ru.anr.base.facade.samples.services;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
-
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.APIException;
 import ru.anr.base.domain.api.models.ResponseModel;
@@ -18,10 +14,8 @@ import ru.anr.base.services.api.ApiStrategy;
 /**
  * Sample API strategy.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 13, 2014
- *
  */
 @ApiStrategy(id = "ping.errors", version = "v1", model = PingRequestModel.class)
 @Component("PingErrorsStrategy")

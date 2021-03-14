@@ -1,12 +1,8 @@
-/**
- * 
- */
 package ru.anr.base.facade.samples.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.APIException;
@@ -19,10 +15,8 @@ import ru.anr.base.services.api.ApiStrategy;
 /**
  * Sample API strategy.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 13, 2014
- *
  */
 @ApiStrategy(id = "ping", version = "v1", model = PingRequestModel.class)
 @Component("PingApiStrategy")
@@ -77,8 +71,6 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
      */
     @Override
     public Object put(APICommand cmd) {
-
         throw new ApplicationException("Just runtime exception");
     }
-
 }

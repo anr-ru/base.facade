@@ -1,9 +1,7 @@
 /**
- * 
+ *
  */
 package ru.anr.base.facade.samples.web;
-
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.*;
 import ru.anr.base.facade.samples.ejb.MyService;
 import ru.anr.base.facade.web.api.NotFoundException;
 import ru.anr.base.samples.domain.Samples;
+
+import java.util.Map;
 
 /**
  * Sample controller implementation - to check full glassfish application
@@ -53,12 +47,12 @@ public class SampleController {
 
     /**
      * Sample query GET method.
-     * 
+     *
      * @param id
      *            Some string
      * @return Some result value
      */
-    @RequestMapping(value = "/query/{id}", method = RequestMethod.GET, produces = { "text/plain" })
+    @RequestMapping(value = "/query/{id}", method = RequestMethod.GET, produces = {"text/plain"})
     @ResponseBody
     public String displayMessage(@PathVariable String id) {
 
@@ -70,31 +64,31 @@ public class SampleController {
 
     /**
      * Sample query GET method.
-     * 
+     *
      * @param params
      *            Some get uri variables
      * @return Some result value
      */
     @RequestMapping(value = "/get", method = RequestMethod.GET, //
-    produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+            produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public String get(@RequestParam Map<String, String> params) {
 
         logger.debug("GET: {}", params);
 
-        String v = params.containsKey("q") ? params.get("q") : "";
+        String v = params.getOrDefault("q", "");
         return "{\"value\": \"" + v + "\"}";
     }
 
     /**
      * Sample query POST method.
-     * 
+     *
      * @param body
      *            Request body
      * @return Some result value
      */
     @RequestMapping(value = "/post", method = RequestMethod.POST, //
-    produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+            produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public String post(@RequestBody String body) {
 
@@ -104,41 +98,41 @@ public class SampleController {
 
     /**
      * Sample query PUT method.
-     * 
+     *
      * @return Some result value
      */
     @RequestMapping(value = "/put", method = RequestMethod.PUT, //
-    produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+            produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> put() {
 
-        return new ResponseEntity<String>("", HttpStatus.CREATED);
+        return new ResponseEntity<>("", HttpStatus.CREATED);
     }
 
     /**
      * Sample query PUT method.
-     * 
+     *
      * @param what
      *            Some path parameter
-     * 
+     *
      * @return Some result value
      */
     @RequestMapping(value = "/delete/{what}", method = RequestMethod.DELETE, //
-    produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+            produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> delete(@PathVariable String what) {
 
-        return new ResponseEntity<String>("", HttpStatus.ALREADY_REPORTED);
+        return new ResponseEntity<>("", HttpStatus.ALREADY_REPORTED);
     }
 
     /**
      * A sample method which raises the NotFoundException
-     * 
+     *
      * @param what
      *            Some path parameter
-     * 
+     *
      * @return Some result value
      */
     @RequestMapping(value = "/notfound/{what}", method = RequestMethod.PUT, //
-    produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+            produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> notFound(@PathVariable String what) {
 
         throw new NotFoundException("what", what);

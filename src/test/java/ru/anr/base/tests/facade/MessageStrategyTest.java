@@ -1,16 +1,12 @@
-/**
- * 
- */
 package ru.anr.base.tests.facade;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.anr.base.facade.ejb.mdb.MessageStrategy;
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
@@ -20,10 +16,8 @@ import ru.anr.base.services.pattern.StrategyConfig.StrategyModes;
 /**
  * General EJB/Web integration tests.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 11, 2014
- *
  */
 
 public class MessageStrategyTest extends BaseWebTestCase {
@@ -68,9 +62,9 @@ public class MessageStrategyTest extends BaseWebTestCase {
 
         Samples o = dao.save(new Samples());
 
-        Message<String> msg = new GenericMessage<String>("", s.toHeaders(o));
+        Message<String> msg = new GenericMessage<>("", s.toHeaders(o));
 
         Samples ox = s.extractObject(msg, dao);
-        Assert.assertEquals(o, ox);
+        Assertions.assertEquals(o, ox);
     }
 }

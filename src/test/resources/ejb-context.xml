@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
-    xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <context:component-scan base-package="ru.anr.base.facade.samples.services" />
-
+    <context:component-scan base-package="ru.anr.base.facade.samples.services"/>
     <!-- JNDI Objects -->
-    <jee:jndi-lookup id="datasource" jndi-name="APPJDBC" lookup-on-startup="true" />
-    <jee:jndi-lookup id="entityManagerFactory" jndi-name="TestUnit/EntityManagerFactory" resource-ref="true" expected-type="javax.persistence.EntityManagerFactory"/>
-    <jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" lookup-on-startup="true" />
-    <jee:jndi-lookup id="testQueue" jndi-name="jms/testQueue" />    
+    <jee:jndi-lookup id="datasource" jndi-name="APPJDBC" lookup-on-startup="true"/>
+    <jee:jndi-lookup id="entityManagerFactory" jndi-name="TestUnit/EntityManagerFactory" resource-ref="true"
+                     expected-type="javax.persistence.EntityManagerFactory"/>
+    <jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" lookup-on-startup="true"/>
+    <jee:jndi-lookup id="testQueue" jndi-name="jms/testQueue"/>
 
     <!-- JMS -->
-    <bean id = "jmsConfig" class="ru.anr.base.facade.jmsclient.JmsJEEConfig" />
-    
+    <bean id="jmsConfig" class="ru.anr.base.facade.jmsclient.JmsJEEConfig"/>
+
     <!-- A test APIs -->
-    <bean id = "apiConfig" class = "ru.anr.base.services.api.ApiConfig" />
-    <bean id = "messageConfig" class="ru.anr.base.services.MessagePropertiesConfig" />
+    <bean id="apiConfig" class="ru.anr.base.services.api.ApiConfig"/>
+    <bean id="messageConfig" class="ru.anr.base.services.MessagePropertiesConfig"/>
     <!-- Validations -->
-    <bean id = "validationConfig" class = "ru.anr.base.services.validation.ValidationConfig" />
+    <bean id="validationConfig" class="ru.anr.base.services.validation.ValidationConfig"/>
 
     <!-- Security -->
-    <bean id="securityConfig" class="ru.anr.base.services.security.SecurityConfig" 
-        p:providers-ref="authenticator"/>
+    <bean id="securityConfig" class="ru.anr.base.services.security.SecurityConfig"
+          p:providers-ref="authenticator"/>
 
-    <bean id = "authenticator" 
-        class="org.springframework.security.authentication.AnonymousAuthenticationProvider" 
-        p:messageSource-ref="messageSource">
-        <constructor-arg value="DerKey" />
-    </bean>        
-        
+    <bean id="authenticator"
+          class="org.springframework.security.authentication.AnonymousAuthenticationProvider"
+          p:messageSource-ref="messageSource">
+        <constructor-arg value="DerKey"/>
+    </bean>
+
 </beans>
