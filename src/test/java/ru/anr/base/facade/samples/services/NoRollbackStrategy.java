@@ -3,7 +3,6 @@ package ru.anr.base.facade.samples.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import ru.anr.base.domain.api.APICommand;
@@ -34,7 +33,6 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
      * {@link MyDao}
      */
     @Autowired
-    @Qualifier("mydao")
     private MyDao dao;
 
     /**

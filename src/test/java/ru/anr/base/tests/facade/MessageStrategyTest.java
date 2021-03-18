@@ -3,7 +3,6 @@ package ru.anr.base.tests.facade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,6 @@ public class MessageStrategyTest extends BaseWebTestCase {
      * Test local dao
      */
     @Autowired
-    @Qualifier("mydao")
     private MyDao dao;
 
     private static final class TestStrategy implements MessageStrategy {

@@ -1,12 +1,8 @@
-/**
- * 
- */
 package ru.anr.base.tests;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.HttpServerErrorException;
-
 import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.tests.multithreading.ThreadJob;
 
@@ -14,10 +10,8 @@ import ru.anr.base.tests.multithreading.ThreadJob;
  * A special class of {@link ThreadJob} which handles http 5xx errors (to sees
  * the error body).
  *
- *
  * @author Alexey Romanchuk
  * @created Jul 3, 2015
- *
  */
 
 public class HttpJob extends ThreadJob {
@@ -29,11 +23,9 @@ public class HttpJob extends ThreadJob {
 
     /**
      * The constructor takes the {@link RestClient} as the first argument
-     * 
-     * @param rest
-     *            The {@link RestClient}
-     * @param job
-     *            The {@link ThreadJob} interface to run
+     *
+     * @param rest The {@link RestClient}
+     * @param job  The {@link ThreadJob} interface to run
      */
     public HttpJob(RestClient rest, DoJob job) {
 
@@ -47,7 +39,7 @@ public class HttpJob extends ThreadJob {
     @Override
     protected String processException(Throwable ex) {
 
-        String rs = null;
+        String rs;
         if (ex instanceof HttpServerErrorException) {
 
             HttpServerErrorException http = (HttpServerErrorException) ex;

@@ -43,9 +43,6 @@ import java.util.Map;
 @Validated
 public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRequests {
 
-    /**
-     * The logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(AsyncAPIRequestsImpl.class);
 
     /**

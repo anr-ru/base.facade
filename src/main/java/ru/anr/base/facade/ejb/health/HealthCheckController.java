@@ -114,7 +114,7 @@ public class HealthCheckController {
      */
     private String doCheck(String fail) {
 
-        Boolean b = (fail == null) ? false : Boolean.parseBoolean(fail);
+        boolean b = Boolean.parseBoolean(fail);
         try {
             /*
              * if there is no health-check service defined, we suppose not to

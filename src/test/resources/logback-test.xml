@@ -12,9 +12,8 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework.transaction" level="INFO"/>
+    <logger name="org.springframework" level="INFO"/>
 
-    <logger name="org.springframework.web" level="DEBUG"/>
     <logger name="org.hibernate" level="INFO"/>
     <logger name="org.apache" level="INFO"/>
 
@@ -22,6 +21,8 @@
     <logger name="org.springframework.cache" level="INFO"/>
     <logger name="org.hibernate.cache" level="INFO"/>
     <logger name="net.sf.ehcache" level="INFO"/>
+    <logger name="org.jboss.weld" level="INFO"/>
+
 
     <logger name="ru.anr" level="DEBUG"/>
 

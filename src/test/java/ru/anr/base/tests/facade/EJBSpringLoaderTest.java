@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;
 import org.springframework.test.context.ActiveProfiles;
-import ru.anr.base.facade.ejb.EJBSpringLoader;
+import ru.anr.base.facade.ejb.EJBStartUpLoader;
 import ru.anr.base.facade.samples.ejb.StartUpEJB;
 
 import java.util.Queue;
@@ -19,13 +19,13 @@ import java.util.Queue;
 public class EJBSpringLoaderTest extends BaseWebTestCase {
 
     /**
-     * Test method for {@link ru.anr.base.facade.ejb.EJBSpringLoader#init()}.
+     * Test method for {@link EJBStartUpLoader#init()}.
      */
     @Test
     public void testInit() {
 
         jms.clean(queue);
-        EJBSpringLoader loader = bean(StartUpEJB.class);
+        StartUpEJB loader = bean(StartUpEJB.class);
 
         Assertions.assertNotNull(loader);
         Queue<Message<String>> q = jms.queue(queue);

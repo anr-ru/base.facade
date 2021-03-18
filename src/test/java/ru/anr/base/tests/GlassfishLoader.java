@@ -61,11 +61,6 @@ public class GlassfishLoader {
     protected GlassFishRuntime glassfishRuntime;
 
     /**
-     * File with domain configuration in class path
-     */
-    private String domainFileConfig = "domain.xml";
-
-    /**
      * Name of application
      */
     private final String appName;
@@ -104,7 +99,7 @@ public class GlassfishLoader {
         final int inDoubleQuote = 2;
         int state = normal;
         final StringTokenizer tok = new StringTokenizer(toProcess, "\"' ", true);
-        final ArrayList<String> result = new ArrayList<String>();
+        final ArrayList<String> result = new ArrayList<>();
         final StringBuilder current = new StringBuilder();
         boolean lastTokenHasBeenQuoted = false;
 
@@ -162,15 +157,13 @@ public class GlassfishLoader {
 
             GlassFishProperties gfProps = new GlassFishProperties();
 
-            // Searching of domain.xml in classpath
-            //gfProps.setConfigFileURI(new ClassPathResource(domainFileConfig).getFile().toURI().toString());
             gfProps.setConfigFileReadOnly(false);
             gfProps.setProperty("glassfish.embedded.tmpdir", "./target/glassfish");
 
             // Base logger settings
             Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
 
-            Logger.getLogger("javax.enterprise.system.tools.deployment").setLevel(Level.FINE);
+            Logger.getLogger("javax.enterprise.system.tools.deployment").setLevel(Level.INFO);
             Logger.getLogger("javax.enterprise.system").setLevel(Level.FINE);
 
             glassfishRuntime = GlassFishRuntime.bootstrap();
@@ -266,8 +259,8 @@ public class GlassfishLoader {
             Deployer deployer = glassfish.getDeployer();
 
             // Create a scattered web application.
-            ScatteredArchive webmodule =
-                    new ScatteredArchive(appName, ScatteredArchive.Type.WAR, new File("src/main/webapp"));
+            ScatteredArchive webmodule = new ScatteredArchive(appName, ScatteredArchive.Type.WAR, new File("src/main/webapp"));
+            //new ScatteredArchive(appName, ScatteredArchive.Type.WAR, new File("src/main/webapp"));
 
             // target/classes directory contains my complied servlets
             webmodule.addClassPath(new File("target", "classes"));
@@ -314,16 +307,5 @@ public class GlassfishLoader {
         } catch (IOException ex) {
             logger.info("File : {} not found, ignoring", file);
         }
-    }
-
-    // /////////////////////////////////////////////////////////////////////////
-    // /// getters/setters
-    // /////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param domainFileConfig the domainFileConfig to set
-     */
-    public void setDomainFileConfig(String domainFileConfig) {
-        this.domainFileConfig = domainFileConfig;
     }
 }

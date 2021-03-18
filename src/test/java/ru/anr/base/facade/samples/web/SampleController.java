@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.anr.base.facade.samples.ejb.MyService;
 import ru.anr.base.facade.web.api.NotFoundException;
@@ -30,7 +29,6 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/api/v1")
-@Transactional
 public class SampleController {
 
     /**

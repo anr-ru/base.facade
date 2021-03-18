@@ -17,56 +17,33 @@ package ru.anr.base.facade.ejb;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import ru.anr.base.BaseSpringParent;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.facade.ejb.mdb.LoopBaseEventKeyStrategy;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.jms.Destination;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A singleton EJB which loads spring context via {@link SpringEJBInterceptor}
- * intercepter.
+ * A parent for EJB StartUp beans that need to do some work during their start. It provides some tools for
+ * initial messages for queues if necessary.
+ *
  * <p>
  * Add the @Singleton and @Startup annotations in descendants.
  *
  * @author Alexey Romanchuk
  * @created Nov 12, 2014
  */
-public class EJBSpringLoader extends BaseSpringParent {
+public abstract class EJBStartUpLoader extends EJBContextHolder {
 
     /**
      * Logger
      */
-    private static final Logger logger = LoggerFactory.getLogger(EJBSpringLoader.class);
-
-    /**
-     * The main entry point for loading Spring context
-     */
-    @Produces
-    public ApplicationContext getApplicationContext() {
-
-        AbstractApplicationContext context = new ClassPathXmlApplicationContext("classpath:/ejb-context.xml");
-        context.registerShutdownHook();
-        return context;
-    }
-
-    /**
-     * Reference to {@link JmsOperations} if it is used
-     */
-    @Autowired(required = false)
-    private JmsOperations jms;
+    private static final Logger logger = LoggerFactory.getLogger(EJBStartUpLoader.class);
 
     /**
      * Initialization of a queue ( JmsOperation specified above must be set).
@@ -89,6 +66,8 @@ public class EJBSpringLoader extends BaseSpringParent {
         hh.put(LoopBaseEventKeyStrategy.INSTANCE_HEADER, LoopBaseEventKeyStrategy.getInstanceID());
 
         Message<String> msg = new GenericMessage<String>(text, hh);
+
+        JmsOperations jms = bean("jmsTemplate", JmsOperations.class);
 
         Destination queue = bean(queueBean, Destination.class);
         jms.convertAndSend(queue, msg);
@@ -120,22 +99,14 @@ public class EJBSpringLoader extends BaseSpringParent {
      */
     protected void sendAll() {
 
-        queues.forEach(a -> {
-            initQueue(a[0].toString(), a[1].toString(), a[2].toString(), (Object[]) a[3]);
-        });
+        queues.forEach(a -> initQueue(a[0].toString(), a[1].toString(), a[2].toString(), (Object[]) a[3]));
         queues.clear();
     }
 
-    @Inject
-    private ApplicationContext context;
-
-    /**
-     * Initialization
-     */
     @PostConstruct
     public void init() {
 
-        logger.info("Context: {}, profiles: {}", context, getProfiles());
+        logger.info("Context: {}, profiles: {}, production: {}", getCtx(), getProfiles(), isProdMode());
 
         if (isProdMode()) {
             sendAll();

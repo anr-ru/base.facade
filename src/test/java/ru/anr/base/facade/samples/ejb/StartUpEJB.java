@@ -1,7 +1,8 @@
 package ru.anr.base.facade.samples.ejb;
 
-import ru.anr.base.facade.ejb.EJBSpringLoader;
+import ru.anr.base.facade.ejb.EJBStartUpLoader;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.PersistenceUnit;
@@ -16,12 +17,10 @@ import javax.persistence.PersistenceUnits;
 @Startup
 @Singleton
 @PersistenceUnits({@PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")})
-public class StartUpEJB extends EJBSpringLoader {
+public class StartUpEJB extends EJBStartUpLoader {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
+    @PostConstruct
     public void init() {
 
         addQueue("queue", "KEY", "BODY1", "HH", "VALUE");

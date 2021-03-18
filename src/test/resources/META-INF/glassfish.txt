@@ -3,7 +3,7 @@ create-connector-connection-pool --steadypoolsize 20 --maxpoolsize 100 --poolres
 create-connector-resource --poolname "jms/ConnectionPool" --description "JMS Connection Pool" "jms/ConnectionFactory"
 
 # JDBC pool
-create-jdbc-connection-pool --datasourceclassname ${JDBC_DRIVER} --restype javax.sql.XADataSource --steadypoolsize 5 --maxpoolsize 20 --poolresize 2 --property Password=${JDBC_PASSWORD}:User=${JDBC_USER}:Url="${JDBC_URL}":sslmode=${SSL_MODE} AppJDBCPool
+create-jdbc-connection-pool --datasourceclassname ${JDBC_DRIVER} --restype javax.sql.XADataSource --steadypoolsize 5 --maxpoolsize 20 --poolresize 2 --property Password=${JDBC_PASSWORD}:User=${JDBC_USER}:serverName="${JDBC_SERVER}":databaseName="${JDBC_DATABASE}":connectionAttributes="${JDBC_CONN_ATTRS}" AppJDBCPool
 create-jdbc-resource --connectionpoolid AppJDBCPool AppDatabase
 
 create-jmsdest --desttype queue --property UserName=${JMS_USER}:Password=${JMS_PASSWORD} TestQueue

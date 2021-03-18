@@ -115,16 +115,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.extras</groupId>
-            <artifactId>glassfish-embedded-all</artifactId>
+            <groupId>fish.payara.extras</groupId>
+            <artifactId>payara-embedded-all</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <version>${derby.version}</version>
-            <scope>provided</scope>
-        </dependency-->
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.services</artifactId>
@@ -150,7 +150,9 @@
 
         <dbx.hibernateDialect>org.hibernate.dialect.DerbyTenSevenDialect</dbx.hibernateDialect>
         <dbx.driverClass>org.apache.derby.jdbc.EmbeddedXADataSource</dbx.driverClass>
-        <dbx.url>jdbc\:derby\:target\/database</dbx.url>
+        <dbx.database>target\/derby</dbx.database>
+        <dbx.connection.attrs>\;create\=true</dbx.connection.attrs>
+        <dbx.url>jdbc\:derby\:${dbx.database}${dbx.connection.attrs}</dbx.url>
         <dbx.user>localtest</dbx.user>
         <dbx.password>localtest</dbx.password>
         <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>

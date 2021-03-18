@@ -16,37 +16,37 @@
             memoryStoreEvictionPolicy="LRU"
             statistics="true"
             clearOnFlush="false"
-            >
-    </defaultCache>           
+    >
+    </defaultCache>
 
-    <cache name="org.hibernate.cache.internal.StandardQueryCache"
-            maxElementsInMemory="1000"
-            eternal="false"
-            timeToIdleSeconds="3"
-            timeToLiveSeconds="3"
-            overflowToDisk="false"
-            diskSpoolBufferSizeMB="0"
-            maxElementsOnDisk="0"
-            diskPersistent="false"
-            diskExpiryThreadIntervalSeconds="120"
-            memoryStoreEvictionPolicy="LRU"
-            statistics="true"
-            clearOnFlush="false"
-            >
+    <cache name="default-query-results-region"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToIdleSeconds="3"
+           timeToLiveSeconds="3"
+           overflowToDisk="false"
+           diskSpoolBufferSizeMB="0"
+           maxElementsOnDisk="0"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"
+           statistics="true"
+           clearOnFlush="false"
+    >
     </cache>
 
-    <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
-            maxElementsInMemory="1000"
-            eternal="true"
-            overflowToDisk="false"
-            diskSpoolBufferSizeMB="0"
-            maxElementsOnDisk="0"
-            diskPersistent="false"
-            diskExpiryThreadIntervalSeconds="120"
-            memoryStoreEvictionPolicy="LRU"
-            statistics="true"
-            clearOnFlush="false"
-            >
+    <cache name="default-update-timestamps-region"
+           maxElementsInMemory="1000"
+           eternal="true"
+           overflowToDisk="false"
+           diskSpoolBufferSizeMB="0"
+           maxElementsOnDisk="0"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"
+           statistics="true"
+           clearOnFlush="false"
+    >
     </cache>
-    
+
 </ehcache>

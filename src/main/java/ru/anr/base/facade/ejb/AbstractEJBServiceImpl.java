@@ -29,9 +29,7 @@ import javax.transaction.Transactional;
  * The abstract parent for all EJBs used here. The CONTAINER transaction support
  * has been added just for understanding what we really relay on.
  * <p>
- * Also added an interceptor which gives an ability to inject spring beans
- * directly as EJB class fields (with
- * {@link org.springframework.beans.factory.annotation.Autowired} annotation).
+ * Spring beans can be pulled on its descendants from the injected spring context (see {@link EJBContextHolder}).
  *
  * @author Alexey Romanchuk
  * @created Nov 13, 2014
@@ -39,7 +37,7 @@ import javax.transaction.Transactional;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Transactional(dontRollbackOn = {NotFoundException.class, BadCredentialsException.class})
-@Interceptors({SpringEJBInterceptor.class, ExceptionHandlerInterceptor.class})
+@Interceptors({ExceptionHandlerInterceptor.class})
 public abstract class AbstractEJBServiceImpl extends EJBContextHolder {
 
 }

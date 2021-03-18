@@ -3,11 +3,9 @@ package ru.anr.base.tests.facade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
@@ -21,38 +19,30 @@ import ru.anr.base.samples.domain.Samples;
 
 public class WebAccessTest extends BaseWebTestCase {
 
-    /**
-     * Client under test
-     */
     private final RestClient client = new RestClient();
 
-    /**
-     * Test local dao
-     */
     @Autowired
-    @Qualifier("mydao")
     private MyDao dao;
 
     /**
      * Integration test to chech EJB/JTA/JMS/JPA integration to work with
-     * Glassfish Embedded server.
+     * JEE Embedded server.
      * <p>
      * Transaction annotations (which gives a local transaction) is required for
      * lazy-loaded hibernate objects.
      */
     @Test
-    @Transactional
     public void checks() {
 
         RestClient rest = new RestClient();
         rest.setAccept(MediaType.TEXT_PLAIN);
 
-        ResponseEntity<String> r = rest.get("api/v1/query/2");
+        ResponseEntity<String> r = rest.get("/api/v1/query/2");
 
         logger.info("Result: {}", r.getBody());
         Assertions.assertNotNull(r.getBody());
 
-        sleep(2000); // Waiting JMS Handler to complete
+        sleep(5000); // Waiting JMS Handler to complete
 
         Long id = Long.valueOf(r.getBody());
 

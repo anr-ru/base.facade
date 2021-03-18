@@ -13,7 +13,8 @@ import ru.anr.base.dao.BaseRepositoryFactoryBean;
  * @created Nov 6, 2014
  */
 @Configuration
-@EnableJpaRepositories(basePackages = {"ru.anr.base.samples.dao"}, //
+@EnableJpaRepositories(
+        basePackages = {"ru.anr.base.samples.dao"},
         repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class)
 @EnableTransactionManagement
 public class DaoConfig extends BaseJTADaoConfig {

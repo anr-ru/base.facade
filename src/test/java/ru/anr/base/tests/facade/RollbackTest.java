@@ -3,7 +3,6 @@ package ru.anr.base.tests.facade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import ru.anr.base.facade.samples.domain.PingReponseModel;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
 import ru.anr.base.facade.web.api.RestClient;
@@ -20,11 +19,7 @@ import ru.anr.base.tests.APITester;
 
 public class RollbackTest extends BaseWebTestCase {
 
-    /**
-     * {@link MyDao}
-     */
     @Autowired
-    @Qualifier("mydao")
     private MyDao dao;
 
     /**

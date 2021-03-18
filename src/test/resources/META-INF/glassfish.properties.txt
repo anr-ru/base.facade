@@ -9,10 +9,12 @@ create-system-properties --target domain JMS_URLS=localhost
 create-system-properties --target domain JDBC_DRIVER=${dbx.driverClass}
 create-system-properties --target domain JDBC_USER=${dbx.user}
 create-system-properties --target domain JDBC_PASSWORD=${dbx.password}
-create-system-properties --target domain JDBC_URL="${dbx.url}"
-
-create-system-properties --target domain SSL_MODE=disable
+create-system-properties --target domain JDBC_DATABASE="${dbx.database}"
+create-system-properties --target domain JDBC_SERVER=localhost
+create-system-properties --target domain JDBC_CONN_ATTRS="${dbx.connection.attrs}"
 
 create-jvm-options -- -Dspring.profiles.active="developers"
 create-jvm-options -- -Dspring.profiles.default="developers"
-create-jvm-options -- "--add-exports java.base/jdk.internal.loader=ALL-UNNAMED"
+
+create-jvm-options -- "--add-opens --add-exports java.base/jdk.internal.loader=ALL-UNNAMED"
+create-jvm-options -- "--illegal-access=warn"

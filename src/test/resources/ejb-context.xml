@@ -10,7 +10,7 @@
 
     <context:component-scan base-package="ru.anr.base.facade.samples.services"/>
     <!-- JNDI Objects -->
-    <jee:jndi-lookup id="datasource" jndi-name="APPJDBC" lookup-on-startup="true"/>
+    <jee:jndi-lookup id="datasource" jndi-name="AppDatabase" lookup-on-startup="true"/>
     <jee:jndi-lookup id="entityManagerFactory" jndi-name="TestUnit/EntityManagerFactory" resource-ref="true"
                      expected-type="javax.persistence.EntityManagerFactory"/>
     <jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" lookup-on-startup="true"/>

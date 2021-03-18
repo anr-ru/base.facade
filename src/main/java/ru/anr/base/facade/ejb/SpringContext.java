@@ -15,30 +15,20 @@
  */
 package ru.anr.base.facade.ejb;
 
-import org.springframework.context.ApplicationContext;
-import ru.anr.base.BaseSpringParent;
-
-import javax.inject.Inject;
+import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A holder of Spring context and a single parent for all EJB beans that require a Spring context.
- *
- * @author Alexey Romanchuk
- * @created Nov 12, 2014
+ * Annotation for qualifying Spring Context for the CDI parser.
  */
-public abstract class EJBContextHolder extends BaseSpringParent {
-
-    /**
-     * Inject the context as a CDI bean
-     */
-    @Override
-    @Inject
-    public void setCtx(@SpringContext ApplicationContext context) {
-        super.setCtx(context);
-    }
-
-    public ApplicationContext getCtx() {
-
-        return ctx;
-    }
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE})
+public @interface SpringContext {
+    @Nonbinding
+    String name() default "default";
 }

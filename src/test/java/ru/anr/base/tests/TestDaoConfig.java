@@ -13,7 +13,8 @@ import ru.anr.base.samples.dao.MyDao;
  * @created Dec 18, 2014
  */
 @Configuration
-@EnableJpaRepositories(basePackageClasses = {BaseRepository.class, MyDao.class}, //
+@EnableJpaRepositories(
+        basePackageClasses = {BaseRepository.class, MyDao.class},
         repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class)
 public class TestDaoConfig extends AbstractLocalDaoConfig {
 

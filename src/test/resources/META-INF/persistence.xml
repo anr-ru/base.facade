@@ -22,10 +22,10 @@
             <property name="hibernate.connection.driver_class" value="${dbx.driverClass}"/>
 
             <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
-            <!--property name="hibernate.transaction.factory_class" value="org.hibernate.engine.transaction.internal.jta.CMTTransactionFactory"/-->
 
-            <property name="hibernate.transaction.coordinator_class"
-                      value="org.hibernate.resource.transaction.backend.jta.internal.JtaTransactionCoordinatorImpl"/>
+            <property name="hibernate.transaction.factory_class"
+                      value="org.hibernate.resource.transaction.backend.jta.internal.JtaTransactionCoordinatorBuilderImpl"/>
+            <property name="hibernate.transaction.coordinator_class" value="jta"/>
 
             <!-- ddl auto update for test database -->
             <property name="hibernate.hbm2ddl.auto" value="update"/>

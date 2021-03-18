@@ -181,7 +181,7 @@ public class ApiTest extends BaseWebTestCase {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
             Assertions.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
-            Assertions.assertEquals("{\"code\":-1,\"error_id\":\"validation\",\"message\":\"[may not be null]\"}",
+            Assertions.assertEquals("{\"code\":-1,\"error_id\":\"validation\",\"message\":\"[must not be null]\"}",
                     ex.getResponseBodyAsString());
         }
     }
