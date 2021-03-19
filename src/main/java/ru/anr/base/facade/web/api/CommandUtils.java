@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,8 +15,6 @@
  */
 package ru.anr.base.facade.web.api;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -24,7 +22,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import ru.anr.base.ApplicationException;
 import ru.anr.base.BaseParent;
 import ru.anr.base.domain.api.APICommand;
@@ -32,43 +29,29 @@ import ru.anr.base.domain.api.RawFormatTypes;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.api.APICommandFactory;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Utilities for APICommand building in a web layer.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 21, 2014
- *
  */
 
 public final class CommandUtils {
 
-    /**
-     * The logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(CommandUtils.class);
 
-    /**
-     * Constructor
-     */
     private CommandUtils() {
-
-        /*
-         * Do nothing
-         */
     }
 
     /**
      * Building a command with data extracted from {@link HttpServletRequest}
      * (method, headers).
-     * 
-     * 
-     * @param commandId
-     *            Identifier of Command
-     * @param apiVersion
-     *            API Version
-     * @param request
-     *            Http request
+     *
+     * @param commandId  Identifier of Command
+     * @param apiVersion API Version
+     * @param request    Http request
      * @return A command instance
      */
     public static APICommand build(String commandId, String apiVersion, HttpServletRequest request) {
@@ -97,11 +80,9 @@ public final class CommandUtils {
      * Exception enhancement - by default all our exception are packaged to
      * {@link APICommand} format but in some cases we need to throw an exception
      * (Spring security, Fatal error).
-     * 
-     * @param api
-     *            Original API command
-     * @param ex
-     *            OPriginal exception
+     *
+     * @param api Original API command
+     * @param ex  OPriginal exception
      * @return A new exception to be thrown or null if no throwing is required
      */
     public static RuntimeException enhanceException(APICommand api, Exception ex) {
@@ -116,7 +97,7 @@ public final class CommandUtils {
         } else {
 
             ResponseModel r = api.getResponse();
-            if (BaseParent.safeEquals(r.getCode(), Integer.valueOf(1))) {
+            if (BaseParent.safeEquals(r.getCode(), 1)) {
 
                 // code = 1 means "System error" and must generate HTTP 500
                 logger.error("System error caught: {}", r.getDescription());
@@ -129,11 +110,9 @@ public final class CommandUtils {
     /**
      * Construction of API Command with request specific params (taken from a
      * current request)
-     * 
-     * @param commandId
-     *            Identifier of command
-     * @param apiVersion
-     *            Version of API
+     *
+     * @param commandId  Identifier of command
+     * @param apiVersion Version of API
      * @return An instance of API command
      */
     public static APICommand buildAPI(String commandId, String apiVersion) {
@@ -145,23 +124,21 @@ public final class CommandUtils {
     /**
      * Processing an API command. If an exception occurs, starting predefined
      * error processing.
-     * 
-     * @param factory
-     *            The {@link APICommandFactory}
-     * @param api
-     *            API Command to process
+     *
+     * @param factory The {@link APICommandFactory}
+     * @param api     API Command to process
      * @return Resulted command
      */
     public static APICommand process(APICommandFactory factory, APICommand api) {
 
-        APICommand r = null;
+        APICommand r;
         try {
             r = factory.process(api);
 
         } catch (Throwable ex) {
 
             Throwable e = new ApplicationException(ex).getMostSpecificCause();
-            if (e != null && (e instanceof RuntimeException)) {
+            if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
             } else {
                 throw new ApplicationException(e); // Real shit happened

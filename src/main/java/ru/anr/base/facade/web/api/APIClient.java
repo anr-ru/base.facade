@@ -20,8 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.serializer.JSONSerializerImpl;
 import ru.anr.base.services.serializer.Serializer;
@@ -36,19 +35,10 @@ import java.util.Map;
  */
 public class APIClient {
 
-    /**
-     * The logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(APIClient.class);
 
-    /**
-     * {@link Serializer}
-     */
     protected Serializer json = new JSONSerializerImpl();
 
-    /**
-     * The parent test case
-     */
     protected RestClient client;
 
     /**
@@ -62,7 +52,7 @@ public class APIClient {
     }
 
     /**
-     * Performs a wrapped API call with loggins all http errors.
+     * Performs a wrapped API call with logging all http errors.
      *
      * @param callback The callback with request details
      * @param typeDef  An unspecified type (can be a class or a {@link TypeReference}
@@ -80,7 +70,7 @@ public class APIClient {
             logger.debug("Query result: {}", rs.getBody());
 
             Object type = (typeDef == null) ? ResponseModel.class : typeDef;
-            S value = null;
+            S value;
 
             if (typeDef instanceof TypeReference<?>) {
                 value = json.fromStr(rs.getBody(), (TypeReference<S>) type);
@@ -90,13 +80,9 @@ public class APIClient {
                 value = json.fromStr(rs.getBody(), (Class<S>) type);
             }
             return value;
-
-        } catch (HttpClientErrorException e1) {
-            logger.error("Query client error: {}: {}", e1.getStatusCode(), e1.getResponseBodyAsString());
-            throw e1;
-        } catch (HttpServerErrorException e2) {
-            logger.error("Query server error: {}: {}", e2.getStatusCode(), e2.getResponseBodyAsString());
-            throw e2;
+        } catch (HttpStatusCodeException ex) {
+            logger.error("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
+            throw ex;
         }
     }
 
@@ -166,15 +152,11 @@ public class APIClient {
      * @return An array of bytes
      */
     public byte[] apiDownload(String url) {
-
         try {
             return client.download(url).getBody();
-        } catch (HttpClientErrorException e1) {
-            logger.error("Query client error: {}: {}", e1.getStatusCode(), e1.getResponseBodyAsString());
-            throw e1;
-        } catch (HttpServerErrorException e2) {
-            logger.error("Query server error: {}: {}", e2.getStatusCode(), e2.getResponseBodyAsString());
-            throw e2;
+        } catch (HttpStatusCodeException ex) {
+            logger.error("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
+            throw ex;
         }
     }
 
@@ -261,7 +243,7 @@ public class APIClient {
     }
 
     /**
-     * The DELETE command for API with a model as a simle class
+     * The DELETE command for API with a model as a simple class.
      *
      * @param url        The url
      * @param modelClass The class of the resulted model

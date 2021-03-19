@@ -109,7 +109,7 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
 
         jms.convertAndSend(responses, msg);
 
-        TypeReference<List<PingRequestModel>> type = new TypeReference<List<PingRequestModel>>() {
+        TypeReference<List<PingRequestModel>> type = new TypeReference<>() {
         };
 
         List<PingRequestModel> rs = apis.getResponse("ID", type);
