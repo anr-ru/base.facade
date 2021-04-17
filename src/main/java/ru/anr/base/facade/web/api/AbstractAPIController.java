@@ -35,22 +35,21 @@ import ru.anr.base.services.api.ApiUtils;
  * method specific arguments, for example:
  *
  * <PRE>
- * <p>
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.GET)
  * public String doGet(@PathVariable String id, @RequestParam Map&lt;String, String&gt; params) {
- * <p>
+ *
  * APICommand cmd = buildAPI(&quot;ping&quot;, &quot;v1&quot;).context(&quot;id&quot;, id).params(params);
  * return process(cmd).getRawModel();
  * }
  * </PRE>
- * <p>
+ *
  * or
  *
  * <PRE>
- * <p>
+ *
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.POST)
  * public String doPost(@PathVariable String id, @RequestBody String body) {
- * <p>
+ *
  * APICommand cmd = buildAPI(&quot;ping&quot;, &quot;v1&quot;).context(&quot;id&quot;, id).addRaw(body);
  * return process(cmd).getRawModel();
  * }
@@ -113,6 +112,7 @@ public class AbstractAPIController {
      * A variant of API-command builder that use the strategy class
      *
      * @param clazz The strategy class to use
+     * @return The build command
      */
     protected APICommand buildAPI(Class<? extends ApiCommandStrategy> clazz) {
         ApiStrategy api = ApiUtils.extract(clazz);
