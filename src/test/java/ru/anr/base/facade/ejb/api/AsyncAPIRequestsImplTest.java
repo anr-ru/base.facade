@@ -1,26 +1,23 @@
 /**
- * 
+ *
  */
 package ru.anr.base.facade.ejb.api;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.jms.Destination;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.facade.ejb.api.requests.AsyncAPIRequests;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
 import ru.anr.base.tests.JmsTests;
 import ru.anr.base.tests.facade.BaseWebTestCase;
+
+import javax.jms.Destination;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description ...
@@ -33,9 +30,6 @@ import ru.anr.base.tests.facade.BaseWebTestCase;
 
 public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
 
-    /**
-     * {@link AsyncAPIRequests}
-     */
     @Autowired
     @Qualifier("asyncApiService")
     private AsyncAPIRequests apis;
