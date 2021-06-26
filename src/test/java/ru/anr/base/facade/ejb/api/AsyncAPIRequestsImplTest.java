@@ -34,9 +34,6 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
     @Qualifier("asyncApiService")
     private AsyncAPIRequests apis;
 
-    /**
-     * {@link JmsTests} defined for local tests
-     */
     @Autowired
     private JmsTests jms;
 
