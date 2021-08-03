@@ -1,12 +1,11 @@
 /**
- * 
+ *
  */
 package ru.anr.base.facade.samples.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.APIException;
@@ -53,7 +52,7 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
     @Override
     public ResponseModel post(APICommand cmd) {
 
-        PingRequestModel m = (PingRequestModel) cmd.getRequest();
+        PingRequestModel m = cmd.getRequest();
 
         logger.debug("Ping processed: {}, {}", cmd.getContexts().get("id"), m.getMessage());
 

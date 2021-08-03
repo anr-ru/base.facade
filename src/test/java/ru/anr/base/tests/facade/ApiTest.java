@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.anr.base.tests.facade;
 
@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-
 import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.tests.HttpJob;
 import ru.anr.base.tests.multithreading.ThreadExecutor;

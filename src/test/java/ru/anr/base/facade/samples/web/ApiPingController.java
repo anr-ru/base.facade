@@ -50,7 +50,7 @@ public class ApiPingController extends AbstractAPIController {
      *            Request body
      * @return Some result value
      */
-    @RequestMapping(value = "/ping/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/ping/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
     public String doPost(@PathVariable String id, @RequestBody String body) {
 
         return process(buildAPI(PingApiStrategy.class)

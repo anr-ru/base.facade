@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.springframework.core.io.Resource;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.web.api.APIClient;
 import ru.anr.base.facade.web.api.ApiCallback;
@@ -28,7 +30,7 @@ public class APITester extends APIClient {
     /**
      * The parent test case
      */
-    private BaseTestCase testcase;
+    private final BaseTestCase testcase;
 
     /**
      * Construction of an object
@@ -290,7 +292,7 @@ public class APITester extends APIClient {
      *            The class
      */
     public <S> S apiUpload(RestClient client, String url, Resource file, Class<S> resultModel,
-            Map<String, Object> props) {
+                           Map<String, Object> props) {
 
         return api(args -> client.upload(url, file, props), resultModel);
     }
@@ -325,5 +327,26 @@ public class APITester extends APIClient {
         testcase.assertException(args -> {
             api(callback, ResponseModel.class, params);
         }, expectedMsg, params);
+    }
+
+    /**
+     * Performs a wrapped API call with loggins all http errors.
+     *
+     * @param callback The callback with request details
+     * @param typeDef  An unspecified type (can be a class or a {@link TypeReference}
+     *                 object)
+     * @param params   Additional parameters
+     * @return The response as an object of the required class
+     */
+    @Override
+    protected <S> S api(ApiCallback callback, Object typeDef, Object... params) {
+        try {
+            return super.api(callback, typeDef, params);
+        } catch (HttpClientErrorException e1) {
+            throw new AssertionError("Client Error (" + e1.getStatusCode() + ") / " + e1.getResponseBodyAsString());
+        } catch (HttpServerErrorException e2) {
+            throw new AssertionError("Server Error (" + e2.getStatusCode() + ") / " + e2.getResponseBodyAsString());
+        }
+
     }
 }
