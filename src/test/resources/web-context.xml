@@ -1,52 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
-    xmlns:security="http://www.springframework.org/schema/security"
-    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="ru.anr.base.facade.samples.web,ru.anr.base.facade.web.api" />
+    <context:component-scan base-package="ru.anr.base.facade.samples.web,ru.anr.base.facade.web.api"/>
 
-    <jee:jndi-lookup id="datasource" jndi-name="APPJDBC" lookup-on-startup="true" />
-    <jee:jndi-lookup id="entityManagerFactory" jndi-name="TestUnit/EntityManagerFactory" resource-ref="true" expected-type="javax.persistence.EntityManagerFactory"/>
+    <jee:jndi-lookup id="datasource" jndi-name="APPJDBC" lookup-on-startup="true"/>
+    <jee:jndi-lookup id="entityManagerFactory" jndi-name="TestUnit/EntityManagerFactory" resource-ref="true"
+                     expected-type="javax.persistence.EntityManagerFactory"/>
 
-    <mvc:annotation-driven />
+    <mvc:annotation-driven/>
 
     <jee:local-slsb id="ejbean"
-        business-interface="ru.anr.base.facade.samples.ejb.MyService"
-        jndi-name="java:global/facade/MyServiceEJB" resource-ref="true" />
+                    business-interface="ru.anr.base.facade.samples.ejb.MyService"
+                    jndi-name="java:global/facade/MyServiceEJB" resource-ref="true"/>
 
     <jee:local-slsb id="apibean"
-        business-interface="ru.anr.base.services.api.APICommandFactory"
-        jndi-name="java:global/facade/TestEJBApi" resource-ref="true" />
+                    business-interface="ru.anr.base.services.api.APICommandFactory"
+                    jndi-name="java:global/facade/TestEJBApi" resource-ref="true"/>
 
 
     <jee:local-slsb id="authenticationManager"
-        business-interface="org.springframework.security.authentication.AuthenticationManager"
-        jndi-name="java:global/facade/AuthenticationBean" resource-ref="true" />
-        
-    <!-- Security settings: for default anonymous authenticationManager is not invoked -->        
+                    business-interface="org.springframework.security.authentication.AuthenticationManager"
+                    jndi-name="java:global/facade/AuthenticationBean" resource-ref="true"/>
+
+    <!-- Security settings: for default anonymous authenticationManager is not invoked -->
     <security:http authentication-manager-ref="authenticationManager" entry-point-ref="entryPoint"
-        use-expressions="false" disable-url-rewriting="false">
+                   use-expressions="false" disable-url-rewriting="false">
 
         <security:csrf disabled="true"/>
 
         <security:anonymous username="anonymous" key="DerKey" granted-authority="ROLE_ANONYMOUS"/>
 
         <!-- Registration is allowed for an anonymous user -->
-        <security:intercept-url pattern="/**" access="ROLE_ANONYMOUS" />
+        <security:intercept-url pattern="/**" access="ROLE_ANONYMOUS"/>
 
     </security:http>
-    
-    <bean id = "entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
 
-    <bean class="ru.anr.base.facade.ejb.health.HealthCheckJEEConfig" p:jndiName="java:global/facade/HealthBean" />
+    <bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+
+    <bean class="ru.anr.base.facade.ejb.health.HealthCheckJEEConfig" p:jndiName="java:global/facade/HealthBean"/>
 
 </beans>
