@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,6 +14,14 @@
  * the License.
  */
 package ru.anr.base.tests;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.glassfish.embeddable.*;
+import org.glassfish.embeddable.archive.ScatteredArchive;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import ru.anr.base.ApplicationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,21 +31,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.glassfish.embeddable.CommandResult;
-import org.glassfish.embeddable.CommandRunner;
-import org.glassfish.embeddable.Deployer;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.embeddable.GlassFishRuntime;
-import org.glassfish.embeddable.archive.ScatteredArchive;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-
-import ru.anr.base.ApplicationException;
-
 /**
  * Loader for Embedded Glassfish. Default configuration tries to load both
  * classpath and test classpath as a single war application.
@@ -45,10 +38,8 @@ import ru.anr.base.ApplicationException;
  * The loader can be use only for JUnit tests and not specially usefull for
  * local web development, because unable to perform class/resources reloading.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 17, 2014
- *
  */
 
 public class GlassfishLoader {
@@ -80,9 +71,8 @@ public class GlassfishLoader {
 
     /**
      * Constructor
-     * 
-     * @param appName
-     *            Name of application
+     *
+     * @param appName Name of application
      */
     public GlassfishLoader(String appName) {
 
@@ -93,13 +83,12 @@ public class GlassfishLoader {
     /**
      * Note: This part of code is taken from Apache Ant CommandLine
      * implementation.
-     * 
+     *
      * Crack a command line.
-     * 
-     * @param toProcess
-     *            the command line to process.
+     *
+     * @param toProcess the command line to process.
      * @return the command line broken into strings. An empty or null toProcess
-     *         parameter results in a zero sized array.
+     * parameter results in a zero sized array.
      */
     public static String[] translateCommandline(String toProcess) {
 
@@ -160,7 +149,7 @@ public class GlassfishLoader {
         if (state == inQuote || state == inDoubleQuote) {
             throw new ApplicationException("unbalanced quotes in " + toProcess);
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     /**
@@ -173,8 +162,11 @@ public class GlassfishLoader {
             GlassFishProperties gfProps = new GlassFishProperties();
 
             // Searching of domain.xml in classpath
-            gfProps.setConfigFileURI(new ClassPathResource(domainFileConfig).getFile().toURI().toString());
-            gfProps.setConfigFileReadOnly(true);
+            ClassPathResource r = new ClassPathResource(domainFileConfig);
+            if (r.exists()) {
+                gfProps.setConfigFileURI(r.getFile().toURI().toString());
+                gfProps.setConfigFileReadOnly(true);
+            }
             gfProps.setProperty("glassfish.embedded.tmpdir", "./target/glassfish");
 
             // Base logger settings
@@ -201,13 +193,10 @@ public class GlassfishLoader {
 
     /**
      * Executes a file with asadmin commands
-     * 
-     * @param fileName
-     *            Name of a file
-     * @throws IOException
-     *             In case of File not found
-     * @throws GlassFishException
-     *             In case of Glassfish error
+     *
+     * @param fileName Name of a file
+     * @throws IOException        In case of File not found
+     * @throws GlassFishException In case of Glassfish error
      */
     private void executeScript(String fileName) throws IOException, GlassFishException {
 
@@ -268,10 +257,6 @@ public class GlassfishLoader {
     /**
      * Deploying all applications (EJB, Servlets) localed both in classpath and
      * test classpath.
-     * 
-     * @param deployer
-     * @throws IOException
-     * @throws GlassFishException
      */
     public void deployApps() {
 
@@ -313,11 +298,9 @@ public class GlassfishLoader {
      * Safe adding item to avoid {@link IOException} in case of absence some
      * configuration. For example a test application can be web only without
      * EJB.
-     * 
-     * @param webmodule
-     *            WAR module
-     * @param file
-     *            File to add
+     *
+     * @param webmodule WAR module
+     * @param file      File to add
      */
     private void safeAddMetadata(ScatteredArchive webmodule, File file) {
 
@@ -337,8 +320,7 @@ public class GlassfishLoader {
     // /////////////////////////////////////////////////////////////////////////
 
     /**
-     * @param domainFileConfig
-     *            the domainFileConfig to set
+     * @param domainFileConfig the domainFileConfig to set
      */
     public void setDomainFileConfig(String domainFileConfig) {
 
