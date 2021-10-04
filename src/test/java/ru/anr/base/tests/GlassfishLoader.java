@@ -166,6 +166,8 @@ public class GlassfishLoader {
             if (r.exists()) {
                 gfProps.setConfigFileURI(r.getFile().toURI().toString());
                 gfProps.setConfigFileReadOnly(true);
+            } else {
+                gfProps.setConfigFileReadOnly(false);
             }
             gfProps.setProperty("glassfish.embedded.tmpdir", "./target/glassfish");
 
