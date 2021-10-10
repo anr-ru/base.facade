@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,6 +15,12 @@
  */
 package ru.anr.base.tests;
 
+import org.springframework.jms.core.*;
+import org.springframework.util.Assert;
+import ru.anr.base.ApplicationException;
+import ru.anr.base.BaseParent;
+
+import javax.jms.*;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,30 +28,12 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Queue;
-import javax.jms.QueueBrowser;
-
-import org.springframework.jms.core.BrowserCallback;
-import org.springframework.jms.core.MessageCreator;
-import org.springframework.jms.core.MessagePostProcessor;
-import org.springframework.jms.core.ProducerCallback;
-import org.springframework.jms.core.SessionCallback;
-import org.springframework.util.Assert;
-
-import ru.anr.base.ApplicationException;
-import ru.anr.base.BaseParent;
-
 /**
  * A test implementation for {@link JmsTests} to use instead of real JMS
  * template.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 22, 2014
- *
  */
 
 public class TestJmsOperations extends BaseParent implements JmsTests {
@@ -70,9 +58,8 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
 
     /**
      * Getting stored queue (or creating a new one in storage)
-     * 
-     * @param destination
-     *            Destination to use
+     *
+     * @param destination Destination to use
      * @return Mock queue instance
      */
     private java.util.Queue<org.springframework.messaging.Message<String>> getQueue(Object destination) {
@@ -312,7 +299,7 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     @Override
     public Object receiveSelectedAndConvert(Destination destination, String messageSelector) {
 
-        return receiveAndConvert(destination);
+        return receiveSelectedAndConvert(destination.toString(), messageSelector);
     }
 
     /**
@@ -321,7 +308,9 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     @Override
     public Object receiveSelectedAndConvert(String destinationName, String messageSelector) {
 
-        return receiveAndConvert(destinationName);
+        // TODO: is there a basic way to parse simple SQL where conditions?
+        java.util.Queue<org.springframework.messaging.Message<String>> q = getQueue(destinationName);
+        return q.poll();
     }
 
     /**
@@ -434,8 +423,7 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     }
 
     /**
-     * @param defaultDestination
-     *            the defaultDestination to set
+     * @param defaultDestination the defaultDestination to set
      */
     public void setDefaultDestination(Destination defaultDestination) {
 

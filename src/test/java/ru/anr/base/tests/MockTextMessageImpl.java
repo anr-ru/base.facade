@@ -1,17 +1,17 @@
 /**
- * 
+ *
  */
 package ru.anr.base.tests;
 
-import java.util.Enumeration;
+import org.springframework.jms.support.JmsHeaders;
+import org.springframework.messaging.Message;
+import ru.anr.base.BaseParent;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-
-import org.springframework.messaging.Message;
-
-import ru.anr.base.BaseParent;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * A mock text message used in operations which require raw JMS Objects like
@@ -32,7 +32,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
 
     /**
      * Constructor
-     * 
+     *
      * @param message
      *            The message
      */
@@ -43,7 +43,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
 
     /**
      * Returns the embedded message
-     * 
+     *
      * @return The message
      */
     public Message<String> getMessage() {
@@ -56,8 +56,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public String getJMSMessageID() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (String) this.message.getHeaders().get(JmsHeaders.MESSAGE_ID);
     }
 
     /**
@@ -65,8 +64,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSMessageID(String id) throws JMSException {
-
-        throw new UnsupportedOperationException();
+        this.message.getHeaders().put(JmsHeaders.MESSAGE_ID, id);
     }
 
     /**
@@ -74,8 +72,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public long getJMSTimestamp() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (long) nullSafe(0L, this.message.getHeaders().get(JmsHeaders.TIMESTAMP));
     }
 
     /**
@@ -83,9 +80,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSTimestamp(long timestamp) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+        this.message.getHeaders().put(JmsHeaders.TIMESTAMP, timestamp);
     }
 
     /**
@@ -93,8 +88,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public byte[] getJMSCorrelationIDAsBytes() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return BaseParent.utf8(this.getJMSCorrelationID());
     }
 
     /**
@@ -102,8 +96,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSCorrelationIDAsBytes(byte[] correlationID) throws JMSException {
-
-        throw new UnsupportedOperationException();
+        this.setJMSCorrelationID(BaseParent.utf8(correlationID));
     }
 
     /**
@@ -111,9 +104,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSCorrelationID(String correlationID) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+        this.message.getHeaders().put(JmsHeaders.CORRELATION_ID, correlationID);
     }
 
     /**
@@ -121,8 +112,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public String getJMSCorrelationID() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (String) this.message.getHeaders().get(JmsHeaders.CORRELATION_ID);
     }
 
     /**
@@ -130,8 +120,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public Destination getJMSReplyTo() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (Destination) this.message.getHeaders().get(JmsHeaders.REPLY_TO);
     }
 
     /**
@@ -139,9 +128,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSReplyTo(Destination replyTo) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+        this.message.getHeaders().put(JmsHeaders.REPLY_TO, replyTo);
     }
 
     /**
@@ -149,8 +136,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public Destination getJMSDestination() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (Destination) this.message.getHeaders().get(JmsHeaders.DESTINATION);
     }
 
     /**
@@ -158,8 +144,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSDestination(Destination destination) throws JMSException {
-
-        throw new UnsupportedOperationException();
+        this.message.getHeaders().put(JmsHeaders.DESTINATION, destination);
     }
 
     /**
@@ -167,8 +152,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public int getJMSDeliveryMode() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (int) nullSafe(0, this.message.getHeaders().get(JmsHeaders.DELIVERY_MODE));
     }
 
     /**
@@ -176,9 +160,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSDeliveryMode(int deliveryMode) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+        this.message.getHeaders().put(JmsHeaders.DELIVERY_MODE, deliveryMode);
     }
 
     /**
@@ -186,8 +168,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public boolean getJMSRedelivered() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (boolean) nullSafe(false, this.message.getHeaders().get(JmsHeaders.REDELIVERED));
     }
 
     /**
@@ -195,9 +176,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSRedelivered(boolean redelivered) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+        this.message.getHeaders().put(JmsHeaders.REDELIVERED, redelivered);
     }
 
     /**
@@ -205,8 +184,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public String getJMSType() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (String) this.message.getHeaders().get(JmsHeaders.TYPE);
     }
 
     /**
@@ -214,9 +192,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSType(String type) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+        this.message.getHeaders().put(JmsHeaders.TYPE, type);
     }
 
     /**
@@ -224,8 +200,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public long getJMSExpiration() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (long) nullSafe(0L, this.message.getHeaders().get(JmsHeaders.EXPIRATION));
     }
 
     /**
@@ -233,9 +208,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public void setJMSExpiration(long expiration) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+        this.message.getHeaders().put(JmsHeaders.EXPIRATION, expiration);
     }
 
     /**
@@ -243,8 +216,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public long getJMSDeliveryTime() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return (long) 0;
     }
 
     /**
@@ -253,53 +225,45 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
     @Override
     public void setJMSDeliveryTime(long deliveryTime) throws JMSException {
 
-        throw new UnsupportedOperationException();
-
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public int getJMSPriority() throws JMSException {
-
-        throw new UnsupportedOperationException();
+    public int getJMSPriority() {
+        return (int) nullSafe(0, this.message.getHeaders().get(JmsHeaders.PRIORITY));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setJMSPriority(int priority) throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+    public void setJMSPriority(int priority) {
+        this.message.getHeaders().put(JmsHeaders.PRIORITY, priority);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void clearProperties() throws JMSException {
-
-        throw new UnsupportedOperationException();
-
+    public void clearProperties() {
+        this.message.getHeaders().clear();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean propertyExists(String name) throws JMSException {
-
-        throw new UnsupportedOperationException();
+    public boolean propertyExists(String name) {
+        return this.message.getHeaders().containsKey(name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean getBooleanProperty(String name) throws JMSException {
+    public boolean getBooleanProperty(String name) {
 
         throw new UnsupportedOperationException();
     }
@@ -308,7 +272,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      * {@inheritDoc}
      */
     @Override
-    public byte getByteProperty(String name) throws JMSException {
+    public byte getByteProperty(String name) {
 
         throw new UnsupportedOperationException();
     }
@@ -317,7 +281,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      * {@inheritDoc}
      */
     @Override
-    public short getShortProperty(String name) throws JMSException {
+    public short getShortProperty(String name) {
 
         throw new UnsupportedOperationException();
     }
@@ -326,7 +290,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      * {@inheritDoc}
      */
     @Override
-    public int getIntProperty(String name) throws JMSException {
+    public int getIntProperty(String name) {
 
         throw new UnsupportedOperationException();
     }
@@ -363,7 +327,6 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public String getStringProperty(String name) throws JMSException {
-
         return (String) this.message.getHeaders().get(name);
     }
 
@@ -372,8 +335,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public Object getObjectProperty(String name) throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return this.message.getHeaders().get(name);
     }
 
     /**
@@ -381,8 +343,7 @@ public class MockTextMessageImpl extends BaseParent implements TextMessage {
      */
     @Override
     public Enumeration<?> getPropertyNames() throws JMSException {
-
-        throw new UnsupportedOperationException();
+        return new Vector<>(this.message.getHeaders().keySet()).elements();
     }
 
     /**
