@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,35 +15,34 @@
  */
 package ru.anr.base.facade.ejb.api.requests;
 
-import java.util.Map;
-
-import javax.jms.Destination;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import ru.anr.base.BaseSpringParent;
+import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
 import ru.anr.base.facade.ejb.api.AsyncAPIHeaders;
+import ru.anr.base.facade.ejb.api.responses.AsyncAPIStrategy;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.services.serializer.Serializer;
+
+import javax.jms.Destination;
+import java.util.Map;
 
 /**
  * An implementation for {@link AsyncAPIRequests}.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 20, 2015
- *
  */
 @Validated
 public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRequests {
@@ -81,11 +80,9 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
     /**
      * The default constructor requires a serializer
-     * 
-     * @param serializer
-     *            The serializer (XML or JSON)
-     * @param keyName
-     *            The name of the key used to distinguish the API messages
+     *
+     * @param serializer The serializer (XML or JSON)
+     * @param keyName    The name of the key used to distinguish the API messages
      */
     public AsyncAPIRequestsImpl(Serializer serializer, String keyName) {
 
@@ -109,7 +106,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     @Override
     public Message<String> toMessage(Object model, Map<String, Object> headers) {
 
-        return new GenericMessage<String>(serializer.toStr(model), headers);
+        return new GenericMessage<>(serializer.toStr(model), headers);
     }
 
     /**
@@ -123,23 +120,17 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
     /**
      * The sending procedure.
-     * 
-     * @param id
-     *            The identifier of the strategy to use
-     * @param version
-     *            The version of the strategy
-     * @param method
-     *            The method of the strategy
-     * @param model
-     *            A model to use
-     * @param queue
-     *            A response queue if required
-     * @param params
-     *            Parameters of the query
+     *
+     * @param id      The identifier of the strategy to use
+     * @param version The version of the strategy
+     * @param method  The method of the strategy
+     * @param model   A model to use
+     * @param queue   A response queue if required
+     * @param params  Parameters of the query
      * @return The ID of the query
      */
     private String internalQuery(String id, String version, MethodTypes method, RequestModel model, String queue,
-            Object... params) {
+                                 Object... params) {
 
         Assert.notNull(requestQueue, "The request queue is not defined");
 
@@ -147,6 +138,14 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
         hh.put(AsyncAPIHeaders.API_STRATEGY_ID.name(), id);
         hh.put(AsyncAPIHeaders.API_VERSION.name(), version);
         hh.put(AsyncAPIHeaders.API_METHOD.name(), method.name());
+
+        // If we have some authorization, let's add the principal name to determine more precisely
+        // where and how to send the response.
+        Authentication token = SecurityContextHolder.getContext().getAuthentication();
+        if (token != null && token.isAuthenticated()) {
+            hh.put(AsyncAPIHeaders.API_PRINCIPAL.name(), nullSafe(token.getPrincipal()));
+        }
+
         hh.putAll(toMap(params));
 
         if (queue != null) {
@@ -182,7 +181,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      */
     @Override
     public String noResponseQuery(String id, String version, MethodTypes method, RequestModel model,
-            Object... params) {
+                                  Object... params) {
 
         return internalQuery(id, version, method, model, null, params);
     }
@@ -196,39 +195,50 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      * {@inheritDoc}
      */
     @Override
-    public String getResponse(String queryId) {
-
+    public APICommand getResponse(String queryId) {
         Assert.notNull(responseQueue, "The response queue is not defined");
-
         String selector = String.format(SELECTOR, AsyncAPIHeaders.API_QUERY_ID.name(), queryId);
 
         Destination d = bean(responseQueue);
 
         @SuppressWarnings("unchecked")
         Message<String> msg = (Message<String>) jms.receiveSelectedAndConvert(d, selector);
-        return (msg == null) ? null : msg.getPayload();
+        return msg == null ? null : AsyncAPIStrategy.buildCommand(msg);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public APICommand getResponse(String queryId, Class<?> responseClass) {
+
+        APICommand cmd = getResponse(queryId);
+        if (cmd != null) {
+
+            logger.debug("Raw response: {}", cmd.getRawModel());
+
+            if (cmd.getRawModel() != null) {
+                cmd.setResponse(serializer.fromStr(cmd.getRawModel(), responseClass));
+            }
+        }
+        return cmd;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <S> S getResponse(String queryId, Class<S> responseClass) {
+    public APICommand getResponse(String queryId, TypeReference<?> ref) {
 
-        String s = getResponse(queryId);
-        logger.debug("Raw response: {}", s);
-        return (s == null) ? null : serializer.fromStr(s, responseClass);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <S> S getResponse(String queryId, TypeReference<S> ref) {
-
-        String s = getResponse(queryId);
-        logger.debug("Raw response: {}", s);
-        return (s == null) ? null : serializer.fromStr(s, ref);
+        APICommand cmd = getResponse(queryId);
+        if (cmd != null) {
+            logger.debug("Raw response: {}", cmd.getRawModel());
+            if (cmd.getRawModel() != null) {
+                cmd.setResponse(serializer.fromStr(cmd.getRawModel(), ref));
+            }
+        }
+        return cmd;
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -236,8 +246,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     // /////////////////////////////////////////////////////////////////////////
 
     /**
-     * @param requestQueue
-     *            the requestQueue to set
+     * @param requestQueue the requestQueue to set
      */
     public void setRequestQueue(String requestQueue) {
 
@@ -245,8 +254,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     }
 
     /**
-     * @param responseQueue
-     *            the responseQueue to set
+     * @param responseQueue the responseQueue to set
      */
     public void setResponseQueue(String responseQueue) {
 

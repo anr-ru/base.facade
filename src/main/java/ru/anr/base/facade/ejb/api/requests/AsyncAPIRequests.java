@@ -18,6 +18,7 @@ package ru.anr.base.facade.ejb.api.requests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.messaging.Message;
+import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
 import ru.anr.base.services.api.ApiCommandStrategy;
@@ -119,18 +120,17 @@ public interface AsyncAPIRequests {
      *
      * @param queryId       The identifier of the query
      * @param responseClass The class for the response model
-     * @param <S>           The type of the object
      * @return An object instance
      */
-    <S> S getResponse(String queryId, Class<S> responseClass);
+    APICommand getResponse(String queryId, Class<?> responseClass);
 
     /**
      * Pulls the pure string response from the response queue
      *
      * @param queryId The identifier of the query
-     * @return The response model as a string
+     * @return The API command with the parsed body
      */
-    String getResponse(String queryId);
+    APICommand getResponse(String queryId);
 
     /**
      * Pulls the response for a more complex case when the response model is a
@@ -138,8 +138,7 @@ public interface AsyncAPIRequests {
      *
      * @param queryId The identifier of the query
      * @param ref     {@link TypeReference} object to use
-     * @param <S>     The type of the object
-     * @return The object corresponding to the type
+     * @return The API command with the parsed body
      */
-    <S> S getResponse(String queryId, TypeReference<S> ref);
+    APICommand getResponse(String queryId, TypeReference<?> ref);
 }

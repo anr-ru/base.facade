@@ -1,12 +1,12 @@
 /*
  * Copyright 2014 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,30 +16,26 @@
 
 package ru.anr.base.facade.ejb.api.responses;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.Destination;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.ejb.api.AsyncAPIHeaders;
 import ru.anr.base.services.BaseServiceImpl;
 import ru.anr.base.services.api.APICommandFactory;
 
+import javax.jms.Destination;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * An implementation of {@link APIResponseManager}.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 21, 2015
- *
  */
 public class APIResponseManagerImpl extends BaseServiceImpl implements APIResponseManager {
 
@@ -69,7 +65,7 @@ public class APIResponseManagerImpl extends BaseServiceImpl implements APIRespon
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Very important: here we use a new transaction to guarantee sending the
      * error message back in spite of rolling back of the original transaction
      * due to the exception.
@@ -90,9 +86,8 @@ public class APIResponseManagerImpl extends BaseServiceImpl implements APIRespon
 
     /**
      * Extracts a queue to send the response
-     * 
-     * @param cmd
-     *            The original command
+     *
+     * @param cmd The original command
      * @return The name of the queue
      */
     private String getQueue(APICommand cmd) {
@@ -102,21 +97,18 @@ public class APIResponseManagerImpl extends BaseServiceImpl implements APIRespon
 
     /**
      * Performs sending the response as a message
-     * 
-     * @param queue
-     *            The queue to respond
-     * @param body
-     *            The body of the message
-     * @param request
-     *            The original request
+     *
+     * @param queue   The queue to respond
+     * @param body    The body of the message
+     * @param request The original request
      */
-    private void sendResponse(String queue, String body, APICommand request) {
+    protected void sendResponse(String queue, String body, APICommand request) {
 
         Destination d = bean(queue);
 
-        Map<String, Object> hh = new HashMap<String, Object>(request.getContexts());
+        Map<String, Object> hh = new HashMap<>(request.getContexts());
         hh.remove(AsyncAPIHeaders.API_RESPONSE_TO.name());
 
-        jms.convertAndSend(d, new GenericMessage<String>(body, hh));
+        jms.convertAndSend(d, new GenericMessage<>(body, hh));
     }
 }

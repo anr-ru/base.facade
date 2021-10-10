@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
+import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.facade.ejb.api.requests.AsyncAPIRequests;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
@@ -90,11 +91,13 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
 
         Map<String, Object> hh = toMap("xxx", 123, "yyy", "zzz");
         hh.put(AsyncAPIHeaders.API_QUERY_ID.name(), "ID");
+        hh.put(AsyncAPIHeaders.API_METHOD.name(), "Post");
 
         Message<String> msg = apis.toMessage(m, hh);
         jms.convertAndSend(responses, msg);
 
-        PingRequestModel r = apis.getResponse("ID", PingRequestModel.class);
+        APICommand cmd = apis.getResponse("ID", PingRequestModel.class);
+        PingRequestModel r = cmd.getResponse();
         Assert.assertEquals("self", r.getDescription());
 
         // TypeReference
@@ -106,7 +109,8 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
         TypeReference<List<PingRequestModel>> type = new TypeReference<List<PingRequestModel>>() {
         };
 
-        List<PingRequestModel> rs = apis.getResponse("ID", type);
+        cmd = apis.getResponse("ID", type);
+        List<PingRequestModel> rs = cmd.getResponse();
         Assert.assertEquals("self", rs.get(0).getDescription());
     }
 }
