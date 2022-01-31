@@ -155,8 +155,8 @@
         <dbx.password>localtest</dbx.password>
         <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>
 
-        <base.utils.version>1.0.5</base.utils.version>
-        <base.services.version>1.1.5</base.services.version>
+        <base.utils.version>1.0.8</base.utils.version>
+        <base.services.version>1.1.8</base.services.version>
 
     </properties>
 

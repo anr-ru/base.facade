@@ -104,7 +104,7 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
                 m.getHeaders().get(STRATEGY, String.class),
                 m.getHeaders().get(VERSION, String.class));
 
-        cmd.setContexts(m.getHeaders());
+        cmd.setContexts(m.getHeaders()); // Immutable map !
         if (!isEmpty(m.getPayload())) {
             cmd.setRawModel(m.getPayload());
         }
