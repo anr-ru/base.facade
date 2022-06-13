@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -50,6 +51,8 @@ public class APIClient {
      * The parent test case
      */
     protected RestClient client;
+
+    private HttpHeaders lastHeaders;
 
     /**
      * Construction of an object
@@ -89,6 +92,7 @@ public class APIClient {
             } else {
                 value = json.fromStr(rs.getBody(), (Class<S>) type);
             }
+            this.lastHeaders = rs.getHeaders();
             return value;
 
         } catch (HttpClientErrorException e1) {
@@ -168,7 +172,9 @@ public class APIClient {
     public byte[] apiDownload(String url) {
 
         try {
-            return client.download(url).getBody();
+            ResponseEntity<byte[]> rs = client.download(url);
+            this.lastHeaders = rs.getHeaders();
+            return rs.getBody();
         } catch (HttpClientErrorException e1) {
             logger.error("Query client error: {}: {}", e1.getStatusCode(), e1.getResponseBodyAsString());
             throw e1;
@@ -291,7 +297,10 @@ public class APIClient {
      * @return Returns the embedded client for extra settings
      */
     public RestClient getClient() {
-
         return client;
+    }
+
+    public HttpHeaders getLastHeaders() {
+        return lastHeaders;
     }
 }
