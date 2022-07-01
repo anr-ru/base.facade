@@ -15,10 +15,12 @@ import javax.persistence.PersistenceUnits;
  * @author Alexey Romanchuk
  * @created Nov 12, 2014
  */
-@PersistenceUnits({@PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")})
-@MessageDriven(name = "MyMDBHandler", mappedName = "jms/testQueue",
-        activationConfig = {
-                @ActivationConfigProperty(propertyName = "endpointExceptionRedeliveryAttempts", propertyValue = "1")})
+@PersistenceUnits({
+        @PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")
+})
+@MessageDriven(name = "MyMDBHandler", mappedName = "jms/testQueue", activationConfig = {
+        @ActivationConfigProperty(propertyName = "endpointExceptionRedeliveryAttempts", propertyValue = "1")
+})
 public class MyMDBHandler extends AbstractMessageDrivenHandler {
 
     @Override

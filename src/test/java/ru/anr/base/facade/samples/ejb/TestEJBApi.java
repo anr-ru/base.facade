@@ -14,9 +14,10 @@ import javax.persistence.PersistenceUnits;
  */
 @Stateless(name = "TestEJBApi", mappedName = "ejb/TestEJBApi")
 @Local(APICommandFactory.class)
-@PersistenceUnits({@PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")})
+@PersistenceUnits({
+        @PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")
+})
 public class TestEJBApi extends AbstractEJBApiCommandFactory {
-
     /*
      * Empty. Just configuring EJB annotations (jndi name, test persistent
      * units)

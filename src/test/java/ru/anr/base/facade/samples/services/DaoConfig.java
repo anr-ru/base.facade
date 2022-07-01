@@ -3,8 +3,8 @@ package ru.anr.base.facade.samples.services;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.anr.base.dao.BaseJTADaoConfig;
-import ru.anr.base.dao.BaseRepositoryFactoryBean;
+import ru.anr.base.dao.config.BaseJTADaoConfig;
+import ru.anr.base.dao.config.repository.BaseRepositoryFactoryBean;
 
 /**
  * Test JPA configuration, which uses HSQL database datasource.

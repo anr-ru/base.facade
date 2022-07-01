@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.facade.web.api.APIClient;
-import ru.anr.base.facade.web.api.ApiCallback;
 import ru.anr.base.facade.web.api.RestClient;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * A class to facilitate some testing procedures for a REST-based API.
@@ -251,10 +252,7 @@ public class APITester extends APIClient {
      * @param expectedMsg The expected message
      * @param params      Parameters to use
      */
-    public void assertAPIException(ApiCallback callback, String expectedMsg, Object... params) {
-
-        testcase.assertException(args -> {
-            api(callback, ResponseModel.class, params);
-        }, expectedMsg, params);
+    public void assertAPIException(Function<Object[], ResponseEntity<String>> callback, String expectedMsg, Object... params) {
+        testcase.assertException(args -> api(callback, ResponseModel.class, params), expectedMsg, params);
     }
 }

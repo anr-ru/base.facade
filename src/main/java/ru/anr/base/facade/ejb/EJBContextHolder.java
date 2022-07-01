@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,13 @@ import ru.anr.base.BaseSpringParent;
 import javax.inject.Inject;
 
 /**
- * A holder of Spring context and a single parent for all EJB beans that require a Spring context.
+ * A holder of the Spring context and a single parent for all EJB beans that
+ * require a Spring context.
  *
  * @author Alexey Romanchuk
  * @created Nov 12, 2014
  */
 public abstract class EJBContextHolder extends BaseSpringParent {
-
     /**
      * Inject the context as a CDI bean
      */
@@ -38,7 +38,6 @@ public abstract class EJBContextHolder extends BaseSpringParent {
     }
 
     public ApplicationContext getCtx() {
-
         return ctx;
     }
 }

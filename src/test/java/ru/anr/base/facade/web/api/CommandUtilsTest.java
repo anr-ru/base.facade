@@ -5,9 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.RawFormatTypes;
+import ru.anr.base.facade.samples.services.PingApiStrategy;
 import ru.anr.base.tests.BaseTestCase;
 
 /**
@@ -58,4 +61,20 @@ public class CommandUtilsTest extends BaseTestCase {
         Assertions.assertEquals(RawFormatTypes.JSON, cmd.getRequestFormat());
         Assertions.assertEquals(RawFormatTypes.JSON, cmd.getResponseFormat());
     }
+
+    /**
+     * Use case: we can use the strategy class instead of string codes.
+     */
+    @Test
+    public void testStrategyClass() {
+
+        MockHttpServletRequest rq = new MockHttpServletRequest();
+        rq.setMethod("GET");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(rq));
+
+        APICommand cmd = CommandUtils.buildAPI(PingApiStrategy.class);
+        Assertions.assertEquals("ping", cmd.getCommandId());
+        Assertions.assertEquals("v1", cmd.getVersion());
+    }
 }
+

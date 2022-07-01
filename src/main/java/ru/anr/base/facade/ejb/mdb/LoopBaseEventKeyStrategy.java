@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,9 +34,6 @@ import javax.jms.Destination;
 
 public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
 
-    /**
-     * The logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(LoopBaseEventKeyStrategy.class);
 
     /**
@@ -113,11 +110,14 @@ public class LoopBaseEventKeyStrategy extends BaseEventKeyStrategy {
         return safeEquals(getInstanceID(), value);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///// getters/setters
+    ///////////////////////////////////////////////////////////////////////////
+
     /**
      * @param dropQueueBean the dropQueue to set
      */
     public void setDropQueueBean(String dropQueueBean) {
-
         this.dropQueueBean = dropQueueBean;
     }
 }

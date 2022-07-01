@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.anr.base.facade.samples.web;
 
 import org.slf4j.Logger;
@@ -22,18 +19,13 @@ import java.util.Map;
  * Sample controller implementation - to check full glassfish application
  * integration stack.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 11, 2014
- *
  */
 @Controller
 @RequestMapping("/api/v1")
 public class SampleController {
 
-    /**
-     * Logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(SampleController.class);
 
     /**
@@ -46,8 +38,7 @@ public class SampleController {
     /**
      * Sample query GET method.
      *
-     * @param id
-     *            Some string
+     * @param id Some string
      * @return Some result value
      */
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET, produces = {"text/plain"})
@@ -63,8 +54,7 @@ public class SampleController {
     /**
      * Sample query GET method.
      *
-     * @param params
-     *            Some get uri variables
+     * @param params Some get uri variables
      * @return Some result value
      */
     @RequestMapping(value = "/get", method = RequestMethod.GET, //
@@ -81,8 +71,7 @@ public class SampleController {
     /**
      * Sample query POST method.
      *
-     * @param body
-     *            Request body
+     * @param body Request body
      * @return Some result value
      */
     @RequestMapping(value = "/post", method = RequestMethod.POST, //
@@ -109,9 +98,7 @@ public class SampleController {
     /**
      * Sample query PUT method.
      *
-     * @param what
-     *            Some path parameter
-     *
+     * @param what Some path parameter
      * @return Some result value
      */
     @RequestMapping(value = "/delete/{what}", method = RequestMethod.DELETE, //
@@ -124,9 +111,7 @@ public class SampleController {
     /**
      * A sample method which raises the NotFoundException
      *
-     * @param what
-     *            Some path parameter
-     *
+     * @param what Some path parameter
      * @return Some result value
      */
     @RequestMapping(value = "/notfound/{what}", method = RequestMethod.PUT, //

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,10 +26,11 @@ import javax.interceptor.Interceptors;
 import javax.transaction.Transactional;
 
 /**
- * The abstract parent for all EJBs used here. The CONTAINER transaction support
- * has been added just for understanding what we really relay on.
+ * The abstract parent for all EJBs used here. It uses the container-based
+ * transaction management.
  * <p>
- * Spring beans can be pulled on its descendants from the injected spring context (see {@link EJBContextHolder}).
+ * Spring beans can be pulled on its descendants from the injected
+ * spring context (see {@link EJBContextHolder}).
  *
  * @author Alexey Romanchuk
  * @created Nov 13, 2014

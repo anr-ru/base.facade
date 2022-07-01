@@ -26,7 +26,6 @@ public class PingErrorsStrategy extends AbstractApiCommandStrategyImpl {
      */
     @Override
     public ResponseModel get(APICommand cmd) {
-
         throw new BadCredentialsException("Wrong password or alike");
     }
 

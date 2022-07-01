@@ -1,12 +1,12 @@
 /*
- * Copyright 2014 the original author or authors.
- * 
+ * Copyright 2014-2022 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,8 +15,6 @@
  */
 package ru.anr.base.facade.jmsclient;
 
-import javax.jms.ConnectionFactory;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,14 +22,14 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.jms.connection.SingleConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 
+import javax.jms.ConnectionFactory;
+
 /**
  * JMS Configurations. Defines a Spring {@link JmsTemplate} bean with required
  * settings (Simplifies spring bean creation).
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 21, 2014
- *
  */
 @Configuration
 public class JmsConfig extends JmsJEEConfig {
@@ -39,9 +37,8 @@ public class JmsConfig extends JmsJEEConfig {
     /**
      * Cached factory (wrapper for jms factory from JNDI). Expects a bean
      * 'jmsConnectionFactory' defined in current context.
-     * 
-     * @param connectionFactory
-     *            JMS Connection factory
+     *
+     * @param connectionFactory JMS Connection factory
      * @return Bean instance
      */
     @Bean(name = "connectionFactory")
@@ -58,16 +55,14 @@ public class JmsConfig extends JmsJEEConfig {
 
     /**
      * Constructing a JMS template bean
-     * 
-     * @param connectionFactory
-     *            {@link ConnectionFactory}
+     *
+     * @param connectionFactory {@link ConnectionFactory}
      * @return Bean instance
      */
     @Override
     @Bean(name = "jmsTemplate")
     @DependsOn("connectionFactory")
     public JmsTemplate template(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
-
         return super.template(connectionFactory);
     }
 }

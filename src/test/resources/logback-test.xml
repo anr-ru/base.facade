@@ -24,7 +24,7 @@
     <logger name="org.jboss.weld" level="INFO"/>
 
 
-    <logger name="ru.anr" level="DEBUG"/>
+    <logger name="ru.anr" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>

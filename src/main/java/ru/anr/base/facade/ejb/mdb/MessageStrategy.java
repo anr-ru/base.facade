@@ -1,12 +1,12 @@
 /*
- * Copyright 2014 the original author or authors.
- * 
+ * Copyright 2014-2022 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,26 +15,23 @@
  */
 package ru.anr.base.facade.ejb.mdb;
 
-import java.util.Map;
-
 import org.springframework.messaging.Message;
-
 import ru.anr.base.ApplicationException;
 import ru.anr.base.BaseParent;
-import ru.anr.base.dao.BaseRepositoryImpl;
+import ru.anr.base.dao.EntityUtils;
 import ru.anr.base.dao.repository.BaseRepository;
 import ru.anr.base.domain.BaseEntity;
 import ru.anr.base.services.pattern.Strategy;
 import ru.anr.base.services.pattern.StrategyConfig;
 import ru.anr.base.services.pattern.StrategyConfig.StrategyModes;
 
+import java.util.Map;
+
 /**
  * Strategy for message processing.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 21, 2014
- *
  */
 
 public interface MessageStrategy extends Strategy<Message<String>> {
@@ -51,22 +48,17 @@ public interface MessageStrategy extends Strategy<Message<String>> {
 
     /**
      * Finds an object using the provided headers inside of a message
-     * 
-     * @param msg
-     *            The message
-     * @param dao
-     *            Some {@link BaseRepository}
+     *
+     * @param msg The message
+     * @param dao Some {@link BaseRepository}
+     * @param <S> The object class
      * @return The object or null if not found
-     * 
-     * @param <S>
-     *            The object class
      */
     default <S extends BaseEntity> S extractObject(Message<String> msg, BaseRepository<?> dao) {
 
         try {
-            Class<?> clazz = Class.forName(msg.getHeaders().get(OBJECT_CLASS).toString());
-            Long id = Long.valueOf(msg.getHeaders().get(OBJECT_ID).toString());
-
+            Class<?> clazz = Class.forName(BaseParent.nullSafe(msg.getHeaders().get(OBJECT_CLASS)));
+            Long id = Long.valueOf(BaseParent.nullSafe(msg.getHeaders().get(OBJECT_ID)));
             return dao.find(clazz, id);
         } catch (ClassNotFoundException ex) {
             throw new ApplicationException(ex);
@@ -76,13 +68,10 @@ public interface MessageStrategy extends Strategy<Message<String>> {
     /**
      * Implementation for the case when a strategy is defined by a value of some
      * header
-     * 
-     * @param m
-     *            A message which header is analyzed
-     * @param header
-     *            The name of the header
-     * @param controlValue
-     *            A control value to compare with
+     *
+     * @param m            A message which header is analyzed
+     * @param header       The name of the header
+     * @param controlValue A control value to compare with
      * @return {@link StrategyConfig}
      */
     default StrategyConfig headerCheck(Message<String> m, String header, String controlValue) {
@@ -93,33 +82,25 @@ public interface MessageStrategy extends Strategy<Message<String>> {
 
     /**
      * Builds the headers required for storing information about an entity
-     * 
-     * @param o
-     *            The entity
+     *
+     * @param o The entity
      * @return A map which contains the headers
      */
     default Map<String, Object> toHeaders(BaseEntity o) {
-
-        return BaseParent.toMap(OBJECT_ID, o.getId(), OBJECT_CLASS, BaseRepositoryImpl.entityClass(o).getName());
+        return BaseParent.toMap(OBJECT_ID, o.getId(), OBJECT_CLASS, EntityUtils.entityClass(o).getName());
     }
 
     /**
      * Returns a value of message header which is specified as the parameter
      * 'name'.
-     * 
-     * @param m
-     *            The message
-     * @param name
-     *            The name of the header
-     * @param clazz
-     *            The value of the header
+     *
+     * @param m     The message
+     * @param name  The name of the header
+     * @param clazz The value of the header
+     * @param <S>   Type of the header value
      * @return The found header value
-     * 
-     * @param <S>
-     *            Type of the header value
      */
     default <S> S header(Message<String> m, String name, Class<S> clazz) {
-
         return m.getHeaders().get(name, clazz);
     }
 }

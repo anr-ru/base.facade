@@ -6,6 +6,8 @@ import org.springframework.web.client.HttpServerErrorException;
 import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.tests.multithreading.ThreadJob;
 
+import java.util.function.Consumer;
+
 /**
  * A special class of {@link ThreadJob} which handles http 5xx errors (to sees
  * the error body).
@@ -27,7 +29,7 @@ public class HttpJob extends ThreadJob {
      * @param rest The {@link RestClient}
      * @param job  The {@link ThreadJob} interface to run
      */
-    public HttpJob(RestClient rest, DoJob job) {
+    public HttpJob(RestClient rest, Consumer<Object[]> job) {
 
         super(job);
         add(rest); // will be as the first argument

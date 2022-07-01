@@ -1,12 +1,12 @@
 /*
- * Copyright 2014 the original author or authors.
- * 
+ * Copyright 2014-2022 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,22 +21,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.Assert;
-
 import ru.anr.base.services.serializer.SerializationConfig;
 import ru.anr.base.services.serializer.Serializer;
 
 /**
  * The configuration to create {@link AsyncAPIRequests}.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 21, 2015
- *
  */
 @Configuration
 @Import(SerializationConfig.class)
 public class AsyncAPIRequestsConfig {
-
     /**
      * The queue for requests
      */
@@ -54,9 +50,8 @@ public class AsyncAPIRequestsConfig {
 
     /**
      * Creates a bean {@link AsyncAPIRequests}.
-     * 
-     * @param json
-     *            JSON Serializer which the bean depends on
+     *
+     * @param json JSON Serializer which the bean depends on
      * @return An instance of the bean
      */
     @Bean(name = "asyncApiService")
@@ -72,34 +67,28 @@ public class AsyncAPIRequestsConfig {
         return bean;
     }
 
-    // /////////////////////////////////////////////////////////////////////////
-    // /// getters/setters
-    // /////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    ///// getters/setters
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * @param requestQueue
-     *            the requestQueue to set
+     * @param requestQueue the requestQueue to set
      */
     public void setRequestQueue(String requestQueue) {
-
         this.requestQueue = requestQueue;
     }
 
     /**
-     * @param keyName
-     *            the keyName to set
+     * @param keyName the keyName to set
      */
     public void setKeyName(String keyName) {
-
         this.keyName = keyName;
     }
 
     /**
-     * @param responseQueue
-     *            the responseQueue to set
+     * @param responseQueue the responseQueue to set
      */
     public void setResponseQueue(String responseQueue) {
-
         this.responseQueue = responseQueue;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,7 +51,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     private final Serializer serializer;
 
     /**
-     * Jms to send and receive messages
+     * JMS to send and receive messages
      */
     @Autowired(required = false)
     private JmsOperations jms;
@@ -78,7 +78,6 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      * @param keyName    The name of the key used to distinguish the API messages
      */
     public AsyncAPIRequestsImpl(Serializer serializer, String keyName) {
-
         super();
         this.serializer = serializer;
         this.keyName = keyName;
@@ -89,7 +88,6 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      */
     @Override
     public <S> S toModel(Message<String> message, Class<S> clazz) {
-
         return serializer.fromStr(message.getPayload(), clazz);
     }
 
@@ -98,8 +96,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      */
     @Override
     public Message<String> toMessage(Object model, Map<String, Object> headers) {
-
-        return new GenericMessage<String>(serializer.toStr(model), headers);
+        return new GenericMessage<>(serializer.toStr(model), headers);
     }
 
     /**
@@ -107,7 +104,6 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      */
     @Override
     public String query(String id, String version, MethodTypes method, RequestModel model, Object... params) {
-
         return internalQuery(id, version, method, model, responseQueue, params);
     }
 
@@ -156,8 +152,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
 
         jms.convertAndSend(d, msg);
 
-        logger.debug("The Async JMS API query {}/{} with ID = {} has been sent to {}", id, version, queryId,
-                requestQueue);
+        logger.debug("The Async JMS API query {}/{} with ID = {} has been sent to {}", id, version, queryId, requestQueue);
         return queryId;
     }
 
@@ -167,7 +162,6 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
     @Override
     public String noResponseQuery(String id, String version, MethodTypes method, RequestModel model,
                                   Object... params) {
-
         return internalQuery(id, version, method, model, null, params);
     }
 
@@ -215,15 +209,14 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
         return (s == null) ? null : serializer.fromStr(s, ref);
     }
 
-    // /////////////////////////////////////////////////////////////////////////
-    // /// getters/setters
-    // /////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    ///// getters/setters
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * @param requestQueue the requestQueue to set
      */
     public void setRequestQueue(String requestQueue) {
-
         this.requestQueue = requestQueue;
     }
 
@@ -231,7 +224,6 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      * @param responseQueue the responseQueue to set
      */
     public void setResponseQueue(String responseQueue) {
-
         this.responseQueue = responseQueue;
     }
 }

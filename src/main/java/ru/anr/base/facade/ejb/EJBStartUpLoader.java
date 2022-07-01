@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A parent for EJB StartUp beans that need to do some work during their start. It provides some tools for
- * initial messages for queues if necessary.
+ * A parent for EJB StartUp beans that need to do some work during their start.
+ * It provides some tools for initial messages for queues if necessary.
  *
  * <p>
  * Add the @Singleton and @Startup annotations in descendants.
@@ -40,19 +40,17 @@ import java.util.Map;
  */
 public abstract class EJBStartUpLoader extends EJBContextHolder {
 
-    /**
-     * Logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(EJBStartUpLoader.class);
 
     /**
-     * Initialization of a queue ( JmsOperation specified above must be set).
+     * Initializes the given cycled queue (JmsOperation specified above must be set). The cycled queue is
+     * a message that is continuously sent to the same queue doing some action each time.
      *
-     * @param queueBean   The queue to be initialized ( specified as a bean in the
+     * @param queueBean   The queue to be initialized (specified as a bean name in the
      *                    context)
-     * @param messageKey  Message key
+     * @param messageKey  The message key
      * @param headerPairs Pairs name/value for additional headers
-     * @param text        Text inside of the message (to understand what it is the
+     * @param text        Text inside the message (to understand what it is the
      *                    message for)
      */
     protected void initQueue(String queueBean, String messageKey, String text, Object... headerPairs) {
@@ -81,24 +79,22 @@ public abstract class EJBStartUpLoader extends EJBContextHolder {
     private final List<Object[]> queues = list();
 
     /**
-     * Adding queues for further initialization. Real initialization will be
-     * available in 'production' mode only.
+     * Adds a queue for postponed initialization. The real initialization will be
+     * available in the 'production' mode only.
      *
      * @param queueBean   The name of queue bean
      * @param messageKey  The key for message identification
      * @param headerPairs Pairs 'name'/'value' for additional headers
-     * @param body        Message body
+     * @param body        The message body
      */
     protected void addQueue(String queueBean, String messageKey, String body, Object... headerPairs) {
-
         queues.add(new Object[]{queueBean, messageKey, body, headerPairs});
     }
 
     /**
-     * Performs sending to all preliminary registered queues
+     * Sends all prepared messages to preliminary registered queues
      */
     protected void sendAll() {
-
         queues.forEach(a -> initQueue(a[0].toString(), a[1].toString(), a[2].toString(), (Object[]) a[3]));
         queues.clear();
     }

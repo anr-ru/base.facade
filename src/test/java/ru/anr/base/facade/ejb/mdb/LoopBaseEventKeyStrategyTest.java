@@ -29,7 +29,6 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
      */
     @BeforeEach
     public void before() {
-
         value = LoopBaseEventKeyStrategy.getInstanceID();
     }
 
@@ -38,7 +37,6 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
      */
     @Test
     public void testGetInstanceID() {
-
         Assertions.assertNotNull(value);
         Assertions.assertEquals(value, LoopBaseEventKeyStrategy.getInstanceID());
     }
@@ -50,7 +48,6 @@ public class LoopBaseEventKeyStrategyTest extends BaseWebTestCase {
      * @return The message
      */
     private Message<String> msg(String id) {
-
         Map<String, Object> hh = (id == null) ? null : toMap(LoopBaseEventKeyStrategy.INSTANCE_HEADER, id);
         return new GenericMessage<>("", hh);
     }

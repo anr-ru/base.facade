@@ -3,21 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.anr</groupId>
+        <groupId>org.anrruf</groupId>
         <artifactId>base.platform.parent</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT-991587b</version>
     </parent>
 
     <artifactId>base.facade</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 
     <name>Base Facade</name>
-    <description>Facade Serivices for Glassfish Apps</description>
+    <description>Facade Services for Glassfish Apps</description>
 
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
@@ -93,12 +93,12 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.anr</groupId>
+            <groupId>org.anrruf</groupId>
             <artifactId>base.services</artifactId>
             <version>${base.services.version}</version>
         </dependency>
         <dependency>
-            <groupId>ru.anr</groupId>
+            <groupId>org.anrruf</groupId>
             <artifactId>base.utils</artifactId>
             <version>${base.utils.version}</version>
         </dependency>
@@ -126,13 +126,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ru.anr</groupId>
+            <groupId>org.anrruf</groupId>
             <artifactId>base.services</artifactId>
             <classifier>tests</classifier>
             <version>${base.services.version}</version>
         </dependency>
         <dependency>
-            <groupId>ru.anr</groupId>
+            <groupId>org.anrruf</groupId>
             <artifactId>base.tests</artifactId>
             <version>${base.tests.version}</version>
         </dependency>
@@ -157,9 +157,9 @@
         <dbx.password>localtest</dbx.password>
         <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>
 
-        <base.utils.version>2.0.0-SNAPSHOT</base.utils.version>
-        <base.services.version>2.0.0-SNAPSHOT</base.services.version>
-        <base.tests.version>2.0.0-SNAPSHOT</base.tests.version>
+        <base.utils.version>2.0.0-SNAPSHOT-84d1b9e</base.utils.version>
+        <base.services.version>2.0.0-SNAPSHOT-812506f</base.services.version>
+        <base.tests.version>2.0.0-SNAPSHOT-c19b9fd</base.tests.version>
 
     </properties>
 

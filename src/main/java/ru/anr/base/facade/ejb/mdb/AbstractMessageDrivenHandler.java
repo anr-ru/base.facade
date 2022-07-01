@@ -1,12 +1,12 @@
 /*
- * Copyright 2014 the original author or authors.
- * 
+ * Copyright 2014-2022 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,19 +15,18 @@
  */
 package ru.anr.base.facade.ejb.mdb;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessagingMessageConverter;
 import org.springframework.util.Assert;
-
 import ru.anr.base.ApplicationException;
 import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 
 /**
  * Base implementation for JMS Handler. Performs conversion from JMS message to
@@ -36,14 +35,10 @@ import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
  *
  * @author Alexey Romanchuk
  * @created Nov 17, 2014
- *
  */
 
 public abstract class AbstractMessageDrivenHandler extends AbstractEJBServiceImpl implements MessageListener {
 
-    /**
-     * Logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(AbstractMessageDrivenHandler.class);
 
     /**
@@ -71,21 +66,18 @@ public abstract class AbstractMessageDrivenHandler extends AbstractEJBServiceImp
 
     /**
      * Processing a converted to spring format JMS message
-     * 
-     * @param msg
-     *            A message
+     *
+     * @param msg A message
      */
     protected abstract void onMessage(org.springframework.messaging.Message<String> msg);
 
     /**
      * Logging a message (this can be overriden if not all msg headers is
      * allowed to log in file, for example some PIN codes and passwords).
-     * 
-     * @param msg
-     *            Converted JMS message
+     *
+     * @param msg Converted JMS message
      */
     protected void logMessage(org.springframework.messaging.Message<String> msg) {
-
         logger.debug("Received a JMS message: {}", msg);
     }
 }

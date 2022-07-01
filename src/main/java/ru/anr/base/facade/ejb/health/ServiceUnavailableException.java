@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,9 +28,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
 public class ServiceUnavailableException extends NestedRuntimeException {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 5402460084896920425L;
 
     /**
@@ -45,7 +42,6 @@ public class ServiceUnavailableException extends NestedRuntimeException {
      * @param msg    A message with some details if applicable
      */
     public ServiceUnavailableException(String status, String msg) {
-
         super(msg);
         this.status = status;
     }
@@ -54,7 +50,6 @@ public class ServiceUnavailableException extends NestedRuntimeException {
      * @return the status
      */
     public String getStatus() {
-
         return status;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,9 +33,6 @@ import java.time.temporal.ChronoUnit;
  */
 public class HealthCheckEJBImpl extends AbstractEJBServiceImpl implements HealthCheck {
 
-    /**
-     * The logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(HealthCheckEJBImpl.class);
 
     /**
@@ -43,7 +40,6 @@ public class HealthCheckEJBImpl extends AbstractEJBServiceImpl implements Health
      */
     @Override
     public String check(boolean fail) {
-
         return HealthCheckUtils.checkWork(fail, getCtx());
     }
 
@@ -53,7 +49,7 @@ public class HealthCheckEJBImpl extends AbstractEJBServiceImpl implements Health
     @Schedule(hour = "*", minute = "*/10", second = "0", persistent = false)
     public void onSchedule() {
 
-        ZonedDateTime start = ZonedDateTime.ofInstant(//
+        ZonedDateTime start = ZonedDateTime.ofInstant(
                 Instant.ofEpochMilli(Long.parseLong(this.check(false))), DEFAULT_TIMEZONE);
         ZonedDateTime now = now();
 
@@ -64,8 +60,6 @@ public class HealthCheckEJBImpl extends AbstractEJBServiceImpl implements Health
         seconds = seconds - 60 * minutes;
         minutes = minutes - 60 * hours;
 
-        String log = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-
-        logger.info("Health check, up time {}", log);
+        logger.info("Health check, up time {}", String.format("%02d:%02d:%02d", hours, minutes, seconds));
     }
 }

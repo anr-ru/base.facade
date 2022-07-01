@@ -1,4 +1,4 @@
-package ru.anr.base.tests.facade;
+package ru.anr.base.facade.web.api;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
-import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.tests.BaseTestCase;
 
 /**

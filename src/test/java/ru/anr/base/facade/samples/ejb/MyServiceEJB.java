@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.anr.base.facade.samples.ejb;
 
 import org.springframework.jms.core.JmsOperations;
@@ -16,15 +13,15 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.PersistenceUnits;
 
 /**
- * Implementation of sample service.
- *
+ * An implementation of sample service.
  *
  * @author Alexey Romanchuk
  * @created Nov 11, 2014
- *
  */
 @Stateless(name = "MyServiceEJB", mappedName = "ejb/My")
-@PersistenceUnits({@PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")})
+@PersistenceUnits({
+        @PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")
+})
 @Local(MyService.class)
 public class MyServiceEJB extends AbstractEJBServiceImpl implements MyService {
 

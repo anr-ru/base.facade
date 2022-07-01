@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,8 @@ import ru.anr.base.facade.ejb.AbstractEJBServiceImpl;
 import ru.anr.base.services.api.APICommandFactory;
 
 /**
- * A bridge EJB for a conjunction of the Spring-built API factory bean and its EJB wrapper.
+ * A EJB-bridge for a conjunction of the Spring-built API factory bean and
+ * its EJB wrapper.
  *
  * @author Alexey Romanchuk
  * @created Nov 13, 2014
@@ -34,19 +35,16 @@ public abstract class AbstractEJBApiCommandFactory extends AbstractEJBServiceImp
 
     @Override
     public APICommand process(APICommand cmd) {
-
         return factory().process(cmd);
     }
 
     @Override
     public APICommand error(APICommand cmd, Throwable ex) {
-
         return factory().error(cmd, ex);
     }
 
     @Override
     public APICommand error(APICommand cmd, Throwable ex, ResponseModel model) {
-
         return factory().error(cmd, ex, model);
     }
 
@@ -55,7 +53,6 @@ public abstract class AbstractEJBApiCommandFactory extends AbstractEJBServiceImp
      */
     @Override
     public APICommand error(Throwable ex) {
-
         return factory().error(ex);
     }
 }

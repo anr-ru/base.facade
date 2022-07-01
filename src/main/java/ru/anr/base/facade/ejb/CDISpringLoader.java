@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
 /**
- * CDI loaders for spring context. This is a single endpoint for producing the main spring context used in the app.
+ * CDI loaders for spring context. This is a single endpoint for producing
+ * the main spring context used in the app.
  *
  * @author Alexey Romanchuk
  * @created Mar 18, 2021
@@ -39,7 +40,6 @@ public class CDISpringLoader {
     @SpringContext
     @ApplicationScoped
     public ApplicationContext getApplicationContext() {
-
         AbstractApplicationContext context = new ClassPathXmlApplicationContext("classpath:/ejb-context.xml");
         context.registerShutdownHook();
         return context;

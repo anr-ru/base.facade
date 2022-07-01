@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,8 +28,12 @@ import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.RawFormatTypes;
 import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.api.APICommandFactory;
+import ru.anr.base.services.api.ApiCommandStrategy;
+import ru.anr.base.services.api.ApiStrategy;
+import ru.anr.base.services.api.ApiUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * Utilities for APICommand building in a web layer.
@@ -46,13 +50,13 @@ public final class CommandUtils {
     }
 
     /**
-     * Building a command with data extracted from {@link HttpServletRequest}
+     * Builds a command with data extracted from {@link HttpServletRequest}
      * (method, headers).
      *
-     * @param commandId  Identifier of Command
-     * @param apiVersion API Version
-     * @param request    Http request
-     * @return A command instance
+     * @param commandId  The Identifier of Command
+     * @param apiVersion The API Version
+     * @param request    The HTTP request
+     * @return The resulted command instance
      */
     public static APICommand build(String commandId, String apiVersion, HttpServletRequest request) {
 
@@ -70,14 +74,16 @@ public final class CommandUtils {
         }
         cmd.method(request.getMethod());
 
-        cmd.getContexts().put("x-forwarded-for", request.getHeader("x-forwarded-for"));
-        cmd.getContexts().put("user-agent", request.getHeader("user-agent"));
-
+        Enumeration<String> headers = request.getHeaderNames();
+        while (headers.hasMoreElements()) {
+            String h = headers.nextElement();
+            cmd.getContexts().put(h, request.getHeader(h));
+        }
         return cmd;
     }
 
     /**
-     * Exception enhancement - by default all our exception are packaged to
+     * The exception enhancement - by default all our exceptions are packaged to
      * {@link APICommand} format but in some cases we need to throw an exception
      * (Spring security, Fatal error).
      *
@@ -95,13 +101,11 @@ public final class CommandUtils {
         if ((root instanceof AccessDeniedException) || (root instanceof AuthenticationException)) {
             rs = new WebAPIException(root.getMessage(), root);
         } else {
-
             ResponseModel r = api.getResponse();
-            if (BaseParent.safeEquals(r.getCode(), 1)) {
-
+            if (BaseParent.safeEquals(r.code, 1)) {
                 // code = 1 means "System error" and must generate HTTP 500
-                logger.error("System error caught: {}", r.getDescription());
-                rs = new WebAPIException(r.getMessage(), root);
+                logger.error("System error caught: {}", r.description);
+                rs = new WebAPIException(r.message, root);
             }
         }
         return rs;
@@ -116,13 +120,24 @@ public final class CommandUtils {
      * @return An instance of API command
      */
     public static APICommand buildAPI(String commandId, String apiVersion) {
-
         ServletRequestAttributes r = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         return CommandUtils.build(commandId, apiVersion, r.getRequest());
     }
 
     /**
-     * Processing an API command. If an exception occurs, starting predefined
+     * Construction of API Command with request specific params (taken from a
+     * current request)
+     *
+     * @param clazz The API strategy class
+     * @return An instance of API command
+     */
+    public static APICommand buildAPI(Class<? extends ApiCommandStrategy> clazz) {
+        ApiStrategy s = ApiUtils.extract(clazz);
+        return buildAPI(s.id(), s.version());
+    }
+
+    /**
+     * Processes an API command. If an exception occurs, we start predefined
      * error processing.
      *
      * @param factory The {@link APICommandFactory}
@@ -130,13 +145,10 @@ public final class CommandUtils {
      * @return Resulted command
      */
     public static APICommand process(APICommandFactory factory, APICommand api) {
-
         APICommand r;
         try {
             r = factory.process(api);
-
         } catch (Throwable ex) {
-
             Throwable e = new ApplicationException(ex).getMostSpecificCause();
             if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;

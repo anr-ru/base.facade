@@ -3,8 +3,8 @@ package ru.anr.base.tests.facade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.anr.base.facade.samples.domain.PingReponseModel;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
+import ru.anr.base.facade.samples.domain.PingResponseModel;
 import ru.anr.base.facade.web.api.RestClient;
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
@@ -42,7 +42,7 @@ public class RollbackTest extends BaseWebTestCase {
         PingRequestModel rq = new PingRequestModel();
         rq.setMessage("hello");
 
-        PingReponseModel rs = api.apiPOST(client, "/api/v1/rollback", rq, PingReponseModel.class);
+        PingResponseModel rs = api.apiPOST(client, "/api/v1/rollback", rq, PingResponseModel.class);
 
         Samples s = dao.find(Samples.class, parse(rs.getMessage(), Long.class));
         Assertions.assertNull(s);
@@ -58,7 +58,7 @@ public class RollbackTest extends BaseWebTestCase {
         PingRequestModel rq = new PingRequestModel();
         rq.setMessage("hello");
 
-        PingReponseModel rs = api.apiPUT(client, "/api/v1/norollback", rq, PingReponseModel.class);
+        PingResponseModel rs = api.apiPUT(client, "/api/v1/norollback", rq, PingResponseModel.class);
 
         Samples s = dao.find(Samples.class, parse(rs.getMessage(), Long.class));
         Assertions.assertNotNull(s);

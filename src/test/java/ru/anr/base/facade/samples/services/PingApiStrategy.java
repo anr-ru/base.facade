@@ -7,8 +7,8 @@ import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.APIException;
 import ru.anr.base.domain.api.models.ResponseModel;
-import ru.anr.base.facade.samples.domain.PingReponseModel;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
+import ru.anr.base.facade.samples.domain.PingResponseModel;
 import ru.anr.base.services.api.AbstractApiCommandStrategyImpl;
 import ru.anr.base.services.api.ApiStrategy;
 
@@ -22,9 +22,6 @@ import ru.anr.base.services.api.ApiStrategy;
 @Component("PingApiStrategy")
 public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
 
-    /**
-     * Logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(PingApiStrategy.class);
 
     /**
@@ -35,7 +32,7 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
 
         logger.debug("Ping processed: {}", cmd.getContexts().get("id"));
 
-        PingReponseModel rs = new PingReponseModel();
+        PingResponseModel rs = new PingResponseModel();
         rs.setMessage("response," + cmd.getContexts().get("id"));
 
         return rs;
@@ -51,7 +48,7 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
 
         logger.debug("Ping processed: {}, {}", cmd.getContexts().get("id"), m.getMessage());
 
-        PingReponseModel rs = new PingReponseModel();
+        PingResponseModel rs = new PingResponseModel();
         rs.setMessage(m.getMessage() + "," + cmd.getContexts().get("id"));
 
         return rs;

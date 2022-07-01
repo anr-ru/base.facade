@@ -16,7 +16,9 @@ import javax.persistence.PersistenceUnits;
  */
 @Startup
 @Singleton
-@PersistenceUnits({@PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")})
+@PersistenceUnits({
+        @PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")
+})
 public class StartUpEJB extends EJBStartUpLoader {
 
     @Override

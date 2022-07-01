@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.anr.base.facade.ejb.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -20,16 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Description ...
- *
+ * Tests of Asynchronous Messaging.
  *
  * @author Alexey Romanchuk
  * @created Nov 20, 2015
- *
  */
-
 public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
-
     /**
      * {@link AsyncAPIRequests}
      */
@@ -92,7 +85,7 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
         jms.clean(responses);
 
         PingRequestModel m = new PingRequestModel();
-        m.setDescription("self");
+        m.description = "self";
 
         Map<String, Object> hh = toMap("xxx", 123, "yyy", "zzz");
         hh.put(AsyncAPIHeaders.API_QUERY_ID.name(), "ID");
@@ -101,7 +94,7 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
         jms.convertAndSend(responses, msg);
 
         PingRequestModel r = apis.getResponse("ID", PingRequestModel.class);
-        Assertions.assertEquals("self", r.getDescription());
+        Assertions.assertEquals("self", r.description);
 
         // TypeReference
         List<PingRequestModel> list = list(m);
@@ -113,6 +106,6 @@ public class AsyncAPIRequestsImplTest extends BaseWebTestCase {
         };
 
         List<PingRequestModel> rs = apis.getResponse("ID", type);
-        Assertions.assertEquals("self", rs.get(0).getDescription());
+        Assertions.assertEquals("self", rs.get(0).description);
     }
 }

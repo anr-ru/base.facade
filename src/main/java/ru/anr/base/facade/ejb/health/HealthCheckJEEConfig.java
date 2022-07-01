@@ -1,12 +1,12 @@
 /*
- * Copyright 2014 the original author or authors.
- * 
+ * Copyright 2014-2022 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,10 +23,8 @@ import org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean;
  * A configuration for health beans in the case of using in a EJB environment.
  * This class must be put to a spring context fo a web application.
  *
- *
  * @author Alexey Romanchuk
  * @created Nov 28, 2016
- *
  */
 @Configuration
 public class HealthCheckJEEConfig {
@@ -38,18 +36,17 @@ public class HealthCheckJEEConfig {
 
     /**
      * Exports a controller for serving '/health' requests.
-     * 
+     *
      * @return A bean instance
      */
     @Bean(name = "HealthController")
     public HealthCheckController health() {
-
         return new HealthCheckController();
     }
 
     /**
      * Exports a EJB proxy bean for accessing to the EJB-located spring context
-     * 
+     *
      * @return A bean instance
      */
     @Bean(name = "health")
@@ -68,11 +65,9 @@ public class HealthCheckJEEConfig {
     ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * @param jndiName
-     *            the jndiName to set
+     * @param jndiName the jndiName to set
      */
     public void setJndiName(String jndiName) {
-
         this.jndiName = jndiName;
     }
 }

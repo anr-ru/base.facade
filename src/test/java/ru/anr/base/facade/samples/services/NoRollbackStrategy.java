@@ -7,8 +7,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.models.ResponseModel;
-import ru.anr.base.facade.samples.domain.PingReponseModel;
 import ru.anr.base.facade.samples.domain.PingRequestModel;
+import ru.anr.base.facade.samples.domain.PingResponseModel;
 import ru.anr.base.samples.dao.MyDao;
 import ru.anr.base.samples.domain.Samples;
 import ru.anr.base.services.api.AbstractApiCommandStrategyImpl;
@@ -24,9 +24,6 @@ import ru.anr.base.services.api.ApiStrategy;
 @Component
 public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
 
-    /**
-     * Logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(NoRollbackStrategy.class);
 
     /**
@@ -60,7 +57,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
             logger.error("Caught an exception: {}", ex.getMessage());
         }
 
-        PingReponseModel rs = new PingReponseModel();
+        PingResponseModel rs = new PingResponseModel();
         rs.setMessage(s.getId().toString());
 
         return rs;
@@ -85,7 +82,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
             logger.error("Caught an exception: {}", ex.getMessage());
         }
 
-        PingReponseModel rs = new PingReponseModel();
+        PingResponseModel rs = new PingResponseModel();
         rs.setMessage(s.getId().toString());
 
         return rs;
