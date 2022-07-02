@@ -23,11 +23,6 @@ public class RollbackTest extends BaseWebTestCase {
     private MyDao dao;
 
     /**
-     * {@link APITester}
-     */
-    private final APITester api = new APITester(this);
-
-    /**
      * {@link RestClient}
      */
     private final RestClient client = new RestClient();
@@ -42,7 +37,7 @@ public class RollbackTest extends BaseWebTestCase {
         PingRequestModel rq = new PingRequestModel();
         rq.setMessage("hello");
 
-        PingResponseModel rs = api.apiPOST(client, "/api/v1/rollback", rq, PingResponseModel.class);
+        PingResponseModel rs = APITester.apiPOST(client, "/api/v1/rollback", rq, PingResponseModel.class);
 
         Samples s = dao.find(Samples.class, parse(rs.getMessage(), Long.class));
         Assertions.assertNull(s);
@@ -58,7 +53,7 @@ public class RollbackTest extends BaseWebTestCase {
         PingRequestModel rq = new PingRequestModel();
         rq.setMessage("hello");
 
-        PingResponseModel rs = api.apiPUT(client, "/api/v1/norollback", rq, PingResponseModel.class);
+        PingResponseModel rs = APITester.apiPUT(client, "/api/v1/norollback", rq, PingResponseModel.class);
 
         Samples s = dao.find(Samples.class, parse(rs.getMessage(), Long.class));
         Assertions.assertNotNull(s);

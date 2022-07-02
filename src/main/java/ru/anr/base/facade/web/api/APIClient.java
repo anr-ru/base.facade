@@ -25,7 +25,6 @@ import ru.anr.base.domain.api.models.ResponseModel;
 import ru.anr.base.services.serializer.JSONSerializerImpl;
 import ru.anr.base.services.serializer.Serializer;
 
-import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -43,7 +42,7 @@ public class APIClient {
     protected RestClient client;
 
     /**
-     * Construction of a new object
+     * Constructs a new object
      *
      * @param client The REST Client
      */
@@ -52,16 +51,21 @@ public class APIClient {
     }
 
     /**
-     * Performs a wrapped API call with logging all http errors.
+     * A wrapper for executing REST API calls with logging all http errors and applying all
+     * object transformations for the request and the result.
+     * <p>
+     * This function is considered as a common entry point for all possible
+     * RESTful operations.
+     * </p>
      *
      * @param callback The callback with request details
-     * @param typeDef  An unspecified type (can be a class or a {@link TypeReference} object)
+     * @param typeDef  The unspecified result type (can be a class or a {@link TypeReference} object)
      * @param params   Additional parameters
      * @param <S>      The Type of object to use
      * @return The response as an object of the required class
      */
     @SuppressWarnings("unchecked")
-    protected <S> S api(Function<Object[], ResponseEntity<String>> callback, Object typeDef, Object... params) {
+    public <S> S api(Function<Object[], ResponseEntity<String>> callback, Object typeDef, Object... params) {
         try {
             ResponseEntity<String> rs = callback.apply(params);
             logger.debug("Query result: {}", rs.getBody());
@@ -85,16 +89,16 @@ public class APIClient {
 
     /**
      * A variant of {@link #api(Function, Object, Object...)} for the case
-     * when we deal with TypeReference for more complex types.
+     * when we deal with TypeReference explicitly.
      *
      * @param callback The callback
-     * @param clazz    The type reference class
+     * @param typeRef  The type reference class
      * @param params   Parameters
      * @param <S>      The class
      * @return The resulted value
      */
-    public <S> S api(Function<Object[], ResponseEntity<String>> callback, TypeReference<S> clazz, Object... params) {
-        return api(callback, (Object) clazz, params);
+    public <S> S api(Function<Object[], ResponseEntity<String>> callback, TypeReference<S> typeRef, Object... params) {
+        return api(callback, (Object) typeRef, params);
     }
 
     /**
@@ -111,7 +115,37 @@ public class APIClient {
     }
 
     /**
-     * The POST command for API
+     * Uploads a file.
+     *
+     * @param url         The url used for the uploading
+     * @param file        The file (can be a file in memory)
+     * @param resultModel The model for the result
+     * @param props       Key-value pairs to submit with the form.
+     * @param <S>         The class
+     * @return The response model
+     */
+    public <S> S apiUPLOAD(String url, Resource file, Class<S> resultModel, Object... props) {
+        return api(args -> client.upload(url, file, props), resultModel);
+    }
+
+    /**
+     * Downloads a file from the given resource URL.
+     *
+     * @param url The URL of the resource
+     * @return The resulted array of bytes
+     */
+    public byte[] apiDOWNLOAD(String url) {
+        try {
+            return client.download(url).getBody();
+        } catch (HttpStatusCodeException ex) {
+            logger.error("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
+            throw ex;
+        }
+    }
+
+    /**
+     * A variant of the POST API command with an entity model and the result of
+     * the same type.
      *
      * @param url   The url
      * @param model The model to use
@@ -124,37 +158,8 @@ public class APIClient {
     }
 
     /**
-     * Uploads a file.
-     *
-     * @param url         The url used for the uploading
-     * @param file        A file
-     * @param resultModel A model for the result
-     * @param props       A key-value pairs for additional properties to put in the same
-     *                    form as the file
-     * @param <S>         The class
-     * @return A response model
-     */
-    public <S> S apiUpload(String url, Resource file, Class<S> resultModel, Map<String, Object> props) {
-        return api(args -> client.upload(url, file, props), resultModel);
-    }
-
-    /**
-     * Downloads a file
-     *
-     * @param url The URL of the resource
-     * @return An array of bytes
-     */
-    public byte[] apiDownload(String url) {
-        try {
-            return client.download(url).getBody();
-        } catch (HttpStatusCodeException ex) {
-            logger.error("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
-            throw ex;
-        }
-    }
-
-    /**
-     * The POST command for API
+     * A variant of the POST API command with an entity model and the given
+     * result class.
      *
      * @param url              The url
      * @param model            The model to use
@@ -167,7 +172,8 @@ public class APIClient {
     }
 
     /**
-     * The POST command for API
+     * A variant of the POST API command with an entity model and the given
+     * result {@link TypeReference}.
      *
      * @param url     The url
      * @param model   The model to use
@@ -180,7 +186,8 @@ public class APIClient {
     }
 
     /**
-     * The PUT command for API
+     * A variant of the PUT API command with an entity model and the same result
+     * type.
      *
      * @param url   The url
      * @param model The model to use
@@ -193,7 +200,8 @@ public class APIClient {
     }
 
     /**
-     * The PUT command for API.
+     * A variant of the PUT API command with an entity model and the given
+     * result class.
      *
      * @param url              The url
      * @param model            The model to use
@@ -205,9 +213,24 @@ public class APIClient {
         return api(args -> client.put(url, json.toStr(model)), returnModelClass);
     }
 
+    /**
+     * A variant of the PUT API command with an entity model and the given
+     * result {@link TypeReference}
+     *
+     * @param url        The url
+     * @param model      The model to use
+     * @param returnType The type of the resulted model
+     * @param <S>        The type definition for the model
+     * @return The resulted model object
+     */
+    public <S> S apiPUT(String url, Object model, TypeReference<S> returnType) {
+        return api(args -> client.put(url, json.toStr(model)), returnType);
+    }
+
 
     /**
-     * The PATCH command for API
+     * A variant of the PATCH API command with an entity model and the same result
+     * type.
      *
      * @param url   The url
      * @param model The model to use
@@ -220,7 +243,8 @@ public class APIClient {
     }
 
     /**
-     * The PATCH command for API
+     * A variant of the PATCH API command with an entity model and the given
+     * result class.
      *
      * @param url              The url
      * @param model            The model to use
@@ -233,7 +257,21 @@ public class APIClient {
     }
 
     /**
-     * The GET command for API (a TypeReference variant)
+     * A variant of the PUT API command with an entity model and the given
+     * result {@link TypeReference}
+     *
+     * @param url        The url
+     * @param model      The model to use
+     * @param returnType The type of the resulted model
+     * @param <S>        The type definition for the model
+     * @return The resulted model object
+     */
+    public <S> S apiPATCH(String url, Object model, TypeReference<S> returnType) {
+        return api(args -> client.patch(url, json.toStr(model)), returnType);
+    }
+
+    /**
+     * A variant of the GET API command with the given result {@link TypeReference}
      *
      * @param url     The url
      * @param typeRef The {@link TypeReference} object
@@ -245,7 +283,7 @@ public class APIClient {
     }
 
     /**
-     * The GET command for API
+     * A variant of the GET API command with the given result class.
      *
      * @param url        The url
      * @param modelClass The class of the resulted model
@@ -257,7 +295,7 @@ public class APIClient {
     }
 
     /**
-     * The DELETE command for API with a model as a simple class.
+     * A variant of the DELETE API command with the given result class.
      *
      * @param url        The url
      * @param modelClass The class of the resulted model
@@ -269,7 +307,22 @@ public class APIClient {
     }
 
     /**
-     * The DELETE command for API with the model as a TypeReference object (usually, for lists of objects).
+     * The DELETE command for API with a body to submit and the given class
+     * for the result.
+     *
+     * @param url         The url
+     * @param model       The model
+     * @param resultClass The class of the resulted model
+     * @param <S>         The type definition for the model
+     * @return The resulted model object
+     */
+    public <S> S apiDELETE(String url, Object model, Class<S> resultClass) {
+        return api(args -> client.delete(url, json.toStr(model)), resultClass);
+    }
+
+    /**
+     * The DELETE command for API with the model as a TypeReference object
+     * (usually, for lists of objects).
      *
      * @param url     The API url
      * @param typeRef The type reference description
@@ -281,7 +334,7 @@ public class APIClient {
     }
 
     /**
-     * @return Returns the embedded client for extra settings
+     * @return Returns the embedded REST client for extra settings
      */
     public RestClient getClient() {
         return client;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Locale;
 
 /**
- * Abstract configuration for test case which uses Embedded Glassfish to deploy
+ * An abstract configuration for test cases that use Embedded Glassfish to deploy
  * application for local testing.
  *
  * @author Alexey Romanchuk
@@ -32,14 +32,12 @@ import java.util.Locale;
 @Disabled
 public class AbstractGlassfishWebTestCase extends BaseTestCase {
 
-    static {
-        //SLF4JBridgeHandler.removeHandlersForRootLogger();
-        //SLF4JBridgeHandler.install();
-    }
+    // Change the logger's output
+    //static {
+    //SLF4JBridgeHandler.removeHandlersForRootLogger();
+    //SLF4JBridgeHandler.install();
+    //}
 
-    /**
-     * Logger
-     */
     protected static final Logger logger = LoggerFactory.getLogger(AbstractGlassfishWebTestCase.class);
 
     /**

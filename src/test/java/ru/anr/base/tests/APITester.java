@@ -1,44 +1,40 @@
+/*
+ * Copyright 2014-2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package ru.anr.base.tests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
-import ru.anr.base.domain.api.models.ResponseModel;
+import ru.anr.base.BaseParent;
 import ru.anr.base.facade.web.api.APIClient;
 import ru.anr.base.facade.web.api.RestClient;
 
-import java.util.Map;
-import java.util.function.Function;
-
 /**
- * A class to facilitate some testing procedures for a REST-based API.
+ * A class to facilitate some testing procedures for REST-based APIs.
  *
  * @author Alexey Romanchuk
  * @created May 20, 2016
  */
 @Disabled
-public class APITester extends APIClient {
+public class APITester extends BaseParent {
 
     /**
-     * The parent test case
-     */
-    private final BaseTestCase testcase;
-
-    /**
-     * Construction of an object
-     *
-     * @param parent A parent test case
-     */
-    public APITester(BaseTestCase parent) {
-
-        super(null);
-        this.testcase = parent;
-    }
-
-    /**
-     * A POST command for API
+     * A variant of POST command for API when an entity to submit is provided
+     * with the same result type.
      *
      * @param client The rest client
      * @param url    The url
@@ -46,30 +42,28 @@ public class APITester extends APIClient {
      * @param <S>    The type definition for the model
      * @return The resulted model object
      */
-    @SuppressWarnings("unchecked")
-    public <S> S apiPOST(RestClient client, String url, S model) {
-
+    public static <S> S apiPOST(RestClient client, String url, S model) {
         Assertions.assertNotNull(model, "The model cannot be null");
-        return api(args -> client.post(url, json.toStr(model)), (Class<S>) model.getClass());
+        return new APIClient(client).apiPOST(url, model);
     }
 
     /**
-     * A POST command for the API
+     * A variant of POST command for API when a {@link TypeReference} result
+     * is provided.
      *
-     * @param client A rest client
+     * @param client The REST client
      * @param url    The url of the command
      * @param model  The model to user
      * @param <S>    The class value
      * @return Some resulted value
      */
-    public <S> S apiPOST(RestClient client, String url, TypeReference<S> model) {
-
+    public static <S> S apiPOST(RestClient client, String url, Object model, TypeReference<S> result) {
         Assertions.assertNotNull(model, "The model cannot be null");
-        return api(args -> client.post(url, json.toStr(model)), model);
+        return new APIClient(client).apiPOST(url, model, result);
     }
 
     /**
-     * A POST command for API
+     * A variant of POST command for API when a class result is provided.
      *
      * @param client           The rest client
      * @param url              The url
@@ -78,16 +72,15 @@ public class APITester extends APIClient {
      * @param <S>              The type definition for the model
      * @return The resulted model object
      */
-    public <S> S apiPOST(RestClient client, String url, Object model, Class<S> returnModelClass) {
-
+    public static <S> S apiPOST(RestClient client, String url, Object model, Class<S> returnModelClass) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnModelClass, "The class cannot be null");
-
-        return api(args -> client.post(url, json.toStr(model)), returnModelClass);
+        return new APIClient(client).apiPOST(url, model, returnModelClass);
     }
 
     /**
-     * A PUT command for API
+     * A variant of PUT command for API when an entity to submit is provided
+     * with the same result type.
      *
      * @param client The rest client
      * @param url    The url
@@ -95,15 +88,14 @@ public class APITester extends APIClient {
      * @param <S>    The type definition for the model
      * @return The resulted model object
      */
-    @SuppressWarnings("unchecked")
-    public <S> S apiPUT(RestClient client, String url, S model) {
-
+    public static <S> S apiPUT(RestClient client, String url, S model) {
         Assertions.assertNotNull(model, "The model class cannot be null");
-        return api(args -> client.put(url, json.toStr(model)), (Class<S>) model.getClass());
+        return new APIClient(client).apiPUT(url, model);
     }
 
     /**
-     * A PUT command for API
+     * A variant of PUT command for API when an entity to submit is provided
+     * with another class as the result type.
      *
      * @param client           The rest client
      * @param url              The url
@@ -112,15 +104,15 @@ public class APITester extends APIClient {
      * @param <S>              The type definition for the model
      * @return The resulted model object
      */
-    public <S> S apiPUT(RestClient client, String url, Object model, Class<S> returnModelClass) {
-
+    public static <S> S apiPUT(RestClient client, String url, Object model, Class<S> returnModelClass) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnModelClass, "The class cannot be null");
-        return api(args -> client.put(url, json.toStr(model)), returnModelClass);
+        return new APIClient(client).apiPUT(url, model, returnModelClass);
     }
 
     /**
-     * A variant of the PUT method with a complex return type
+     * A variant of the PUT method with a complex {@link TypeReference}
+     * return type.
      *
      * @param client           The REST client
      * @param url              The API url
@@ -129,15 +121,65 @@ public class APITester extends APIClient {
      * @param <S>              The type model
      * @return The resulted value
      */
-    public <S> S apiPUT(RestClient client, String url, Object model, TypeReference<S> returnModelClass) {
-
+    public static <S> S apiPUT(RestClient client, String url, Object model, TypeReference<S> returnModelClass) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnModelClass, "The class cannot be null");
-        return api(args -> client.put(url, json.toStr(model)), returnModelClass);
+        return new APIClient(client).apiPUT(url, model, returnModelClass);
     }
 
     /**
-     * A GET command for API (a TypeReference variant)
+     * A variant of PATCH command for API when an entity to submit is provided
+     * with the same result type.
+     *
+     * @param client The rest client
+     * @param url    The url
+     * @param model  The model to use
+     * @param <S>    The type definition for the model
+     * @return The resulted model object
+     */
+    public static <S> S apiPATCH(RestClient client, String url, S model) {
+        Assertions.assertNotNull(model, "The model class cannot be null");
+        return new APIClient(client).apiPATCH(url, model);
+    }
+
+    /**
+     * A variant of PATCH command for API when an entity to submit is provided
+     * with another class as the result type.
+     *
+     * @param client           The rest client
+     * @param url              The url
+     * @param model            The model to use
+     * @param returnModelClass The class of the resulted model
+     * @param <S>              The type definition for the model
+     * @return The resulted model object
+     */
+    public static <S> S apiPATCH(RestClient client, String url, Object model, Class<S> returnModelClass) {
+        Assertions.assertNotNull(model, "The model cannot be null");
+        Assertions.assertNotNull(returnModelClass, "The class cannot be null");
+        return new APIClient(client).apiPATCH(url, model, returnModelClass);
+    }
+
+    /**
+     * A variant of the PATCH method with a complex {@link TypeReference}
+     * return type.
+     *
+     * @param client     The REST client
+     * @param url        The API url
+     * @param model      The request model
+     * @param returnType The response model
+     * @param <S>        The type model
+     * @return The resulted value
+     */
+    public static <S> S apiPATCH(RestClient client, String url, Object model, TypeReference<S> returnType) {
+        Assertions.assertNotNull(model, "The model cannot be null");
+        Assertions.assertNotNull(returnType, "The class cannot be null");
+        return new APIClient(client).apiPATCH(url, model, returnType);
+    }
+
+
+    /**
+     * A variant of the GET command for API with a {@link TypeReference} as the
+     * result type.
      *
      * @param client  The rest client
      * @param url     The url
@@ -145,14 +187,13 @@ public class APITester extends APIClient {
      * @param <S>     The type definition for the model
      * @return The resulted model object
      */
-    public <S> S apiGET(RestClient client, String url, TypeReference<S> typeRef) {
-
+    public static <S> S apiGET(RestClient client, String url, TypeReference<S> typeRef) {
         Assertions.assertNotNull(typeRef, "The model class cannot be null");
-        return api(args -> client.get(url), typeRef);
+        return new APIClient(client).apiGET(url, typeRef);
     }
 
     /**
-     * A GET command for API
+     * A variant of the GET command for API with the given class as the result type.
      *
      * @param client     The rest client
      * @param url        The url
@@ -160,29 +201,29 @@ public class APITester extends APIClient {
      * @param <S>        The type definition for the model
      * @return The resulted model object
      */
-    public <S> S apiGET(RestClient client, String url, Class<S> modelClass) {
-
+    public static <S> S apiGET(RestClient client, String url, Class<S> modelClass) {
         Assertions.assertNotNull(modelClass, "The model cannot be null");
-        return api(args -> client.get(url), modelClass);
+        return new APIClient(client).apiGET(url, modelClass);
     }
 
     /**
-     * A Delete command for API
+     * A variant of the DELETE API command with the given class as the result
+     * type.
      *
-     * @param client     The rest client
+     * @param client     The REST client
      * @param url        The url
      * @param modelClass The class of the resulted model
      * @param <S>        The type definition for the model
      * @return The resulted model object
      */
-    public <S> S apiDELETE(RestClient client, String url, Class<S> modelClass) {
-
+    public static <S> S apiDELETE(RestClient client, String url, Class<S> modelClass) {
         Assertions.assertNotNull(modelClass, "The model cannot be null");
-        return api(args -> client.delete(url), modelClass);
+        return new APIClient(client).apiDELETE(url, modelClass);
     }
 
     /**
-     * A Delete command for API with a type reference object as the result
+     * A variant of the DELETE API command with the {@link TypeReference}
+     * result type.
      *
      * @param client  The REST client
      * @param url     The API url
@@ -190,14 +231,14 @@ public class APITester extends APIClient {
      * @param <S>     The type definition for the model
      * @return The resulted model object
      */
-    public <S> S apiDELETE(RestClient client, String url, TypeReference<S> typeRef) {
-
+    public static <S> S apiDELETE(RestClient client, String url, TypeReference<S> typeRef) {
         Assertions.assertNotNull(typeRef, "The model cannot be null");
-        return api(args -> client.delete(url), typeRef);
+        return new APIClient(client).apiDELETE(url, typeRef);
     }
 
     /**
-     * A Delete command for API
+     * A variant of the DELETE command when we need to send an entity and expect the
+     * given result type.
      *
      * @param client       The rest client
      * @param url          The url
@@ -206,16 +247,14 @@ public class APITester extends APIClient {
      * @param <S>          The type definition for the model
      * @return The resulted model object
      */
-    public <S> S apiDELETE(RestClient client, String url, Object requestModel, Class<S> modelClass) {
-
+    public static <S> S apiDELETE(RestClient client, String url, Object requestModel, Class<S> modelClass) {
         Assertions.assertNotNull(modelClass, "The response class cannot be null");
         Assertions.assertNotNull(requestModel, "The model cannot be null");
-
-        return api(args -> client.delete(url, json.toStr(requestModel)), modelClass);
+        return new APIClient(client).apiDELETE(url, requestModel, modelClass);
     }
 
     /**
-     * Uploads a file.
+     * Uploads the given resource (from a file or in memory).
      *
      * @param client      A REST client
      * @param url         The url used for the uploading
@@ -226,10 +265,11 @@ public class APITester extends APIClient {
      * @param <S>         The class
      * @return A response model
      */
-    public <S> S apiUpload(RestClient client, String url, Resource file, Class<S> resultModel,
-                           Map<String, Object> props) {
-
-        return api(args -> client.upload(url, file, props), resultModel);
+    public static <S> S apiUPLOAD(RestClient client, String url, Resource file, Class<S> resultModel,
+                                  Object... props) {
+        Assertions.assertNotNull(file, "Resource not defined");
+        Assertions.assertNotNull(resultModel, "Result mode is not defined");
+        return new APIClient(client).apiUPLOAD(url, file, resultModel, props);
     }
 
     /**
@@ -239,20 +279,7 @@ public class APITester extends APIClient {
      * @param url    The URL
      * @return The resulted array of bytes
      */
-    public byte[] apiDownload(RestClient client, String url) {
-
-        return new APIClient(client).apiDownload(url);
-    }
-
-    /**
-     * Asserts that the specified API query definitely generates an exception
-     * with the message
-     *
-     * @param callback    The API callback
-     * @param expectedMsg The expected message
-     * @param params      Parameters to use
-     */
-    public void assertAPIException(Function<Object[], ResponseEntity<String>> callback, String expectedMsg, Object... params) {
-        testcase.assertException(args -> api(callback, ResponseModel.class, params), expectedMsg, params);
+    public static byte[] apiDOWNLOAD(RestClient client, String url) {
+        return new APIClient(client).apiDOWNLOAD(url);
     }
 }
