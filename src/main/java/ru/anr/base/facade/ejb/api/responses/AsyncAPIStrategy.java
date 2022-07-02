@@ -81,17 +81,9 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
     public Message<String> process(Message<String> m, StrategyConfig cfg) {
 
         logger.debug("Processing API command: {}", m);
-
-        APICommand cmd = new APICommand(header(m, STRATEGY, String.class), header(m, VERSION, String.class));
-
-        cmd.setContexts(m.getHeaders());
-        if (!isEmpty(m.getPayload())) {
-            cmd.setRawModel(m.getPayload());
-        }
-        cmd.method(header(m, METHOD, String.class).toUpperCase(Locale.getDefault()));
+        APICommand cmd = buildCommand(m);
 
         try {
-
             APICommand cmdx = apis.process(cmd);
             responses.respond(cmd, cmdx);
 
@@ -100,5 +92,19 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
             throw ex; // re-throw to complete the transaction roll-back
         }
         return null;
+    }
+
+    public static APICommand buildCommand(Message<String> m) {
+
+        APICommand cmd = new APICommand(
+                m.getHeaders().get(STRATEGY, String.class),
+                m.getHeaders().get(VERSION, String.class));
+
+        cmd.setContexts(m.getHeaders()); // Immutable map !
+        if (!isEmpty(m.getPayload())) {
+            cmd.setRawModel(m.getPayload());
+        }
+        cmd.method(nullSafe(m.getHeaders().get(METHOD, String.class), n -> n.toUpperCase(Locale.getDefault())));
+        return cmd;
     }
 }

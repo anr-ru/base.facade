@@ -102,13 +102,13 @@ public class APIResponseManagerImpl extends BaseServiceImpl implements APIRespon
      * @param body    The body of the message
      * @param request The original request
      */
-    private void sendResponse(String queue, String body, APICommand request) {
+    protected void sendResponse(String queue, String body, APICommand request) {
 
         Destination d = bean(queue);
 
-        Map<String, Object> hh = new HashMap<String, Object>(request.getContexts());
+        Map<String, Object> hh = new HashMap<>(request.getContexts());
         hh.remove(AsyncAPIHeaders.API_RESPONSE_TO.name());
 
-        jms.convertAndSend(d, new GenericMessage<String>(body, hh));
+        jms.convertAndSend(d, new GenericMessage<>(body, hh));
     }
 }

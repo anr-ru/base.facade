@@ -18,8 +18,15 @@ package ru.anr.base.facade.ejb.api.requests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.messaging.Message;
+import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
+import ru.anr.base.services.api.ApiCommandStrategy;
+import ru.anr.base.services.api.ApiStrategy;
+import ru.anr.base.services.api.ApiUtils;
+
+import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
@@ -66,6 +73,21 @@ public interface AsyncAPIRequests {
     String query(String id, String version, MethodTypes method, RequestModel model, Object... params);
 
     /**
+     * Performs sending a new query to the request queue. A variant when the strategy class is known.
+     *
+     * @param clazz  The strategy class
+     * @param method A method to use
+     * @param model  A request model
+     * @param params A list of parameters
+     * @return The identifier of the query (because the processing is pure
+     * asynchronous
+     */
+    default String query(Class<? extends ApiCommandStrategy> clazz, MethodTypes method, RequestModel model, Object... params) {
+        ApiStrategy s = ApiUtils.extract(clazz);
+        return query(s.id(), s.version(), method, model, params);
+    }
+
+    /**
      * Performs sending a new query but without a need to receive a response.
      *
      * @param id      The identifier of API strategy
@@ -79,6 +101,22 @@ public interface AsyncAPIRequests {
     String noResponseQuery(String id, String version, MethodTypes method, RequestModel model, Object... params);
 
     /**
+     * Performs sending a new query without a need to receive a response. A variant when the class of the strategy
+     * is known.
+     *
+     * @param clazz  The strategy class
+     * @param method The method to use
+     * @param model  The request model
+     * @param params The list of parameters
+     * @return The identifier of the query (because the processing is pure
+     * asynchronous
+     */
+    default String noResponseQuery(Class<? extends ApiCommandStrategy> clazz, MethodTypes method, RequestModel model, Object... params) {
+        ApiStrategy s = ApiUtils.extract(clazz);
+        return noResponseQuery(s.id(), s.version(), method, model, params);
+    }
+
+    /**
      * Pulls the response from the requests queue by the specified identifier of
      * the request
      *
@@ -87,15 +125,15 @@ public interface AsyncAPIRequests {
      * @param <S>           The type of the object
      * @return An object instance
      */
-    <S> S getResponse(String queryId, Class<S> responseClass);
+    APICommand getResponse(String queryId, Class<?> responseClass);
 
     /**
      * Pulls the pure string response from the response queue
      *
      * @param queryId The identifier of the query
-     * @return The response model as a string
+     * @return The API command with the parsed body
      */
-    String getResponse(String queryId);
+    APICommand getResponse(String queryId);
 
     /**
      * Pulls the response for a more complex case when the response model is a
@@ -103,8 +141,7 @@ public interface AsyncAPIRequests {
      *
      * @param queryId The identifier of the query
      * @param ref     {@link TypeReference} object to use
-     * @param <S>     The type of the object
-     * @return The object corresponding to the type
+     * @return The API command with the parsed body
      */
-    <S> S getResponse(String queryId, TypeReference<S> ref);
+    APICommand getResponse(String queryId, TypeReference<?> ref);
 }

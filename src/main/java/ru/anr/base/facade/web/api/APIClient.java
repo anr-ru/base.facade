@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import ru.anr.base.domain.api.models.ResponseModel;
@@ -40,6 +41,8 @@ public class APIClient {
     protected Serializer json = new JSONSerializerImpl();
 
     protected RestClient client;
+
+    private HttpHeaders lastHeaders;
 
     /**
      * Constructs a new object
@@ -80,6 +83,7 @@ public class APIClient {
             } else {
                 value = json.fromStr(rs.getBody(), (Class<S>) type);
             }
+            this.lastHeaders = rs.getHeaders();
             return value;
         } catch (HttpStatusCodeException ex) {
             logger.error("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
@@ -338,5 +342,9 @@ public class APIClient {
      */
     public RestClient getClient() {
         return client;
+    }
+
+    public HttpHeaders getLastHeaders() {
+        return lastHeaders;
     }
 }

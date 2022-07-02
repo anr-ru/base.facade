@@ -299,7 +299,7 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     @Override
     public Object receiveSelectedAndConvert(Destination destination, String messageSelector) {
 
-        return receiveAndConvert(destination);
+        return receiveSelectedAndConvert(destination.toString(), messageSelector);
     }
 
     /**
@@ -308,7 +308,9 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     @Override
     public Object receiveSelectedAndConvert(String destinationName, String messageSelector) {
 
-        return receiveAndConvert(destinationName);
+        // TODO: is there a basic way to parse simple SQL where conditions?
+        java.util.Queue<org.springframework.messaging.Message<String>> q = getQueue(destinationName);
+        return q.poll();
     }
 
     /**

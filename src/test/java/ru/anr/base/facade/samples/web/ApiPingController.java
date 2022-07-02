@@ -29,10 +29,9 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/ping/{id}", method = RequestMethod.GET)
     public String doGet(@PathVariable String id, @RequestParam Map<String, String> params) {
-        APICommand cmd = buildAPI(PingApiStrategy.class)
+        return process(buildAPI(PingApiStrategy.class)
                 .context("id", id)
-                .params(params);
-        return process(cmd).getRawModel();
+                .params(params)).getRawModel();
     }
 
     /**
@@ -42,12 +41,11 @@ public class ApiPingController extends AbstractAPIController {
      * @param body Request body
      * @return Some result value
      */
-    @RequestMapping(value = "/ping/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/ping/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
     public String doPost(@PathVariable String id, @RequestBody String body) {
-        APICommand cmd = buildAPI("ping", "v1")
+        return process(buildAPI(PingApiStrategy.class)
                 .context("id", id)
-                .addRaw(body);
-        return process(cmd).getRawModel();
+                .addRaw(body)).getRawModel();
     }
 
     /**
@@ -57,8 +55,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public String doDelete() {
-        APICommand cmd = buildAPI("ping", "v1");
-        return process(cmd).getRawModel();
+                return process(buildAPI(PingApiStrategy.class)).getRawModel();
     }
 
     /////////////////// Special tests for error
@@ -70,8 +67,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/denied", method = RequestMethod.POST)
     public String do403() {
-        APICommand cmd = buildAPI("ping.errors", "v1");
-        return process(cmd).getRawModel();
+                return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
     }
 
     /**
@@ -81,8 +77,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/unauth", method = RequestMethod.GET)
     public String do401() {
-        APICommand cmd = buildAPI(PingErrorsStrategy.class);
-        return process(cmd).getRawModel();
+        return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
     }
 
     /**
@@ -92,8 +87,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/api", method = RequestMethod.DELETE)
     public String do400() {
-        APICommand cmd = buildAPI("ping.errors", "v1");
-        return process(cmd).getRawModel();
+                return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
     }
 
     /**
@@ -103,8 +97,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/validate", method = RequestMethod.PUT)
     public String do400Validate() {
-        APICommand cmd = buildAPI("ping.errors", "v1");
-        return process(cmd).getRawModel();
+                return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
     }
 
     /**
@@ -114,8 +107,6 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/system", method = RequestMethod.PUT)
     public String do500() {
-        APICommand cmd = buildAPI("ping", "v1");
-        return process(cmd).getRawModel();
+                return process(buildAPI(PingApiStrategy.class)).getRawModel();
     }
-
 }

@@ -6,7 +6,7 @@ jdk:
 
 cache:
   directories:
-  - "$HOME/.cache"
+    - "$HOME/.cache"
 
 before_install:
   - cp ./.mvn/ci-settings.xml $HOME/.m2/settings.xml

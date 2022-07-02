@@ -19,6 +19,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.core.io.Resource;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import ru.anr.base.BaseParent;
 import ru.anr.base.facade.web.api.APIClient;
 import ru.anr.base.facade.web.api.RestClient;
@@ -281,5 +283,26 @@ public class APITester extends BaseParent {
      */
     public static byte[] apiDOWNLOAD(RestClient client, String url) {
         return new APIClient(client).apiDOWNLOAD(url);
+    }
+
+    /**
+     * Performs a wrapped API call with loggins all http errors.
+     *
+     * @param callback The callback with request details
+     * @param typeDef  An unspecified type (can be a class or a {@link TypeReference}
+     *                 object)
+     * @param params   Additional parameters
+     * @return The response as an object of the required class
+     */
+    @Override
+    protected <S> S api(ApiCallback callback, Object typeDef, Object... params) {
+        try {
+            return super.api(callback, typeDef, params);
+        } catch (HttpClientErrorException e1) {
+            throw new AssertionError("Client Error (" + e1.getStatusCode() + ") / " + e1.getResponseBodyAsString());
+        } catch (HttpServerErrorException e2) {
+            throw new AssertionError("Server Error (" + e2.getStatusCode() + ") / " + e2.getResponseBodyAsString());
+        }
+
     }
 }

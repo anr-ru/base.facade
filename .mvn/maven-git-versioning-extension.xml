@@ -1,11 +1,12 @@
 <gitVersioning>
-   <branch>
-       <pattern>master</pattern>
-       <versionFormat>${version}</versionFormat>
-   </branch>
-   <branch>
+    <preferTags>true</preferTags>
+    <branch>
+        <pattern>master</pattern>
+        <versionFormat>${version}</versionFormat>
+    </branch>
+    <branch>
         <pattern>.*</pattern>
-        <!-- i.e. API-123-SNAPSHOT -->
+        <!-- i.e. DEV-SNAPSHOT -->
         <versionFormat>${branch}-SNAPSHOT</versionFormat>
     </branch>
     <tag>

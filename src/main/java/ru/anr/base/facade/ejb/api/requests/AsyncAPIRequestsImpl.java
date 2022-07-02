@@ -22,12 +22,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import ru.anr.base.BaseSpringParent;
+import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.domain.api.MethodTypes;
 import ru.anr.base.domain.api.models.RequestModel;
 import ru.anr.base.facade.ejb.api.AsyncAPIHeaders;
+import ru.anr.base.facade.ejb.api.responses.AsyncAPIStrategy;
 import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.services.serializer.Serializer;
 
@@ -127,6 +131,14 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
         hh.put(AsyncAPIHeaders.API_STRATEGY_ID.name(), id);
         hh.put(AsyncAPIHeaders.API_VERSION.name(), version);
         hh.put(AsyncAPIHeaders.API_METHOD.name(), method.name());
+
+        // If we have some authorization, let's add the principal name to determine more precisely
+        // where and how to send the response.
+        Authentication token = SecurityContextHolder.getContext().getAuthentication();
+        if (token != null && token.isAuthenticated()) {
+            hh.put(AsyncAPIHeaders.API_PRINCIPAL.name(), nullSafe(token.getPrincipal()));
+        }
+
         hh.putAll(toMap(params));
 
         if (queue != null) {
@@ -174,39 +186,50 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      * {@inheritDoc}
      */
     @Override
-    public String getResponse(String queryId) {
-
+    public APICommand getResponse(String queryId) {
         Assert.notNull(responseQueue, "The response queue is not defined");
-
         String selector = String.format(SELECTOR, AsyncAPIHeaders.API_QUERY_ID.name(), queryId);
 
         Destination d = bean(responseQueue);
 
         @SuppressWarnings("unchecked")
         Message<String> msg = (Message<String>) jms.receiveSelectedAndConvert(d, selector);
-        return (msg == null) ? null : msg.getPayload();
+        return msg == null ? null : AsyncAPIStrategy.buildCommand(msg);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public APICommand getResponse(String queryId, Class<?> responseClass) {
+
+        APICommand cmd = getResponse(queryId);
+        if (cmd != null) {
+
+            logger.debug("Raw response: {}", cmd.getRawModel());
+
+            if (cmd.getRawModel() != null) {
+                cmd.setResponse(serializer.fromStr(cmd.getRawModel(), responseClass));
+            }
+        }
+        return cmd;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <S> S getResponse(String queryId, Class<S> responseClass) {
+    public APICommand getResponse(String queryId, TypeReference<?> ref) {
 
-        String s = getResponse(queryId);
-        logger.debug("Raw response: {}", s);
-        return (s == null) ? null : serializer.fromStr(s, responseClass);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <S> S getResponse(String queryId, TypeReference<S> ref) {
-
-        String s = getResponse(queryId);
-        logger.debug("Raw response: {}", s);
-        return (s == null) ? null : serializer.fromStr(s, ref);
+        APICommand cmd = getResponse(queryId);
+        if (cmd != null) {
+            logger.debug("Raw response: {}", cmd.getRawModel());
+            if (cmd.getRawModel() != null) {
+                cmd.setResponse(serializer.fromStr(cmd.getRawModel(), ref));
+            }
+        }
+        return cmd;
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -27,13 +27,12 @@ import ru.anr.base.services.api.ApiCommandStrategy;
  * The base class for API Controllers. It encapsulates an API Factory, basic
  * settings for support both JSON/XML formats and also contains short-cut method
  * for fast building of API Command Object.
- *
+ * <p>
  * All descendants must have a
  * {@link org.springframework.web.bind.annotation.RestController} annotation and
  * method specific arguments, for example:
  *
  * <PRE>
- *
  * &#064;RequestMapping(value = &quot;/ping/{id}&quot;, method = RequestMethod.GET)
  * public String doGet(@PathVariable String id, @RequestParam Map&lt;String, String&gt; params) {
  *
@@ -76,7 +75,9 @@ public class AbstractAPIController {
      * @param commandId  Identifier of command
      * @param apiVersion Version of API
      * @return An instance of API command
+     * @deprecated Use {@link #buildAPI(Class)} version instead.
      */
+    @Deprecated
     protected APICommand buildAPI(String commandId, String apiVersion) {
         return CommandUtils.buildAPI(commandId, apiVersion);
     }
@@ -114,4 +115,16 @@ public class AbstractAPIController {
     protected APICommand error(APICommand api, Exception ex, ResponseModel model) {
         return apis.error(api, ex, model);
     }
+
+    /**
+     * A variant of API-command builder that use the strategy class
+     *
+     * @param clazz The strategy class to use
+     * @return The build command
+     */
+    protected APICommand buildAPI(Class<? extends ApiCommandStrategy> clazz) {
+        ApiStrategy api = ApiUtils.extract(clazz);
+        return CommandUtils.buildAPI(api.id(), api.version());
+    }
+
 }

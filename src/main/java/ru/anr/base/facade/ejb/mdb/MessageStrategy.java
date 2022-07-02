@@ -54,12 +54,12 @@ public interface MessageStrategy extends Strategy<Message<String>> {
      * @param <S> The object class
      * @return The object or null if not found
      */
-    default <S extends BaseEntity> S extractObject(Message<String> msg, BaseRepository<?> dao) {
+    default <S extends BaseEntity> S extractObject(Message<String> msg, BaseRepository<S> dao) {
 
         try {
-            Class<?> clazz = Class.forName(BaseParent.nullSafe(msg.getHeaders().get(OBJECT_CLASS)));
+            Class<S> clazz = (Class<S>) Class.forName(BaseParent.nullSafe(msg.getHeaders().get(OBJECT_CLASS)));
             Long id = Long.valueOf(BaseParent.nullSafe(msg.getHeaders().get(OBJECT_ID)));
-            return dao.find(clazz, id);
+            return (S) dao.find(clazz, id);
         } catch (ClassNotFoundException ex) {
             throw new ApplicationException(ex);
         }

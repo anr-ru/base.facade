@@ -22,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -34,22 +33,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 
 /**
- * A global error handler for all exceptions. It translates an exception to a valid
+ * A global error handler for all exceptions. It translates exception to a valid
  * API response.
  *
  * @author Alexey Romanchuk
  * @created Nov 17, 2014
  */
-@ControllerAdvice
 public class GlobalAPIExceptionHandler {
-
     private static final Logger logger = LoggerFactory.getLogger(GlobalAPIExceptionHandler.class);
 
     /**
      * {@link APICommandFactory}
      */
     @Autowired
-    private APICommandFactory apis;
+    protected APICommandFactory apis;
+
+    protected void logException(HttpServletRequest rq, Throwable ex, HttpStatus status) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Caught exception: (" + status.value() + "), " + rq.getContextPath(), ex);
+        }
+    }
 
     /**
      * A special case when the {@link HttpRequestMethodNotSupportedException} is
@@ -64,7 +67,7 @@ public class GlobalAPIExceptionHandler {
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
     public String processMethodUnsupported(HttpServletRequest rq, Exception ex) {
 
-        logger.debug("Caught exception: " + rq.getContextPath(), ex);
+        logException(rq, ex, HttpStatus.METHOD_NOT_ALLOWED);
 
         APICommand cmd = apis.error(ex);
         return cmd.getRawModel();
@@ -82,7 +85,7 @@ public class GlobalAPIExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public String processAPIException(HttpServletRequest rq, Exception ex) {
 
-        logger.debug("Caught exception: " + rq.getContextPath(), ex);
+        logException(rq, ex, HttpStatus.BAD_REQUEST);
 
         APICommand cmd = apis.error(ex);
         return cmd.getRawModel();
@@ -100,7 +103,7 @@ public class GlobalAPIExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public String processConstraintViolationException(HttpServletRequest rq, Exception ex) {
 
-        logger.debug("Caught exception: " + rq.getContextPath(), ex);
+        logException(rq, ex, HttpStatus.BAD_REQUEST);
 
         APICommand cmd = apis.error(ex);
         return cmd.getRawModel();
@@ -118,7 +121,7 @@ public class GlobalAPIExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public String processNotFound(HttpServletRequest rq, Exception ex) {
 
-        logger.debug("Caught exception: " + rq.getContextPath(), ex);
+        logException(rq, ex, HttpStatus.NOT_FOUND);
 
         APICommand cmd = apis.error(ex);
         return cmd.getRawModel();
@@ -136,7 +139,7 @@ public class GlobalAPIExceptionHandler {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public String processAccessDenied(HttpServletRequest rq, Exception ex) {
 
-        logger.debug("Caught exception: " + rq.getContextPath(), ex);
+        logException(rq, ex, HttpStatus.FORBIDDEN);
 
         APICommand cmd = apis.error(ex);
         return cmd.getRawModel();
@@ -154,7 +157,7 @@ public class GlobalAPIExceptionHandler {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public String processAuthenticationException(HttpServletRequest rq, Exception ex) {
 
-        logger.debug("Caught exception: " + rq.getContextPath(), ex);
+        logException(rq, ex, HttpStatus.UNAUTHORIZED);
 
         APICommand cmd = apis.error(ex);
         return cmd.getRawModel();
@@ -174,7 +177,7 @@ public class GlobalAPIExceptionHandler {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public String process(HttpServletRequest rq, Exception ex) throws Exception {
 
-        logger.debug("Caught exception: " + rq.getContextPath(), ex);
+        logException(rq, ex, HttpStatus.INTERNAL_SERVER_ERROR);
 
         APICommand cmd = apis.error(ex);
         return cmd.getRawModel();

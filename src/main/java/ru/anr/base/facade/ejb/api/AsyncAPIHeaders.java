@@ -60,6 +60,11 @@ public enum AsyncAPIHeaders {
     API_QUERY_ID,
 
     /**
+     * The authentication principal of the sender (if defined)
+     */
+    API_PRINCIPAL,
+
+    /**
      * The header that is used to organize parallel processing
      */
     PARALLEL_HASH;

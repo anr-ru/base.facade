@@ -44,7 +44,7 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
     @Override
     public ResponseModel post(APICommand cmd) {
 
-        PingRequestModel m = (PingRequestModel) cmd.getRequest();
+        PingRequestModel m = cmd.getRequest();
 
         logger.debug("Ping processed: {}, {}", cmd.getContexts().get("id"), m.getMessage());
 

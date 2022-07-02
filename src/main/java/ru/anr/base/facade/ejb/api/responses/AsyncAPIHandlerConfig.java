@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.Assert;
+import ru.anr.base.BaseParent;
+import ru.anr.base.services.api.APICommandFactory;
 import ru.anr.base.services.api.ApiConfig;
 
 /**
@@ -35,14 +37,19 @@ public class AsyncAPIHandlerConfig {
      */
     private String keyName;
 
+
+    private String responseClassName = APIResponseManagerImpl.class.getName();
+
     /**
      * Creates a bean to send responses and process error
      *
+     * @param factory The {@link APICommandFactory} which the bean depends on
+     * @param jms     The {@link JmsOperations}
      * @return The bean instance
      */
     @Bean
-    public APIResponseManager apiResponseManager() {
-        return new APIResponseManagerImpl();
+    public APIResponseManager apiResponseManager(APICommandFactory factory, JmsOperations jms) throws ClassNotFoundException {
+        return (APIResponseManager) BaseParent.inst(Class.forName(responseClassName), new Class<?>[]{});
     }
 
     /**
@@ -65,5 +72,9 @@ public class AsyncAPIHandlerConfig {
      */
     public void setKeyName(String keyName) {
         this.keyName = keyName;
+    }
+
+    public void setResponseClassName(String responseClassName) {
+        this.responseClassName = responseClassName;
     }
 }

@@ -22,7 +22,6 @@ import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import ru.anr.base.ApplicationException;
-import ru.anr.base.BaseParent;
 
 import java.io.File;
 import java.io.IOException;
@@ -157,7 +156,14 @@ public class GlassfishLoader {
 
             GlassFishProperties gfProps = new GlassFishProperties();
 
-            gfProps.setConfigFileReadOnly(false);
+            // Searching of domain.xml in classpath
+            ClassPathResource r = new ClassPathResource(domainFileConfig);
+            if (r.exists()) {
+                gfProps.setConfigFileURI(r.getFile().toURI().toString());
+                gfProps.setConfigFileReadOnly(true);
+            } else {
+                gfProps.setConfigFileReadOnly(false);
+            }
             gfProps.setProperty("glassfish.embedded.tmpdir", "./target/glassfish");
 
             // Base logger settings
@@ -308,4 +314,17 @@ public class GlassfishLoader {
             logger.info("File : {} not found, ignoring", file);
         }
     }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // /// getters/setters
+    // /////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @param domainFileConfig the domainFileConfig to set
+     */
+    public void setDomainFileConfig(String domainFileConfig) {
+
+        this.domainFileConfig = domainFileConfig;
+    }
+
 }
