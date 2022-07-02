@@ -2,7 +2,6 @@ package ru.anr.base.tests.facade;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.jms.core.BrowserCallback;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import ru.anr.base.tests.MockTextMessageImpl;
@@ -10,9 +9,6 @@ import ru.anr.base.tests.TestDestination;
 import ru.anr.base.tests.TestJmsOperations;
 
 import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.QueueBrowser;
-import javax.jms.Session;
 import java.util.Enumeration;
 import java.util.Queue;
 
@@ -86,17 +82,12 @@ public class TestJmsOperationsTest {
         TestDestination d = new TestDestination("QUEUE");
 
         TestJmsOperations jms = new TestJmsOperations();
-        jms.convertAndSend(d, new GenericMessage<String>("XXX"));
+        jms.convertAndSend(d, new GenericMessage<>("XXX"));
 
-        String rs = jms.browseSelected(d, null, new BrowserCallback<String>() {
-
+        String rs = jms.browseSelected(d, null, (session, browser) -> {
             @SuppressWarnings("unchecked")
-            @Override
-            public String doInJms(Session session, QueueBrowser browser) throws JMSException {
-
-                Enumeration<MockTextMessageImpl> e = browser.getEnumeration();
-                return e.hasMoreElements() ? e.nextElement().getMessage().getPayload() : null;
-            }
+            Enumeration<MockTextMessageImpl> e = browser.getEnumeration();
+            return e.hasMoreElements() ? e.nextElement().getMessage().getPayload() : null;
         });
         Assertions.assertEquals("XXX", rs);
     }

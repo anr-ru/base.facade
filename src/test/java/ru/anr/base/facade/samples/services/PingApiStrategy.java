@@ -33,7 +33,7 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
         logger.debug("Ping processed: {}", cmd.getContexts().get("id"));
 
         PingResponseModel rs = new PingResponseModel();
-        rs.setMessage("response," + cmd.getContexts().get("id"));
+        rs.data = "response," + cmd.getContexts().get("id");
 
         return rs;
     }
@@ -46,11 +46,23 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
 
         PingRequestModel m = cmd.getRequest();
 
-        logger.debug("Ping processed: {}, {}", cmd.getContexts().get("id"), m.getMessage());
+        logger.debug("Ping processed: {}, {}", cmd.getContexts().get("id"), m.data);
 
         PingResponseModel rs = new PingResponseModel();
-        rs.setMessage(m.getMessage() + "," + cmd.getContexts().get("id"));
+        rs.data = m.data + "," + cmd.getContexts().get("id");
 
+        return rs;
+    }
+
+    @Override
+    public ResponseModel patch(APICommand cmd) {
+
+        PingRequestModel m = cmd.getRequest();
+
+        logger.debug("Ping processed: {}, {}", cmd.getContexts().get("id"), m.data);
+
+        PingResponseModel rs = new PingResponseModel();
+        rs.data = "PATCHED: " + cmd.getContexts().get("id") + " : " + m.data;
         return rs;
     }
 
@@ -59,8 +71,7 @@ public class PingApiStrategy extends AbstractApiCommandStrategyImpl {
      */
     @Override
     public ResponseModel delete(APICommand cmd) {
-
-        throw APIException.withCode("Shit happend", 100);
+        throw APIException.withCode("Shit happened", 100);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import ru.anr.base.ApplicationException;
+import ru.anr.base.BaseParent;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static ru.anr.base.BaseParent.nullSafe;
 
 /**
  * Loader for Embedded Glassfish. Default configuration tries to load both
@@ -44,20 +47,22 @@ import java.util.logging.Logger;
 
 public class GlassfishLoader {
 
-    /**
-     * Logger
-     */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(GlassfishLoader.class);
 
     /**
-     * Static ref to Glassfish instance
+     * The static reference to the Glassfish instance
      */
     protected GlassFish glassfish;
 
     /**
-     * Static ref to GlassfishRuntime
+     * The static reference to GlassfishRuntime
      */
     protected GlassFishRuntime glassfishRuntime;
+
+    /**
+     * File with domain configuration in class path
+     */
+    private String domainFileConfig = "domain.xml";
 
     /**
      * Name of application
@@ -70,7 +75,6 @@ public class GlassfishLoader {
      * @param appName Name of application
      */
     public GlassfishLoader(String appName) {
-
         super();
         this.appName = appName;
     }
@@ -211,13 +215,13 @@ public class GlassfishLoader {
 
                 String[] tokens = translateCommandline(l);
 
-                if (tokens.length == 0 || "#".equals(tokens[0])) {
+                if (tokens.length == 0 || "#".equals(nullSafe(tokens[0]))) {
                     continue;
                 }
 
                 String[] args = ArrayUtils.subarray(tokens, 1, tokens.length);
 
-                logger.info("Runnning a command: {} {}", tokens[0], args);
+                logger.info("Running a command: {} {}", tokens[0], args);
                 CommandResult r = cmd.run(tokens[0], args);
 
                 switch (r.getExitStatus()) {
@@ -265,8 +269,7 @@ public class GlassfishLoader {
             Deployer deployer = glassfish.getDeployer();
 
             // Create a scattered web application.
-            ScatteredArchive webmodule = new ScatteredArchive(appName, ScatteredArchive.Type.WAR, new File("src/main/webapp"));
-            //new ScatteredArchive(appName, ScatteredArchive.Type.WAR, new File("src/main/webapp"));
+            ScatteredArchive webmodule = new ScatteredArchive(appName, ScatteredArchive.Type.WAR, new File("target"));
 
             // target/classes directory contains my complied servlets
             webmodule.addClassPath(new File("target", "classes"));
@@ -275,6 +278,8 @@ public class GlassfishLoader {
             // WEB application if required
             safeAddMetadata(webmodule, new File("src/main/webapp/WEB-INF", "sun-web.xml"));
             safeAddMetadata(webmodule, new File("src/main/webapp/WEB-INF", "web.xml"));
+            safeAddMetadata(webmodule, new File("src/test/webapp/WEB-INF", "sun-web.xml"));
+            safeAddMetadata(webmodule, new File("src/test/webapp/WEB-INF", "web.xml"));
 
             // EJB application if required
             safeAddMetadata(webmodule, new File("target/classes/META-INF", "ejb-jar.xml"));
@@ -296,7 +301,7 @@ public class GlassfishLoader {
 
     /**
      * Safe adding item to avoid {@link IOException} in case of absence some
-     * configuration. For example a test application can be web only without
+     * files. For example, a test application can be web-only without
      * EJB.
      *
      * @param webmodule WAR module
@@ -315,15 +320,14 @@ public class GlassfishLoader {
         }
     }
 
-    // /////////////////////////////////////////////////////////////////////////
-    // /// getters/setters
-    // /////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    ///// getters/setters
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * @param domainFileConfig the domainFileConfig to set
      */
     public void setDomainFileConfig(String domainFileConfig) {
-
         this.domainFileConfig = domainFileConfig;
     }
 

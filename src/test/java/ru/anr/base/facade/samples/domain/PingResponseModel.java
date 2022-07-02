@@ -16,23 +16,6 @@ public class PingResponseModel extends ResponseModel {
 
     private static final long serialVersionUID = -2838873002841632068L;
 
-    /**
-     * Some message
-     */
-    private String message;
-
-    /**
-     * @return the message
-     */
-    @XmlAttribute(name = "message")
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * @param message the message to set
-     */
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    @XmlAttribute(name = "data")
+    public String data;
 }

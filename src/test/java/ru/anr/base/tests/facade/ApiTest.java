@@ -30,14 +30,14 @@ public class ApiTest extends BaseWebTestCase {
         ResponseEntity<String> r = client.get("/api/v1/ping/2");
 
         logger.debug("Result: {}", r.getBody());
-        Assertions.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
+        Assertions.assertEquals("{\"code\":0,\"data\":\"response,2\"}", r.getBody());
 
         // Changin to xml as expected type
         client.setAccept(MediaType.APPLICATION_XML);
         r = client.get("/api/v1/ping/2");
 
         logger.debug("Result: {}", r.getBody());
-        Assertions.assertEquals("<?xml version='1.0' encoding='UTF-8'?><pong code=\"0\" message=\"response,2\"/>",
+        Assertions.assertEquals("<?xml version='1.0' encoding='UTF-8'?><pong code=\"0\" data=\"response,2\"/>",
                 r.getBody());
     }
 
@@ -48,10 +48,10 @@ public class ApiTest extends BaseWebTestCase {
     public void pingPost() {
 
         RestClient client = new RestClient();
-        ResponseEntity<String> r = client.post("/api/v1/ping/2", "{\"message\":\"hello\"}");
+        ResponseEntity<String> r = client.post("/api/v1/ping/2", "{\"data\":\"hello\"}");
 
         logger.info("Result: {}", r.getBody());
-        Assertions.assertEquals("{\"code\":0,\"message\":\"hello,2\"}", r.getBody());
+        Assertions.assertEquals("{\"code\":0,\"data\":\"hello,2\"}", r.getBody());
     }
 
     /**
@@ -69,7 +69,7 @@ public class ApiTest extends BaseWebTestCase {
             logger.info("Result: {}", ex.getResponseBodyAsString());
 
             Assertions.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
-            Assertions.assertEquals("{\"code\":100,\"message\":\"Shit happend\"}", ex.getResponseBodyAsString());
+            Assertions.assertEquals("{\"code\":100,\"message\":\"Shit happened\"}", ex.getResponseBodyAsString());
         }
     }
 
@@ -220,7 +220,7 @@ public class ApiTest extends BaseWebTestCase {
                 RestClient c = (RestClient) x[0];
 
                 ResponseEntity<String> r = c.get("/api/v1/ping/2");
-                Assertions.assertEquals("{\"code\":0,\"message\":\"response,2\"}", r.getBody());
+                Assertions.assertEquals("{\"code\":0,\"data\":\"response,2\"}", r.getBody());
                 ThreadExecutor.sleep(10, 50);
             }
         }));
@@ -233,7 +233,7 @@ public class ApiTest extends BaseWebTestCase {
                 RestClient c = (RestClient) x[0];
 
                 ResponseEntity<String> r = c.get("/api/v1/ping/5");
-                Assertions.assertEquals("{\"code\":0,\"message\":\"response,5\"}", r.getBody());
+                Assertions.assertEquals("{\"code\":0,\"data\":\"response,5\"}", r.getBody());
                 ThreadExecutor.sleep(10, 50);
             }
         }));

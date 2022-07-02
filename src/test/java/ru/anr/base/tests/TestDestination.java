@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,7 +42,6 @@ public class TestDestination extends BaseParent implements Destination, Queue {
      * @param name Name of 'queue'
      */
     public TestDestination(String name) {
-
         this.name = name;
     }
 
@@ -51,7 +50,6 @@ public class TestDestination extends BaseParent implements Destination, Queue {
      */
     @Override
     public int hashCode() {
-
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
@@ -60,7 +58,6 @@ public class TestDestination extends BaseParent implements Destination, Queue {
      */
     @Override
     public boolean equals(Object obj) {
-
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
@@ -69,7 +66,6 @@ public class TestDestination extends BaseParent implements Destination, Queue {
      */
     @Override
     public String toString() {
-
         return "[" + name + "]";
     }
 
@@ -78,7 +74,6 @@ public class TestDestination extends BaseParent implements Destination, Queue {
      */
     @Override
     public String getQueueName() {
-
         return name;
     }
 }

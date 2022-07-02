@@ -28,9 +28,6 @@ import ru.anr.base.services.api.ApiUtils;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-import java.util.Map;
-
 /**
  * This service is a tiny wrapper to hide the serialization procedures and
  * sending API messages via JMS.
@@ -122,7 +119,6 @@ public interface AsyncAPIRequests {
      *
      * @param queryId       The identifier of the query
      * @param responseClass The class for the response model
-     * @param <S>           The type of the object
      * @return An object instance
      */
     APICommand getResponse(String queryId, Class<?> responseClass);

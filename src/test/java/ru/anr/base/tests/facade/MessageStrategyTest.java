@@ -34,7 +34,6 @@ public class MessageStrategyTest extends BaseWebTestCase {
          */
         @Override
         public StrategyConfig check(Message<String> o, Object... params) {
-
             return new StrategyConfig(true, o, StrategyModes.Normal);
         }
 
@@ -43,7 +42,6 @@ public class MessageStrategyTest extends BaseWebTestCase {
          */
         @Override
         public Message<String> process(Message<String> o, StrategyConfig cfg) {
-
             return o;
         }
 

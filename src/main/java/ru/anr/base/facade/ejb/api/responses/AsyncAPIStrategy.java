@@ -104,7 +104,10 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
         if (!isEmpty(m.getPayload())) {
             cmd.setRawModel(m.getPayload());
         }
-        cmd.method(nullSafe(m.getHeaders().get(METHOD, String.class), n -> n.toUpperCase(Locale.getDefault())));
+        cmd.method(
+                nullSafe(m.getHeaders().get(METHOD, String.class),
+                        n -> n.toUpperCase(Locale.getDefault())).orElse(null)
+        );
         return cmd;
     }
 }

@@ -42,14 +42,12 @@
                             <includes>
                                 <include>**/AbstractGlassfishWebTestCase*</include>
                                 <include>**/GlassfishLoader*</include>
-                                <include>**/RestClient.class</include>
                                 <include>**/TestDestination.class</include>
                                 <include>**/TestJmsOperations*.class</include>
                                 <include>**/MockTextMessageImpl.class</include>
                                 <include>**/JmsTests.class</include>
                                 <include>**/HttpJob.class</include>
                                 <include>**/APITester.class</include>
-                                <include>**/ApiCallback.class</include>
                             </includes>
                         </configuration>
                     </execution>

@@ -47,7 +47,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
         PingRequestModel m = cmd.getRequest();
 
         Samples s = new Samples();
-        s.setName(m.getMessage());
+        s.setName(m.data);
 
         s = dao.save(s);
 
@@ -58,7 +58,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
         }
 
         PingResponseModel rs = new PingResponseModel();
-        rs.setMessage(s.getId().toString());
+        rs.data = s.getId().toString();
 
         return rs;
     }
@@ -72,7 +72,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
         PingRequestModel m = cmd.getRequest();
 
         Samples s = new Samples();
-        s.setName(m.getMessage());
+        s.setName(m.data);
 
         s = dao.save(s);
 
@@ -83,7 +83,7 @@ public class NoRollbackStrategy extends AbstractApiCommandStrategyImpl {
         }
 
         PingResponseModel rs = new PingResponseModel();
-        rs.setMessage(s.getId().toString());
+        rs.data = s.getId().toString();
 
         return rs;
     }

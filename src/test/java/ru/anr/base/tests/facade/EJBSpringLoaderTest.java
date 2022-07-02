@@ -32,6 +32,8 @@ public class EJBSpringLoaderTest extends BaseWebTestCase {
         Assertions.assertEquals(2, q.size());
         Message<String> m1 = q.poll();
         Message<String> m2 = q.poll();
+        Assertions.assertNotNull(m1);
+        Assertions.assertNotNull(m2);
 
         Assertions.assertEquals("KEY", m1.getHeaders().get("TYPE_KEY"));
         Assertions.assertEquals("KEY", m2.getHeaders().get("TYPE_KEY"));

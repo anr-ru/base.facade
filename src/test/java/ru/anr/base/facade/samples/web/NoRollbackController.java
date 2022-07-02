@@ -37,7 +37,8 @@ public class NoRollbackController extends AbstractAPIController {
     @RequestMapping(value = "/norollback", method = RequestMethod.PUT)
     public String doPut(@RequestBody String body) {
 
-        return process(buildAPI("norollback", "v1").addRaw(body)).getRawModel();
+        return process(buildAPI(NoRollbackStrategy.class)
+                .addRaw(body)).getRawModel();
     }
 
 }

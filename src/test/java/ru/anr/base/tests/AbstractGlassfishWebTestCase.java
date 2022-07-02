@@ -31,13 +31,7 @@ import java.util.Locale;
  */
 @Disabled
 public class AbstractGlassfishWebTestCase extends BaseTestCase {
-
-    // Change the logger's output
-    //static {
-    //SLF4JBridgeHandler.removeHandlersForRootLogger();
-    //SLF4JBridgeHandler.install();
-    //}
-
+    
     protected static final Logger logger = LoggerFactory.getLogger(AbstractGlassfishWebTestCase.class);
 
     /**

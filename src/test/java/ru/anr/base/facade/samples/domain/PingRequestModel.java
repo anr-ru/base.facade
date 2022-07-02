@@ -19,15 +19,8 @@ public class PingRequestModel extends RequestModel {
     /**
      * Message value
      */
-    private String message;
-
-    /**
-     * @return the message
-     */
-    @XmlElement(name = "message")
-    public String getMessage() {
-        return message;
-    }
+    @XmlElement(name = "data")
+    public String data;
 
     /**
      * @param message the message to set

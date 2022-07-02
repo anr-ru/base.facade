@@ -2,7 +2,6 @@ package ru.anr.base.facade.samples.web;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.anr.base.domain.api.APICommand;
 import ru.anr.base.facade.samples.services.PingApiStrategy;
 import ru.anr.base.facade.samples.services.PingErrorsStrategy;
 import ru.anr.base.facade.web.api.AbstractAPIController;
@@ -41,7 +40,7 @@ public class ApiPingController extends AbstractAPIController {
      * @param body Request body
      * @return Some result value
      */
-    @RequestMapping(value = "/ping/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(value = "/ping/{id}", method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH})
     public String doPost(@PathVariable String id, @RequestBody String body) {
         return process(buildAPI(PingApiStrategy.class)
                 .context("id", id)
@@ -55,7 +54,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public String doDelete() {
-                return process(buildAPI(PingApiStrategy.class)).getRawModel();
+        return process(buildAPI(PingApiStrategy.class)).getRawModel();
     }
 
     /////////////////// Special tests for error
@@ -67,7 +66,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/denied", method = RequestMethod.POST)
     public String do403() {
-                return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
+        return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
     }
 
     /**
@@ -87,7 +86,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/api", method = RequestMethod.DELETE)
     public String do400() {
-                return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
+        return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
     }
 
     /**
@@ -97,7 +96,7 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/validate", method = RequestMethod.PUT)
     public String do400Validate() {
-                return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
+        return process(buildAPI(PingErrorsStrategy.class)).getRawModel();
     }
 
     /**
@@ -107,6 +106,6 @@ public class ApiPingController extends AbstractAPIController {
      */
     @RequestMapping(value = "/system", method = RequestMethod.PUT)
     public String do500() {
-                return process(buildAPI(PingApiStrategy.class)).getRawModel();
+        return process(buildAPI(PingApiStrategy.class)).getRawModel();
     }
 }

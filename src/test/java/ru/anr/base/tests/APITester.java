@@ -19,11 +19,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.core.io.Resource;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.http.HttpHeaders;
 import ru.anr.base.BaseParent;
 import ru.anr.base.facade.web.api.APIClient;
 import ru.anr.base.facade.web.api.RestClient;
+
+import java.util.function.Function;
 
 /**
  * A class to facilitate some testing procedures for REST-based APIs.
@@ -33,6 +34,20 @@ import ru.anr.base.facade.web.api.RestClient;
  */
 @Disabled
 public class APITester extends BaseParent {
+
+    private static HttpHeaders lastHeaders;
+
+    // A wrapper to store last headers after each response
+    private static <S> S wrap(RestClient client, Function<APIClient, S> callback) {
+        APIClient api = new APIClient(client, true);
+        S rs = callback.apply(api);
+        lastHeaders = api.getLastHeaders();
+        return rs;
+    }
+
+    public static HttpHeaders getLastHeaders() {
+        return lastHeaders;
+    }
 
     /**
      * A variant of POST command for API when an entity to submit is provided
@@ -46,7 +61,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiPOST(RestClient client, String url, S model) {
         Assertions.assertNotNull(model, "The model cannot be null");
-        return new APIClient(client).apiPOST(url, model);
+        return wrap(client, api -> api.apiPOST(url, model));
     }
 
     /**
@@ -61,7 +76,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiPOST(RestClient client, String url, Object model, TypeReference<S> result) {
         Assertions.assertNotNull(model, "The model cannot be null");
-        return new APIClient(client).apiPOST(url, model, result);
+        return wrap(client, api -> api.apiPOST(url, model, result));
     }
 
     /**
@@ -77,7 +92,7 @@ public class APITester extends BaseParent {
     public static <S> S apiPOST(RestClient client, String url, Object model, Class<S> returnModelClass) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnModelClass, "The class cannot be null");
-        return new APIClient(client).apiPOST(url, model, returnModelClass);
+        return wrap(client, api -> api.apiPOST(url, model, returnModelClass));
     }
 
     /**
@@ -92,7 +107,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiPUT(RestClient client, String url, S model) {
         Assertions.assertNotNull(model, "The model class cannot be null");
-        return new APIClient(client).apiPUT(url, model);
+        return wrap(client, api -> api.apiPUT(url, model));
     }
 
     /**
@@ -109,7 +124,7 @@ public class APITester extends BaseParent {
     public static <S> S apiPUT(RestClient client, String url, Object model, Class<S> returnModelClass) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnModelClass, "The class cannot be null");
-        return new APIClient(client).apiPUT(url, model, returnModelClass);
+        return wrap(client, api -> api.apiPUT(url, model, returnModelClass));
     }
 
     /**
@@ -126,7 +141,7 @@ public class APITester extends BaseParent {
     public static <S> S apiPUT(RestClient client, String url, Object model, TypeReference<S> returnModelClass) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnModelClass, "The class cannot be null");
-        return new APIClient(client).apiPUT(url, model, returnModelClass);
+        return wrap(client, api -> api.apiPUT(url, model, returnModelClass));
     }
 
     /**
@@ -141,7 +156,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiPATCH(RestClient client, String url, S model) {
         Assertions.assertNotNull(model, "The model class cannot be null");
-        return new APIClient(client).apiPATCH(url, model);
+        return wrap(client, api -> api.apiPATCH(url, model));
     }
 
     /**
@@ -158,7 +173,7 @@ public class APITester extends BaseParent {
     public static <S> S apiPATCH(RestClient client, String url, Object model, Class<S> returnModelClass) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnModelClass, "The class cannot be null");
-        return new APIClient(client).apiPATCH(url, model, returnModelClass);
+        return wrap(client, api -> api.apiPATCH(url, model, returnModelClass));
     }
 
     /**
@@ -175,7 +190,7 @@ public class APITester extends BaseParent {
     public static <S> S apiPATCH(RestClient client, String url, Object model, TypeReference<S> returnType) {
         Assertions.assertNotNull(model, "The model cannot be null");
         Assertions.assertNotNull(returnType, "The class cannot be null");
-        return new APIClient(client).apiPATCH(url, model, returnType);
+        return wrap(client, api -> api.apiPATCH(url, model, returnType));
     }
 
 
@@ -191,7 +206,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiGET(RestClient client, String url, TypeReference<S> typeRef) {
         Assertions.assertNotNull(typeRef, "The model class cannot be null");
-        return new APIClient(client).apiGET(url, typeRef);
+        return wrap(client, api -> api.apiGET(url, typeRef));
     }
 
     /**
@@ -205,7 +220,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiGET(RestClient client, String url, Class<S> modelClass) {
         Assertions.assertNotNull(modelClass, "The model cannot be null");
-        return new APIClient(client).apiGET(url, modelClass);
+        return wrap(client, api -> api.apiGET(url, modelClass));
     }
 
     /**
@@ -220,7 +235,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiDELETE(RestClient client, String url, Class<S> modelClass) {
         Assertions.assertNotNull(modelClass, "The model cannot be null");
-        return new APIClient(client).apiDELETE(url, modelClass);
+        return wrap(client, api -> api.apiDELETE(url, modelClass));
     }
 
     /**
@@ -235,24 +250,7 @@ public class APITester extends BaseParent {
      */
     public static <S> S apiDELETE(RestClient client, String url, TypeReference<S> typeRef) {
         Assertions.assertNotNull(typeRef, "The model cannot be null");
-        return new APIClient(client).apiDELETE(url, typeRef);
-    }
-
-    /**
-     * A variant of the DELETE command when we need to send an entity and expect the
-     * given result type.
-     *
-     * @param client       The rest client
-     * @param url          The url
-     * @param requestModel The request model
-     * @param modelClass   The response model class
-     * @param <S>          The type definition for the model
-     * @return The resulted model object
-     */
-    public static <S> S apiDELETE(RestClient client, String url, Object requestModel, Class<S> modelClass) {
-        Assertions.assertNotNull(modelClass, "The response class cannot be null");
-        Assertions.assertNotNull(requestModel, "The model cannot be null");
-        return new APIClient(client).apiDELETE(url, requestModel, modelClass);
+        return wrap(client, api -> api.apiDELETE(url, typeRef));
     }
 
     /**
@@ -271,7 +269,7 @@ public class APITester extends BaseParent {
                                   Object... props) {
         Assertions.assertNotNull(file, "Resource not defined");
         Assertions.assertNotNull(resultModel, "Result mode is not defined");
-        return new APIClient(client).apiUPLOAD(url, file, resultModel, props);
+        return wrap(client, api -> api.apiUPLOAD(url, file, resultModel, props));
     }
 
     /**
@@ -282,27 +280,6 @@ public class APITester extends BaseParent {
      * @return The resulted array of bytes
      */
     public static byte[] apiDOWNLOAD(RestClient client, String url) {
-        return new APIClient(client).apiDOWNLOAD(url);
-    }
-
-    /**
-     * Performs a wrapped API call with loggins all http errors.
-     *
-     * @param callback The callback with request details
-     * @param typeDef  An unspecified type (can be a class or a {@link TypeReference}
-     *                 object)
-     * @param params   Additional parameters
-     * @return The response as an object of the required class
-     */
-    @Override
-    protected <S> S api(ApiCallback callback, Object typeDef, Object... params) {
-        try {
-            return super.api(callback, typeDef, params);
-        } catch (HttpClientErrorException e1) {
-            throw new AssertionError("Client Error (" + e1.getStatusCode() + ") / " + e1.getResponseBodyAsString());
-        } catch (HttpServerErrorException e2) {
-            throw new AssertionError("Server Error (" + e2.getStatusCode() + ") / " + e2.getResponseBodyAsString());
-        }
-
+        return wrap(client, api -> api.apiDOWNLOAD(url));
     }
 }

@@ -35,11 +35,11 @@ public class RollbackTest extends BaseWebTestCase {
     public void pingPost() {
 
         PingRequestModel rq = new PingRequestModel();
-        rq.setMessage("hello");
+        rq.data = "hello";
 
         PingResponseModel rs = APITester.apiPOST(client, "/api/v1/rollback", rq, PingResponseModel.class);
 
-        Samples s = dao.find(Samples.class, parse(rs.getMessage(), Long.class));
+        Samples s = dao.find(Samples.class, parse(rs.data, Long.class));
         Assertions.assertNull(s);
     }
 
@@ -51,11 +51,11 @@ public class RollbackTest extends BaseWebTestCase {
     public void pingPut() {
 
         PingRequestModel rq = new PingRequestModel();
-        rq.setMessage("hello");
+        rq.data = "hello";
 
         PingResponseModel rs = APITester.apiPUT(client, "/api/v1/norollback", rq, PingResponseModel.class);
 
-        Samples s = dao.find(Samples.class, parse(rs.getMessage(), Long.class));
+        Samples s = dao.find(Samples.class, parse(rs.data, Long.class));
         Assertions.assertNotNull(s);
     }
 }

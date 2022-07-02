@@ -69,20 +69,6 @@ public class AbstractAPIController {
     private APICommandFactory apis;
 
     /**
-     * Construction of API Command with request specific params (taken from a
-     * current request)
-     *
-     * @param commandId  Identifier of command
-     * @param apiVersion Version of API
-     * @return An instance of API command
-     * @deprecated Use {@link #buildAPI(Class)} version instead.
-     */
-    @Deprecated
-    protected APICommand buildAPI(String commandId, String apiVersion) {
-        return CommandUtils.buildAPI(commandId, apiVersion);
-    }
-
-    /**
      * Construction of API Command with use of a concrete API strategy class.
      * It's more precise way to specify the API command to use.
      *
@@ -115,16 +101,4 @@ public class AbstractAPIController {
     protected APICommand error(APICommand api, Exception ex, ResponseModel model) {
         return apis.error(api, ex, model);
     }
-
-    /**
-     * A variant of API-command builder that use the strategy class
-     *
-     * @param clazz The strategy class to use
-     * @return The build command
-     */
-    protected APICommand buildAPI(Class<? extends ApiCommandStrategy> clazz) {
-        ApiStrategy api = ApiUtils.extract(clazz);
-        return CommandUtils.buildAPI(api.id(), api.version());
-    }
-
 }

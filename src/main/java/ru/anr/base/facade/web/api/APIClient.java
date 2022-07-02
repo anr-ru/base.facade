@@ -42,6 +42,8 @@ public class APIClient {
 
     protected RestClient client;
 
+    private boolean testMode = false;
+
     private HttpHeaders lastHeaders;
 
     /**
@@ -51,6 +53,11 @@ public class APIClient {
      */
     public APIClient(RestClient client) {
         this.client = client;
+    }
+
+    public APIClient(RestClient client, boolean testMode) {
+        this.client = client;
+        this.testMode = testMode;
     }
 
     /**
@@ -87,7 +94,13 @@ public class APIClient {
             return value;
         } catch (HttpStatusCodeException ex) {
             logger.error("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
-            throw ex;
+            if (testMode) {
+                throw new AssertionError(
+                        "HTTP Error (" + ex.getStatusCode() + " - " + ex.getStatusText() +
+                                ") / " + ex.getResponseBodyAsString());
+            } else {
+                throw ex;
+            }
         }
     }
 
@@ -308,20 +321,6 @@ public class APIClient {
      */
     public <S> S apiDELETE(String url, Class<S> modelClass) {
         return api(args -> client.delete(url), modelClass);
-    }
-
-    /**
-     * The DELETE command for API with a body to submit and the given class
-     * for the result.
-     *
-     * @param url         The url
-     * @param model       The model
-     * @param resultClass The class of the resulted model
-     * @param <S>         The type definition for the model
-     * @return The resulted model object
-     */
-    public <S> S apiDELETE(String url, Object model, Class<S> resultClass) {
-        return api(args -> client.delete(url, json.toStr(model)), resultClass);
     }
 
     /**
