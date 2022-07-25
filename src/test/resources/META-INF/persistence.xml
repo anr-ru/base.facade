@@ -21,8 +21,8 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.connection.driver_class" value="${dbx.driverClass}"/>
 
-            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
-
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="hibernate.transaction.factory_class"
                       value="org.hibernate.resource.transaction.backend.jta.internal.JtaTransactionCoordinatorBuilderImpl"/>
             <property name="hibernate.transaction.coordinator_class" value="jta"/>
