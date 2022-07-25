@@ -33,7 +33,7 @@ import javax.enterprise.inject.Produces;
  */
 @ApplicationScoped
 @Startup
-@Singleton
+@Singleton(name = "CDISpringLoader")
 public class CDISpringLoader {
 
     @Produces

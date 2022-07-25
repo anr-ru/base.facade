@@ -3,6 +3,7 @@ package ru.anr.base.facade.samples.ejb;
 import ru.anr.base.facade.ejb.EJBStartUpLoader;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.PersistenceUnit;
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceUnits;
  */
 @Startup
 @Singleton
+@DependsOn({"CDISpringLoader"})
 @PersistenceUnits({
         @PersistenceUnit(name = "TestUnit/EntityManagerFactory", unitName = "TestUnit")
 })
