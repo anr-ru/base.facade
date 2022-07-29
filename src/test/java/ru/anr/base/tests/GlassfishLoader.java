@@ -15,6 +15,7 @@
  */
 package ru.anr.base.tests;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.glassfish.embeddable.*;
@@ -26,6 +27,9 @@ import ru.anr.base.BaseParent;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -168,6 +172,13 @@ public class GlassfishLoader {
             } else {
                 gfProps.setConfigFileReadOnly(false);
             }
+
+            Path dir = Paths.get("./target", "glassfish");
+            if (Files.exists(dir)) {
+                logger.info("Cleaning up the temporal directory ...");
+                FileUtils.cleanDirectory(dir.toFile());
+            }
+
             gfProps.setProperty("glassfish.embedded.tmpdir", "./target/glassfish");
 
             // Base logger settings
@@ -280,6 +291,8 @@ public class GlassfishLoader {
             safeAddMetadata(webmodule, new File("src/main/webapp/WEB-INF", "web.xml"));
             safeAddMetadata(webmodule, new File("src/test/webapp/WEB-INF", "sun-web.xml"));
             safeAddMetadata(webmodule, new File("src/test/webapp/WEB-INF", "web.xml"));
+            safeAddClasspath(webmodule, new File("src/test/webapp", "WEB-INF"));
+            safeAddClasspath(webmodule, new File("src/main/webapp", "WEB-INF"));
 
             // EJB application if required
             safeAddMetadata(webmodule, new File("target/classes/META-INF", "ejb-jar.xml"));
@@ -317,6 +330,16 @@ public class GlassfishLoader {
 
         } catch (IOException ex) {
             logger.info("File : {} not found, ignoring", file);
+        }
+    }
+
+    private void safeAddClasspath(ScatteredArchive webmodule, File file) {
+        try {
+            logger.debug("Trying to load in classpath: {}", file);
+            webmodule.addClassPath(file);
+            logger.info("Loaded: {}", file);
+        } catch (IOException ex) {
+            logger.info("Classpath directory {} not found, ignoring", file);
         }
     }
 
