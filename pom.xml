@@ -5,14 +5,14 @@
     <parent>
         <groupId>ru.anr</groupId>
         <artifactId>base.platform.parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>base.facade</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
 
     <name>Base Facade</name>
-    <description>Facade Serivices for Glassfish Apps</description>
+    <description>Facade Services for Glassfish Apps</description>
 
     <licenses>
         <license>
@@ -134,7 +134,7 @@
         <dependency>
             <groupId>ru.anr</groupId>
             <artifactId>base.tests</artifactId>
-            <version>1.0.0</version>
+            <version>${base.tests.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mchange</groupId>
@@ -155,8 +155,9 @@
         <dbx.password>localtest</dbx.password>
         <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>
 
-        <base.utils.version>1.0.8</base.utils.version>
-        <base.services.version>1.1.8</base.services.version>
+        <base.utils.version>1.1.0</base.utils.version>
+        <base.services.version>1.2.0</base.services.version>
+        <base.tests.version>1.2.0</base.tests.version>
 
     </properties>
 
