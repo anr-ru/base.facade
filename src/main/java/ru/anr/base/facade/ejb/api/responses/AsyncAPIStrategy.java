@@ -26,6 +26,7 @@ import ru.anr.base.facade.ejb.mdb.BaseEventKeyStrategy;
 import ru.anr.base.services.api.APICommandFactory;
 import ru.anr.base.services.pattern.StrategyConfig;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -100,7 +101,7 @@ public class AsyncAPIStrategy extends BaseEventKeyStrategy {
                 m.getHeaders().get(STRATEGY, String.class),
                 m.getHeaders().get(VERSION, String.class));
 
-        cmd.setContexts(m.getHeaders()); // Immutable map !
+        cmd.setContexts(new HashMap<>(m.getHeaders())); // Immutable map !
         if (!isEmpty(m.getPayload())) {
             cmd.setRawModel(m.getPayload());
         }
