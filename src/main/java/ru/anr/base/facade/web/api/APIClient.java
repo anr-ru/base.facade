@@ -93,7 +93,7 @@ public class APIClient {
             this.lastHeaders = rs.getHeaders();
             return value;
         } catch (HttpStatusCodeException ex) {
-            logger.error("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
+            logger.debug("Query error: {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
             if (testMode) {
                 throw new AssertionError(
                         "HTTP Error (" + ex.getStatusCode() + " - " + ex.getStatusText() +
