@@ -42,7 +42,7 @@ import java.util.Enumeration;
  * @created Nov 21, 2014
  */
 
-public final class CommandUtils {
+public final class CommandUtils extends BaseParent {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandUtils.class);
 
@@ -62,12 +62,12 @@ public final class CommandUtils {
 
         APICommand cmd = new APICommand(commandId, apiVersion);
 
-        if (MediaType.APPLICATION_XML_VALUE.equals(request.getContentType())) {
+        if (nullSafe(request.getContentType()).contains(MediaType.APPLICATION_XML_VALUE)) {
             cmd.setRequestFormat(RawFormatTypes.XML);
         } else {
             cmd.setRequestFormat(RawFormatTypes.JSON);
         }
-        if (MediaType.APPLICATION_XML_VALUE.equals(request.getHeader("Accept"))) {
+        if (nullSafe(request.getHeader("Accept")).contains(MediaType.APPLICATION_XML_VALUE)) {
             cmd.setResponseFormat(RawFormatTypes.XML);
         } else {
             cmd.setResponseFormat(RawFormatTypes.JSON);
