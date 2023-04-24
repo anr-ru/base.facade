@@ -22,7 +22,7 @@ public class HealthCheckTest extends BaseWebTestCase {
     private final RestClient client = new RestClient();
 
     /**
-     * '/health'
+     * '/healthcheck'
      */
     @Test
     public void testGet() {
@@ -36,6 +36,21 @@ public class HealthCheckTest extends BaseWebTestCase {
 
         assertContains(client.get("/healthcheck/false").getBody(), "{\"status\" : \"UP\", \"message\":\"");
     }
+
+    /**
+     * '/healthz'
+     */
+    @Test
+    public void testGetHealthz() {
+
+        ResponseEntity<String> r = client.get("/healthz");
+
+        Assertions.assertEquals(HttpStatus.OK, r.getStatusCode());
+        logger.info("Response: {}", r.getBody());
+
+        assertContains(r.getBody(), "{\"status\" : \"UP\", \"message\":\"");
+    }
+
 
     /**
      * '/health' if failure

@@ -100,6 +100,20 @@ public class HealthCheckController {
         return doCheck(null);
     }
 
+
+    /**
+     * A handler for '/healthz' requests.
+     *
+     * @return A json string containing the current status and a detailed
+     * message if required
+     */
+    @RequestMapping(value = "/healthz", method = RequestMethod.GET,
+            produces = {"application/json; charset=UTF-8"})
+    @ResponseBody
+    public String healthz() {
+        return doCheck(null);
+    }
+
     /**
      * Delegates execution of checking to some underlying {@link HealthCheck}
      * service.
