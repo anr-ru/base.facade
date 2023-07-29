@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2022 the original author or authors.
+ * Copyright 2014-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,7 +51,7 @@ final class HealthCheckUtils {
          * exception if the context has not been previously loaded yet.
          */
         try {
-            return "" + context.getStartupDate();
+            return String.valueOf(context.getStartupDate());
         } catch (Exception ex) {
             throw new ServiceUnavailableException("Context accessing failure", ex.getMessage());
         }

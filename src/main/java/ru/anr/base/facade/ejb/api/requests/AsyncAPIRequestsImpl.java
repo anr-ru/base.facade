@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2022 the original author or authors.
+ * Copyright 2014-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,6 +37,7 @@ import ru.anr.base.services.serializer.Serializer;
 
 import javax.jms.Destination;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * An implementation for {@link AsyncAPIRequests}.
@@ -203,17 +204,7 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      */
     @Override
     public APICommand getResponse(String queryId, Class<?> responseClass) {
-
-        APICommand cmd = getResponse(queryId);
-        if (cmd != null) {
-
-            logger.debug("Raw response: {}", cmd.getRawModel());
-
-            if (cmd.getRawModel() != null) {
-                cmd.setResponse(serializer.fromStr(cmd.getRawModel(), responseClass));
-            }
-        }
-        return cmd;
+        return internalResponse(queryId, (s) -> serializer.fromStr(s, responseClass));
     }
 
     /**
@@ -221,16 +212,20 @@ public class AsyncAPIRequestsImpl extends BaseSpringParent implements AsyncAPIRe
      */
     @Override
     public APICommand getResponse(String queryId, TypeReference<?> ref) {
+        return internalResponse(queryId, (s) -> serializer.fromStr(s, ref));
+    }
 
+    private APICommand internalResponse(String queryId, Function<String, Object> callback) {
         APICommand cmd = getResponse(queryId);
         if (cmd != null) {
             logger.debug("Raw response: {}", cmd.getRawModel());
             if (cmd.getRawModel() != null) {
-                cmd.setResponse(serializer.fromStr(cmd.getRawModel(), ref));
+                cmd.setResponse(callback.apply(cmd.getRawModel()));
             }
         }
         return cmd;
     }
+
 
     ///////////////////////////////////////////////////////////////////////////
     ///// getters/setters
