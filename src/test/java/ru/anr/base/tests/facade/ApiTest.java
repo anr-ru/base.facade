@@ -239,6 +239,6 @@ public class ApiTest extends BaseWebTestCase {
         }));
 
         exec.start();
-        Assertions.assertTrue(exec.waitNotError());
+        Assertions.assertTrue(exec.waitNoErrors());
     }
 }
