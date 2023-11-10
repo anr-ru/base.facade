@@ -48,7 +48,7 @@ public class JmsConfig extends JmsJEEConfig {
 
         SingleConnectionFactory f = new SingleConnectionFactory(connectionFactory);
 
-        // Doesn't work with Glassfish client ??
+        // Doesn't work with a Glassfish client ??
         f.setReconnectOnException(false);
         return f;
     }
