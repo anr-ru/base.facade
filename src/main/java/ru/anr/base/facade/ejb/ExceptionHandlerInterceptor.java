@@ -61,25 +61,33 @@ public class ExceptionHandlerInterceptor {
 
             if (reason instanceof AuthenticationException) {
                 logger.error("AuthenticationException: {}", reason.getMessage());
+                logger.error("Exception details: {}", reason.getMessage(), reason);
             } else if (reason instanceof AccessDeniedException) {
                 logger.error("AccessDeniedException: {}", reason.getMessage());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Exception details: {}", reason.getMessage(), reason);
+                }
             } else if (reason instanceof ConstraintViolationException) {
                 Set<ConstraintViolation<?>> errors = ((ConstraintViolationException) reason).getConstraintViolations();
                 logger.info("ConstraintViolationException: {}", ValidationUtils.getAllErrorsAsString(errors), reason);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Exception details: {}", reason.getMessage(), reason);
+                }
             } else if (reason instanceof APIException) {
                 APIException api = (APIException) reason;
                 logger.info("API error: code={}/{}", api.getErrorCode(), api.getErrorId());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Exception details: {}", reason.getMessage(), reason);
+                }
             } else if (reason instanceof RollbackException) {
                 logger.error("ERROR: Rollback exception, maybe due to timeout: {}", reason.getMessage(), reason);
+                logger.error("Exception details: {}", reason.getMessage(), reason);
             } else if (reason instanceof ApplicationException) {
                 logger.error("ERROR: ApplicationException: {}", reason.getMessage());
+                logger.error("Exception details: {}", reason.getMessage(), reason);
             } else {
                 logger.error("Thrown an EJB exception: {}/{}", reason.getClass().getName(), reason.getMessage());
-            }
-
-            // Log details when
-            if (logger.isDebugEnabled()) {
-                logger.debug("Exception details: {}", reason.getMessage(), reason);
+                logger.error("Exception details: {}", reason.getMessage(), reason);
             }
             // Don't forget to re-throw!
             throw ex;
