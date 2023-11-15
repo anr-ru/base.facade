@@ -149,6 +149,26 @@ public class ApiTest extends BaseWebTestCase {
     }
 
     /**
+     * 400 Bad Request for StaleObjectException
+     */
+    @Test
+    public void badRequest400ForStale() {
+
+        RestClient client = new RestClient();
+        try {
+            client.put("/api/v1/stale/what", "");
+            Assertions.fail();
+        } catch (HttpClientErrorException ex) {
+            logger.info("Result: {}", ex.getResponseBodyAsString());
+
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+            Assertions.assertEquals("{\"code\":1,\"message\":\"Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect) : [entity#what]\"}",
+                    ex.getResponseBodyAsString());
+        }
+    }
+
+
+    /**
      * 400 Bad Request if Validation
      */
     @Test

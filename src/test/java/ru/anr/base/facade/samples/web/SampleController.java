@@ -1,5 +1,6 @@
 package ru.anr.base.facade.samples.web;
 
+import org.hibernate.StaleObjectStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,4 +121,18 @@ public class SampleController {
 
         throw new NotFoundException("what", what);
     }
+
+    /**
+     * A sample method which raises the NotFoundException
+     *
+     * @param what Some path parameter
+     * @return Some result value
+     */
+    @RequestMapping(value = "/stale/{xxx}", method = RequestMethod.PUT, //
+            produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> stale(@PathVariable("xxx") String what) {
+
+        throw new StaleObjectStateException("entity", what);
+    }
+
 }
