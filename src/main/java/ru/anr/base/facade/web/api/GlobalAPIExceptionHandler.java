@@ -15,6 +15,7 @@
  */
 package ru.anr.base.facade.web.api;
 
+import org.hibernate.StaleObjectStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,24 @@ public class GlobalAPIExceptionHandler {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public String processAPIException(HttpServletRequest rq, Exception ex) {
+
+        logException(rq, ex, HttpStatus.BAD_REQUEST);
+
+        APICommand cmd = apis.error(ex);
+        return cmd.getRawModel();
+    }
+
+    /**
+     * A special case when the {@link StaleObjectStateException} is thrown
+     *
+     * @param rq The http request
+     * @param ex The exception
+     * @return The response body
+     */
+    @ExceptionHandler(value = {StaleObjectStateException.class})
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String processOptimisticException(HttpServletRequest rq, Exception ex) {
 
         logException(rq, ex, HttpStatus.BAD_REQUEST);
 

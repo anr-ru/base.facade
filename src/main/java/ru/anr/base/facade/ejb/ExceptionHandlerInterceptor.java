@@ -15,12 +15,14 @@
  */
 package ru.anr.base.facade.ejb;
 
+import org.hibernate.StaleObjectStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import ru.anr.base.ApplicationException;
 import ru.anr.base.domain.api.APIException;
+import ru.anr.base.facade.web.api.NotFoundException;
 import ru.anr.base.services.validation.ValidationUtils;
 
 import javax.interceptor.AroundInvoke;
@@ -82,9 +84,15 @@ public class ExceptionHandlerInterceptor {
             } else if (reason instanceof RollbackException) {
                 logger.error("ERROR: Rollback exception, maybe due to timeout: {}", reason.getMessage(), reason);
                 logger.error("Exception details: {}", reason.getMessage(), reason);
+            } else if (reason instanceof NotFoundException) {
+                logger.error("ERROR: NotFound: {}", reason.getMessage());
+                logger.error("NotFound details: {}", reason.getMessage(), reason);
             } else if (reason instanceof ApplicationException) {
                 logger.error("ERROR: ApplicationException: {}", reason.getMessage());
                 logger.error("Exception details: {}", reason.getMessage(), reason);
+            } else if (reason instanceof StaleObjectStateException) {
+                logger.error("ERROR: StaleObjectStateException: {}", reason.getMessage());
+                logger.error("StaleObjectStateException details: {}", reason.getMessage(), reason);
             } else {
                 logger.error("Thrown an EJB exception: {}/{}", reason.getClass().getName(), reason.getMessage());
                 logger.error("Exception details: {}", reason.getMessage(), reason);
