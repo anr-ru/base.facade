@@ -50,6 +50,7 @@ public class GlobalAPIExceptionHandler {
     protected APICommandFactory apis;
 
     protected void logException(HttpServletRequest rq, Throwable ex, HttpStatus status) {
+        logger.error("Exception ({}): {}", status.value(), rq.getContextPath());
         if (logger.isDebugEnabled()) {
             logger.debug("Caught exception: (" + status.value() + "), " + rq.getContextPath(), ex);
         }
