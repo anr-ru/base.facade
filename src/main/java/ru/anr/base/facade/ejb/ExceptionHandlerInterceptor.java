@@ -86,7 +86,9 @@ public class ExceptionHandlerInterceptor {
                 logger.error("Exception details: {}", reason.getMessage(), reason);
             } else if (reason instanceof NotFoundException) {
                 logger.error("ERROR: NotFound: {}", reason.getMessage());
-                logger.error("NotFound details: {}", reason.getMessage(), reason);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("NotFound details: {}", reason.getMessage(), reason);
+                }
             } else if (reason instanceof ApplicationException) {
                 logger.error("ERROR: ApplicationException: {}", reason.getMessage());
                 logger.error("Exception details: {}", reason.getMessage(), reason);
