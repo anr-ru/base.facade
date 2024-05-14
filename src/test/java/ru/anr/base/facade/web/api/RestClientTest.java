@@ -80,4 +80,23 @@ public class RestClientTest extends BaseTestCase {
         ResponseEntity<String> r2 = client.get("http://google.com");
         Assertions.assertEquals(HttpStatus.OK, r2.getStatusCode());
     }
+
+    @Test
+    void buildTimeout() {
+
+        RestClient rest = new RestClient();
+        rest.setTimeout(10000, 10000);
+
+        long start = System.currentTimeMillis();
+
+        try {
+            rest.get("https://api.test.dw-dynamics.com:22");
+        } catch (Exception e) {
+            logger.error("Exception: {}", e.getMessage());
+        }
+
+        long stop = System.currentTimeMillis() - start;
+        Assertions.assertTrue(stop < (10 + 1) * 1000); // 10s + delta
+    }
+
 }

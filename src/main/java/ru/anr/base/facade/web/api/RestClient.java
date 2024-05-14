@@ -501,6 +501,18 @@ public class RestClient extends BaseParent {
         return rs;
     }
 
+    /**
+     * Sets timeouts.
+     *
+     * @param connectionTimeout The connection timeout
+     * @param requestTimeout    The request timeout
+     */
+    public void setTimeout(int connectionTimeout, int requestTimeout) {
+        HttpComponentsClientHttpRequestFactory factory = (HttpComponentsClientHttpRequestFactory) rest.getRequestFactory();
+        factory.setConnectTimeout(connectionTimeout);
+        factory.setReadTimeout(requestTimeout);
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     ///// getters/setters
     ///////////////////////////////////////////////////////////////////////////
