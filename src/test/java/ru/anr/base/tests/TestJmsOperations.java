@@ -22,9 +22,9 @@ import ru.anr.base.BaseParent;
 
 import javax.jms.*;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
@@ -41,20 +41,12 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
     /**
      * Embedded queue
      */
-    private final Map<String, java.util.Queue<org.springframework.messaging.Message<String>>> queueMap;
+    private final ThreadLocal<Map<String, java.util.Queue<org.springframework.messaging.Message<String>>>> queueMap = new ThreadLocal<>();
 
     /**
      * Stored default queue
      */
     private Destination defaultDestination;
-
-    /**
-     * Constructor
-     */
-    public TestJmsOperations() {
-
-        this.queueMap = new HashMap<>();
-    }
 
     /**
      * Getting stored queue (or creating a new one in storage)
@@ -66,14 +58,12 @@ public class TestJmsOperations extends BaseParent implements JmsTests {
 
         Assert.notNull(destination, "Destination is null");
 
-        String key = destination.toString();
-        java.util.Queue<org.springframework.messaging.Message<String>> q = queueMap.get(key);
-
-        if (q == null) {
-            q = new ConcurrentLinkedQueue<>();
-            queueMap.put(key, q);
+        if (queueMap.get() == null) {
+            queueMap.set(new ConcurrentHashMap<>());
         }
-        return q;
+
+        String key = destination.toString();
+        return queueMap.get().computeIfAbsent(key, k -> new ConcurrentLinkedQueue<>());
     }
 
     /**
