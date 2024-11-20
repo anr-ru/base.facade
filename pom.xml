@@ -183,9 +183,10 @@
         <dbx.password>localtest</dbx.password>
         <dbx.datasoureType>javax.sql.XADataSource</dbx.datasoureType>
 
-        <base.utils.version>2.6.1</base.utils.version>
-        <base.services.version>2.6.1</base.services.version>
+        <base.utils.version>2.6.2</base.utils.version>
+        <base.services.version>2.6.2</base.services.version>
         <base.tests.version>2.6.1</base.tests.version>
+        
         <httpclient.version>4.5.14</httpclient.version>
         <jms.version>2.0.1</jms.version>
         <javax.ejb.version>3.2.2</javax.ejb.version>
