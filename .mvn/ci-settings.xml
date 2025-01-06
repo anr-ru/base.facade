@@ -28,7 +28,7 @@
             <configuration>
                 <httpHeaders>
                     <property>
-                        <name>Deploy-Token</name>
+                        <name>Private-Token</name>
                         <value>${env.GITLAB_DEPLOY_TOKEN}</value>
                     </property>
                 </httpHeaders>
