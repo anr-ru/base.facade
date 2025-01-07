@@ -14,13 +14,8 @@ before_script:
   - "mkdir -p $CI_PROJECT_DIR/.m2"
 
 variables:
-  DOCKER_HOST: tcp://docker:2375/
-  DOCKER_DRIVER: overlay2
   GITLAB_DEPLOY_TOKEN: ${DEPLOY_TOKEN}
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
-
-services:
-  - docker:27.2.0-dind
 
 ################################################################################
 maven-build:
